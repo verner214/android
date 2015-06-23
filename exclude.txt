@@ -1,0 +1,5 @@
+own\plan.txt
+own\ejgit\
+own\temp\
+\.gradle\
+\build\

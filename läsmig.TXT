@@ -1,0 +1,29 @@
+kopierat till aida -----------------------------------------------
+gradle-2.4-bin - installation (inklusive cachat?)
+build - resultat av genomfört bygge, onödigt kanske?
+
+
+
+inte kopierat -----------------------------------------------
+java - ej förändrat efter download från oracle, förutom att cacerts har uppdaterats med nytt cert.
+sdk - detta är android sdk inklusive tools, platform-tools och platforms
+
+
+att göra vid ominstallation -----------------------------------------------
+se min androidsida på nätet men hoppa över det som fås gratis genom säkerhetskopian här.
+ 
+http://tools.android.com/tech-docs/new-build-system/user-guide
+
+-------------------- om alla projekt -----------------
+ranch -- från ranchboken. konvertert till gradlestruktur mha 2gradle.bat
+projekt -- andra androidprojekt
+  -- OBS!! beskrivningar om hur man bygger och exekverar finns i build.gralde - filerna.
+  spring_io_java 
+    -- projekt med en dependencies från maven-repository. byggt med gradlew. https://spring.io/guides/gs/gradle/
+    -- obs! använder inga dependencies visade det sig, 
+  spring_io_java_joda 
+    -- här finns dock dependencies
+  spring_io_java_utan_rep
+    -- dependencies med inte rep, dvs laddat ner jar.
+
+

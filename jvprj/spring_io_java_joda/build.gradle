@@ -1,0 +1,51 @@
+//lwa: för att lära sig gradle utan android
+//hämtat från https://spring.io/guides/gs/gradle/
+
+//bygga och exekvera med gradlew:
+//gradle wrapper
+//gradlew build --hämtar rätt version av gradle (2.3) och lägger i HOME(?) (dvs aida!).
+//gradlew run --kör programmet.
+
+//bygga och exekvera med gradle:
+//gradle clean
+//gradle build. obs! klasserna skapas inte där java-filerna ligger.
+//C:\own\projects\spring_io_java>java -cp build\classes\main\ hello.HelloWorld
+//Hello world3!
+//obs! classpath innehåller bara fram till dess att paketnamnet börjar. paketnamnet blir sedan del av sökvägen till classen.
+
+//bygga och köra utan gradle överhuvudtaget
+//gradle clean
+//C:\own\projects\spring_io_java>javac -cp .\src\main\java c:\own\projects\spring_io_java\src\main\java\hello\*.java
+//C:\own\projects\spring_io_java>java -cp .\src\main\java hello.HelloWorld
+//Hello world3!
+
+apply plugin: 'java'
+apply plugin: 'eclipse' //varför?
+apply plugin: 'application' //så att man kan köra programmet.
+
+mainClassName = 'hello.HelloWorld' //används troligen av application-plugin ovan.
+
+// tag::repositories[]
+repositories {
+    mavenCentral()
+}
+// end::repositories[]
+
+// tag::jar[]
+jar {
+    baseName = 'gs-gradle'
+    version =  '0.1.0'
+}
+// end::jar[]
+
+// tag::dependencies[]
+dependencies {
+    compile "joda-time:joda-time:2.2"
+}
+// end::dependencies[]
+
+// tag::wrapper[]
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+// end::wrapper[]

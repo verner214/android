@@ -1,0 +1,17 @@
+//lwa: för att lära sig gradle utan android
+//hämtat från https://spring.io/guides/gs/gradle/
+
+//bygga och köra utan repository
+//c:\own\projects\spring_io_java_utan_rep>gradle build
+//C:\own\projects\spring_io_java_utan_rep>java -cp build\classes\main;libs\joda-time-2.2.jar hello.HelloWorld
+//The current local time is: 11:19:35.049
+//Hello world3!
+
+//skapat mapp = libs
+//hämtat jar från mavenrepository, http://mvnrepository.com/artifact/joda-time/joda-time/2.2
+
+apply plugin: 'java'
+
+dependencies {
+    compile files('../../libs/joda-time-2.2.jar')
+}
