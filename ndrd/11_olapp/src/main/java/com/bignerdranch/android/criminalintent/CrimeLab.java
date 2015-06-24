@@ -40,5 +40,13 @@ public class CrimeLab {
     public ArrayList<Crime> getCrimes() {
         return mCrimes;
     }
+    
+    private void setCrimesInstance(ArrayList<Crime> crimes) {
+        mCrimes = crimes;
+    }
+    //exception om den anropas innan get.
+    public static void setCrimes(ArrayList<Crime> crimes) {
+        sCrimeLab.setCrimesInstance(crimes);
+    }
 }
 

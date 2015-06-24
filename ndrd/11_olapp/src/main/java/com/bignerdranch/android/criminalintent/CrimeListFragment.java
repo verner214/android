@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.os.AsyncTask;
 
 import android.support.v4.app.ListFragment;
 
@@ -25,10 +26,14 @@ public class CrimeListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         getActivity().setTitle(R.string.crimes_title);
         mCrimes = CrimeLab.get(getActivity()).getCrimes();
-        CrimeAdapter adapter = new CrimeAdapter(mCrimes);
-        setListAdapter(adapter);
+//        CrimeAdapter adapter = new CrimeAdapter(mCrimes);
+//        setListAdapter(adapter);
+//        setListAdapter(mCrimes);//först sätter vi med ordinarie crimes
+        setListAdapter(null);//visa timglas
+        new FetchItemsTask().execute();
     }
 
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // get the Crime from the adapter
         Crime c = ((CrimeAdapter)getListAdapter()).getItem(position);
@@ -41,6 +46,22 @@ public class CrimeListFragment extends ListFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+    }
+
+    private class FetchItemsTask extends AsyncTask<Void,Void,ArrayList<Crime>> {
+        @Override
+        protected ArrayList<Crime> doInBackground(Void... params) {
+            return new GetGson().fetchItems();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Crime> crimes) {
+            //try {Thread.sleep(5000);} catch (InterruptedException e) {}
+            mCrimes = crimes;
+            CrimeAdapter adapter = new CrimeAdapter(mCrimes);
+            setListAdapter(adapter);
+		    CrimeLab.setCrimes(crimes);
+        }
     }
 
     private class CrimeAdapter extends ArrayAdapter<Crime> {
