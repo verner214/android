@@ -36,5 +36,10 @@
     android:layout_marginRight="16dp"
     android:text="@string/crime_solved_label"
     />
+<ImageView android:id="@+id/medium_item_imageView"
+    android:layout_width="400dp"
+    android:layout_height="400dp"
+    android:scaleType="centerCrop" >
+</ImageView>    
 </LinearLayout>
 

@@ -68,6 +68,14 @@ public class GetGson {
 			return thumbURL + "\n" + mediumURL + "\n" + description + "\n" + textarea + "\n";
 		}
 		
+		public String getMediumURL() {
+			return mediumURL;
+		}
+
+		public String getTextarea() {
+			return textarea;
+		}
+
 		public String getThumbURL() {
 			return thumbURL;
 		}
@@ -163,6 +171,7 @@ public class GetGson {
             Crime c = new Crime();
             c.setTitle(i.getThumbURL());
 //            c.setTitle("url=gris");
+            c.setSolved(i.getMediumURL() != null);
             crimes.add(c);
 		}
 		

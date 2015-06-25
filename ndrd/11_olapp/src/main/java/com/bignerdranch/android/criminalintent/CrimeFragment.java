@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 public class CrimeFragment extends Fragment {
     public static final String EXTRA_CRIME_ID = "criminalintent.CRIME_ID";
@@ -75,6 +76,10 @@ public class CrimeFragment extends Fragment {
                 mCrime.setSolved(isChecked);
             }
         });
+                
+        ImageView imageView = (ImageView)v.findViewById(R.id.medium_item_imageView);
+        imageView.setImageResource(R.drawable.brian_up_close);        
+        //mThumbnailThread.queueThumbnail(imageView, c.getTitle());
         
         return v; 
     }
