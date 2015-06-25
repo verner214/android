@@ -1,19 +1,52 @@
+//2do: konsolidera http-kontakten
 package com.bignerdranch.android.criminalintent;
 
 import com.google.gson.Gson;
+
+import java.io.ByteArrayOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import java.util.ArrayList;
+
+import android.util.Log;
 
 //nu försök med json som tidiagare hämtats från azure
 
 public class GetGson {
+
+    public static byte[] getUrlBytes(String urlSpec) throws IOException {
+        URL url = new URL(urlSpec);
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            InputStream in = connection.getInputStream();
+            
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                return null;
+            }
+
+            int bytesRead = 0;
+            byte[] buffer = new byte[1024];
+            while ((bytesRead = in.read(buffer)) > 0) {
+                out.write(buffer, 0, bytesRead);
+            }
+            out.close();
+            return out.toByteArray();
+        } finally {
+            connection.disconnect();
+        }
+    }
 
 	private class Item {
 		private String thumbURL;
@@ -128,7 +161,8 @@ public class GetGson {
 		
 		for (Item i : johnDoe.getItems()) {
             Crime c = new Crime();
-            c.setTitle("desc=" + i.getDescription());
+            c.setTitle(i.getThumbURL());
+//            c.setTitle("url=gris");
             crimes.add(c);
 		}
 		

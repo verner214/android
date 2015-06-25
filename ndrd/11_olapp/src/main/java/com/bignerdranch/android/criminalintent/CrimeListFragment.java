@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.AsyncTask;
+import android.os.Handler;
 
 import android.support.v4.app.ListFragment;
 
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 
 public class CrimeListFragment extends ListFragment {
     private ArrayList<Crime> mCrimes;
+    ThumbnailDownloader<ImageView> mThumbnailThread;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,21 @@ public class CrimeListFragment extends ListFragment {
 //        setListAdapter(mCrimes);//först sätter vi med ordinarie crimes
         setListAdapter(null);//visa timglas
         new FetchItemsTask().execute();
+        
+//initiera bakgrundstråden med loopern. i konstruktorn skicka Handler som är associerad till UI-tråden.
+//registrera callback för downloaded vertig.        
+
+        mThumbnailThread = new ThumbnailDownloader<ImageView>(new Handler());
+        mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
+            public void onThumbnailDownloaded(ImageView imageView, Bitmap thumbnail) {
+                if (isVisible()) {
+                    imageView.setImageBitmap(thumbnail);
+                }
+            }
+        });
+        mThumbnailThread.start();
+        mThumbnailThread.getLooper();
+       
     }
 
     @Override
@@ -64,6 +82,18 @@ public class CrimeListFragment extends ListFragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mThumbnailThread.quit();
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mThumbnailThread.clearQueue();
+    }
+    
     private class CrimeAdapter extends ArrayAdapter<Crime> {
         public CrimeAdapter(ArrayList<Crime> crimes) {
             super(getActivity(), android.R.layout.simple_list_item_1, crimes);
@@ -83,6 +113,8 @@ public class CrimeListFragment extends ListFragment {
             ImageView imageView = (ImageView)convertView
                     .findViewById(R.id.gallery_item_imageView);
             imageView.setImageResource(R.drawable.brian_up_close);
+            
+            mThumbnailThread.queueThumbnail(imageView, c.getTitle());//använd title tills vidare, byt sen.
 
             TextView titleTextView =
                 (TextView)convertView.findViewById(R.id.crime_list_item_titleTextView);
