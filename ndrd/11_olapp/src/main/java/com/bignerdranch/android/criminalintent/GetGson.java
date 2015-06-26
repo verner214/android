@@ -172,6 +172,7 @@ public class GetGson {
             c.setTitle(i.getThumbURL());
 //            c.setTitle("url=gris");
             c.setSolved(i.getMediumURL() != null);
+            c.setMediumURL(i.getMediumURL());
             crimes.add(c);
 		}
 		

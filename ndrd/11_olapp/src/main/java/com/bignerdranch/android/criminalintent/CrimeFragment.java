@@ -1,9 +1,11 @@
 package com.bignerdranch.android.criminalintent;
 
 import java.util.UUID;
+import java.io.IOException;
 
 import android.annotation.TargetApi;
 import android.os.Bundle;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,15 +18,20 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class CrimeFragment extends Fragment {
     public static final String EXTRA_CRIME_ID = "criminalintent.CRIME_ID";
+    private final static String TAG = "CrimeFragment";
 
     Crime mCrime;
     EditText mTitleField;
     Button mDateButton;
     CheckBox mSolvedCheckBox;
-
+    ImageView mImageView;
+    
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
         args.putSerializable(EXTRA_CRIME_ID, crimeId);
@@ -77,10 +84,36 @@ public class CrimeFragment extends Fragment {
             }
         });
                 
-        ImageView imageView = (ImageView)v.findViewById(R.id.medium_item_imageView);
-        imageView.setImageResource(R.drawable.brian_up_close);        
+        mImageView = (ImageView) v.findViewById(R.id.medium_item_imageView);
+        mImageView.setImageResource(R.drawable.brian_up_close);
+        if (mCrime.getMediumURL() != null) {        
+            new FetchItemsTask().execute(mCrime.getMediumURL());
+        }
         //mThumbnailThread.queueThumbnail(imageView, c.getTitle());
         
         return v; 
     }
+    
+    private class FetchItemsTask extends AsyncTask<String,Void,byte[]> {
+        @Override
+        protected byte[] doInBackground(String... urls) {
+            byte[] bytes = null; 
+            try {
+                bytes = GetGson.getUrlBytes(urls[0]);
+            } catch (IOException ioe) {
+                Log.e(TAG, "Error downloading image", ioe);
+            }          
+            return bytes;      
+        }
+
+        @Override
+        protected void onPostExecute(byte[] bitmapBytes) {
+            final Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
+            if (isVisible()) {
+                mImageView.setImageBitmap(bitmap);
+            }
+        }
+    }
+
+    
 }

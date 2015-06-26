@@ -6,6 +6,7 @@ import java.util.UUID;
 public class Crime {
     private UUID mId;
     private String mTitle;
+    private String mMediumURL;
     private Date mDate;
     private boolean mSolved;
 
@@ -21,6 +22,14 @@ public class Crime {
 
     public String getTitle() {
         return mTitle;
+    }
+
+    public String getMediumURL() {
+        return mMediumURL;
+    }
+    
+    public void setMediumURL(String mediumURL) {
+        mMediumURL = mediumURL;
     }
 
     public void setTitle(String title) {
