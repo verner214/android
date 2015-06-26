@@ -112,7 +112,7 @@ public class CrimeListFragment extends ListFragment {
 
             ImageView imageView = (ImageView)convertView
                     .findViewById(R.id.gallery_item_imageView);
-            imageView.setImageResource(R.drawable.brian_up_close);
+            imageView.setImageResource(R.drawable.no_photo);
             
             mThumbnailThread.queueThumbnail(imageView, c.getTitle());//använd title tills vidare, byt sen.
 

@@ -85,7 +85,7 @@ public class CrimeFragment extends Fragment {
         });
                 
         mImageView = (ImageView) v.findViewById(R.id.medium_item_imageView);
-        mImageView.setImageResource(R.drawable.brian_up_close);
+        mImageView.setImageResource(R.drawable.no_photo);
         if (mCrime.getMediumURL() != null) {        
             new FetchItemsTask().execute(mCrime.getMediumURL());
         }
