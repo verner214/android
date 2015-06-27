@@ -81,7 +81,9 @@ public class CameraFragment extends Fragment {
 //http://stackoverflow.com/questions/2169649/get-pick-an-image-from-androids-built-in-gallery-app-programmatically?lq=1
 //http://stackoverflow.com/questions/20067508/get-real-path-from-uri-android-kitkat-new-storage-access-framework?rq=1
 //http://stackoverflow.com/questions/19834842/android-gallery-on-kitkat-returns-different-uri-for-intent-action-get-content
-
+//http://stackoverflow.com/questions/5309190/android-pick-images-from-gallery
+//den sista kanske är bäst, de tre översta verkar handla om hur man får tag i bildnamnet när det egentligen inte behövs
+//då man kan använda content resolver istället direkt mot URI.
             //Uri fullPhotoUri = data.getData();
             //gör något med hela bilden...
         }
