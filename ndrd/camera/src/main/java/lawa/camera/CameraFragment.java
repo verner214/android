@@ -78,8 +78,9 @@ public class CameraFragment extends Fragment {
                 InputStream inputStream = getActivity().getContentResolver().openInputStream(selectedImageURI);
                 Bitmap bmp = BitmapFactory.decodeStream(inputStream);
                 boolean b = bmp == null;
+                Bitmap bmp2 = Bitmap.createScaledBitmap(bmp, 100, 100, true);
                 Toast.makeText(getActivity(), "onActivityResult=" + b2 + "," + b, Toast.LENGTH_SHORT).show();
-                mImgThumbnail.setImageBitmap(bmp);
+                mImgThumbnail.setImageBitmap(bmp2);
 
 //http://stackoverflow.com/questions/2169649/get-pick-an-image-from-androids-built-in-gallery-app-programmatically?lq=1
 //http://stackoverflow.com/questions/20067508/get-real-path-from-uri-android-kitkat-new-storage-access-framework?rq=1
@@ -89,10 +90,12 @@ public class CameraFragment extends Fragment {
 //då man kan använda content resolver istället direkt mot URI.
             //Uri fullPhotoUri = data.getData();
             //gör något med hela bilden...
-            }
+            }//if
         } catch (Exception e) {
             Toast.makeText(getActivity(), "exception=" + e.toString(), Toast.LENGTH_LONG).show();
             Log.e(TAG, "Error downloading image", e);
         }
+//fungerar inte om bilden är stor.
+//scale och resize, http://developer.sonymobile.com/2011/06/27/how-to-scale-images-for-your-android-application/        
     }        
 }
