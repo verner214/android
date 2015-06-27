@@ -2,7 +2,7 @@ package lawa.camera;
 
 import java.util.UUID;
 import java.io.IOException;
-
+import java.io.InputStream;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.annotation.TargetApi;
@@ -70,13 +70,16 @@ public class CameraFragment extends Fragment {
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK) {
-            Bitmap thumbnail = data.getParcelableExtra("data");     
-            boolean b = thumbnail == null;
-            Uri selectedImageURI = data.getData();
-            boolean b2 = selectedImageURI == null;
-            Toast.makeText(getActivity(), "tost" + b + "," + b2, Toast.LENGTH_SHORT).show();
-            mImgThumbnail.setImageBitmap(thumbnail);
+        try {
+            if (requestCode == REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK) {
+                //Bitmap thumbnail = data.getParcelableExtra("data");     
+                Uri selectedImageURI = data.getData();
+                boolean b2 = selectedImageURI == null;
+                InputStream inputStream = getActivity().getContentResolver().openInputStream(selectedImageURI);
+                Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+                boolean b = bmp == null;
+                Toast.makeText(getActivity(), "onActivityResult=" + b2 + "," + b, Toast.LENGTH_SHORT).show();
+                mImgThumbnail.setImageBitmap(bmp);
 
 //http://stackoverflow.com/questions/2169649/get-pick-an-image-from-androids-built-in-gallery-app-programmatically?lq=1
 //http://stackoverflow.com/questions/20067508/get-real-path-from-uri-android-kitkat-new-storage-access-framework?rq=1
@@ -86,6 +89,10 @@ public class CameraFragment extends Fragment {
 //då man kan använda content resolver istället direkt mot URI.
             //Uri fullPhotoUri = data.getData();
             //gör något med hela bilden...
+            }
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "exception=" + e.toString(), Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Error downloading image", e);
         }
     }        
 }
