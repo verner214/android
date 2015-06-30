@@ -15,6 +15,7 @@ import org.apache.http.client.*;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.*;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 
@@ -26,18 +27,22 @@ public class MultiPart {
 		String result = "resultat";
 		try
 		{
+			Log.d(TAG, "image length=" + image.length);
 		    HttpClient client = new DefaultHttpClient();
 		    HttpPost post = new HttpPost("http://vernerphoto.azurewebsites.net/upload");
-			String boundary = "-------------" + System.currentTimeMillis();
-			post.setHeader("Content-type", "multipart/form-data; boundary="+boundary);		
+//		    HttpPost post = new HttpPost("http://10.0.2.2:8080/formhandler");
+			//String boundary = "-------------" + System.currentTimeMillis();
+			//post.setHeader("Content-type", "multipart/form-data; boundary="+boundary);		
 			
 		    MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
 		    entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-		    entityBuilder.setBoundary(boundary);
-		
+		    //entityBuilder.setBoundary(boundary);
+//boundary skapas automatiskt och det behöver man inte ange. gäller både header och parts		
 //		    entityBuilder.addTextBody(USER_ID, userId);
 		
-		    entityBuilder.addBinaryBody("fileUploaded", image);
+//		    entityBuilder.addBinaryBody("fileUploaded", image);
+//formidable ville inte känna till filen förrän contenttype och filnamnet fanns med i body (eller om det var något av dessa som gjorde skilnaden)
+		    entityBuilder.addBinaryBody("fileUploaded", image, ContentType.create("image/jpeg"), "myfilenme.jpg");
 		
 		    HttpEntity entity = entityBuilder.build();
 		    post.setEntity(entity);
@@ -45,7 +50,7 @@ public class MultiPart {
 		    HttpEntity httpEntity = response.getEntity();
 		    result = EntityUtils.toString(httpEntity);
            // Toast.makeText(context, "multipart result=" + result, Toast.LENGTH_SHORT).show();
-//		    Log.v("result", result);
+		    Log.d(TAG, "result=" + result);
 		}
 		catch (Exception e)
 		{

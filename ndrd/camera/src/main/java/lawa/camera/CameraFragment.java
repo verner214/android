@@ -82,13 +82,13 @@ public class CameraFragment extends Fragment {
                 InputStream inputStream = getActivity().getContentResolver().openInputStream(selectedImageURI);
                 Bitmap bmp = BitmapFactory.decodeStream(inputStream);
                 boolean b = bmp == null;
-                Bitmap bmp2 = Bitmap.createScaledBitmap(bmp, 500, 500, true);
+                Bitmap bmp2 = Bitmap.createScaledBitmap(bmp, 100, 100, true);
                 Toast.makeText(getActivity(), "onActivityResult=" + b2 + "," + b, Toast.LENGTH_SHORT).show();
                 mImgThumbnail.setImageBitmap(bmp2);
                 
 //skapa jpg och skicka till azure                
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
-                bmp2.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                bmp2.compress(Bitmap.CompressFormat.JPEG, 70, os);
                 new FetchItemsTask().execute(os.toByteArray());
 
 //dessa tre länkar handlar om hur man får tag i filnamnet om man har en URI. kom på att man inte behöver filnamnet vilket ger en mycket snyggare lösning.
