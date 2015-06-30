@@ -21,35 +21,38 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 public class MultiPart {
     private final static String TAG = "MulitiPart";
 
-	public static void PostImage(Context context, byte[] image) 
+	public static String PostImage(byte[] image) 
 	{
+		String result = "resultat";
 		try
 		{
 		    HttpClient client = new DefaultHttpClient();
 		    HttpPost post = new HttpPost("http://vernerphoto.azurewebsites.net/upload");
-		
+			String boundary = "-------------" + System.currentTimeMillis();
+			post.setHeader("Content-type", "multipart/form-data; boundary="+boundary);		
+			
 		    MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
 		    entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+		    entityBuilder.setBoundary(boundary);
 		
 //		    entityBuilder.addTextBody(USER_ID, userId);
 		
-		    if (image != null)
-		    {
-		        entityBuilder.addBinaryBody("fileUploaded", image);
-		    }
+		    entityBuilder.addBinaryBody("fileUploaded", image);
 		
 		    HttpEntity entity = entityBuilder.build();
 		    post.setEntity(entity);
 		    HttpResponse response = client.execute(post);
 		    HttpEntity httpEntity = response.getEntity();
-		    String result = EntityUtils.toString(httpEntity);
-            Toast.makeText(context, "multipart result=" + result, Toast.LENGTH_SHORT).show();
+		    result = EntityUtils.toString(httpEntity);
+           // Toast.makeText(context, "multipart result=" + result, Toast.LENGTH_SHORT).show();
 //		    Log.v("result", result);
 		}
 		catch (Exception e)
 		{
-            Toast.makeText(context, "exception=" + e.toString(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "exception=" + e.toString(), Toast.LENGTH_LONG).show();
             Log.e(TAG, "Error uploading image", e);
+            Log.e(TAG, "Error uploading image" + e.toString(), e);
 		}
-	}
+		return result;
+	}//postImage
 }

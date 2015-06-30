@@ -89,7 +89,7 @@ public class CameraFragment extends Fragment {
 //skapa jpg och skicka till azure                
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 bmp2.compress(Bitmap.CompressFormat.JPEG, 100, os);
-                MultiPart.PostImage(getActivity(), os.toByteArray());
+                new FetchItemsTask().execute(os.toByteArray());
 
 //dessa tre länkar handlar om hur man får tag i filnamnet om man har en URI. kom på att man inte behöver filnamnet vilket ger en mycket snyggare lösning.
 //http://stackoverflow.com/questions/2169649/get-pick-an-image-from-androids-built-in-gallery-app-programmatically?lq=1
@@ -114,5 +114,22 @@ public class CameraFragment extends Fragment {
     
 //vid beskärning av bilden, använd inte CROP-intent, http://commonsware.com/blog/2013/01/23/no-android-does-not-have-crop-intent.html    
     
-    }        
-}
+    }//onActivityResult
+
+    private class FetchItemsTask extends AsyncTask<byte[],Void,String> {
+        @Override
+        protected String doInBackground(byte[]... streams) {
+            return MultiPart.PostImage(streams[0]);
+//            return bytes;      
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getActivity(), "result från Multipart = " + result, Toast.LENGTH_LONG).show();
+        }
+        
+    }
+
+}//class CameraFragment
+
+
