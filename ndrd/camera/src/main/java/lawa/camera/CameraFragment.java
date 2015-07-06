@@ -108,6 +108,8 @@ public class CameraFragment extends Fragment {
 //2do: skär bilden och skala med metod som ger bra kvalitet. bra länk från sonymobile som går ut på att man ska skala redan när man decodar inputstream.
 //då behöver man inte heller lika mycket minne och algortitmen som används ger bilder av bra kvalitet. man måste dock skala igen när bilden är hämtad, 
 //man kan inte skala till godtycklig upplösning, http://developer.sonymobile.com/2011/06/27/how-to-scale-images-for-your-android-application/        
+//ungefär samma sak i länken nedan, läs siamii's svar
+//http://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app?rq=1
 
 //SAMSUNG. mobiler från denna tillverkare stöter tydligen ibland på problem med att data.getData() returnerar null. värt att testa på samsung med andra ord.
 //http://stackoverflow.com/questions/14627900/camera-intent-data-null-in-onactivityresultint-requestcode-int-resultcode-int

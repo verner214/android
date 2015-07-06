@@ -29,7 +29,8 @@ public class MultiPart {
 		{
 			Log.d(TAG, "image length=" + image.length);
 		    HttpClient client = new DefaultHttpClient();
-		    HttpPost post = new HttpPost("http://vernerphoto.azurewebsites.net/upload");
+		    HttpPost post = new HttpPost("http://vernerolapp.azurewebsites.net/new");
+//		    HttpPost post = new HttpPost("http://vernerphoto.azurewebsites.net/upload");
 //		    HttpPost post = new HttpPost("http://10.0.2.2:8080/formhandler");
 			//String boundary = "-------------" + System.currentTimeMillis();
 			//post.setHeader("Content-type", "multipart/form-data; boundary="+boundary);		
@@ -42,7 +43,9 @@ public class MultiPart {
 		
 //		    entityBuilder.addBinaryBody("fileUploaded", image);
 //formidable ville inte känna till filen förrän contenttype och filnamnet fanns med i body (eller om det var något av dessa som gjorde skilnaden)
-		    entityBuilder.addBinaryBody("fileUploaded", image, ContentType.create("image/jpeg"), "myfilenme.jpg");
+//		    entityBuilder.addBinaryBody("fileUploaded", image, ContentType.create("image/jpeg"), "myfilenme.jpg");
+		    entityBuilder.addBinaryBody("img", image, ContentType.create("image/jpeg"), "myfilenme_img.jpg");
+		    entityBuilder.addBinaryBody("thumb", image, ContentType.create("image/jpeg"), "myfilenme_thumb.jpg");
 		
 		    HttpEntity entity = entityBuilder.build();
 		    post.setEntity(entity);
@@ -50,7 +53,7 @@ public class MultiPart {
 		    HttpEntity httpEntity = response.getEntity();
 		    result = EntityUtils.toString(httpEntity);
            // Toast.makeText(context, "multipart result=" + result, Toast.LENGTH_SHORT).show();
-		    Log.d(TAG, "result=" + result);
+		    Log.d(TAG, "result2bilder=" + result);
 		}
 		catch (Exception e)
 		{
