@@ -5,8 +5,9 @@ import java.util.UUID;
 
 public class Crime {
     private UUID mId;
-    private String mTitle;
-    private String mMediumURL;
+    private String mBeerName;
+    private String mBeerStyle;
+    private String mThumbUrl
     private Date mDate;
     private boolean mSolved;
 
