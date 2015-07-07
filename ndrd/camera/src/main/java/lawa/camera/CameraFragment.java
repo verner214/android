@@ -35,6 +35,8 @@ public class CameraFragment extends Fragment {
 
     Button mBtnSelectPhoto;
     ImageView mImgThumbnail;
+    ImageView mImgLarge;
+    ImageView mImgLarge2;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,8 @@ public class CameraFragment extends Fragment {
 
         mImgThumbnail = (ImageView) v.findViewById(R.id.imgThumbnail);
         mImgThumbnail.setImageResource(R.drawable.no_photo);
+        mImgLarge = (ImageView) v.findViewById(R.id.imgLarge);
+        mImgLarge2 = (ImageView) v.findViewById(R.id.imgLarge2);
         
         Log.w("Log", "onCreateView lawa");
         
@@ -79,18 +83,29 @@ public class CameraFragment extends Fragment {
                 //Bitmap thumbnail = data.getParcelableExtra("data");     
                 Uri selectedImageURI = data.getData();
                 boolean b2 = selectedImageURI == null;
-                InputStream inputStream = getActivity().getContentResolver().openInputStream(selectedImageURI);
-                Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-                boolean b = bmp == null;
-                Bitmap bmp2 = Bitmap.createScaledBitmap(bmp, 100, 100, true);
-                Toast.makeText(getActivity(), "onActivityResult=" + b2 + "," + b, Toast.LENGTH_SHORT).show();
-                mImgThumbnail.setImageBitmap(bmp2);
+//                InputStream inputStream = getActivity().getContentResolver().openInputStream(selectedImageURI);
+//                Bitmap bmp = BitmapFactory.decodeStream(inputStream);
                 
-//skapa jpg och skicka till azure                
+                Bitmap bmp = ImageLibrary.Uri2Bmp(getActivity(), selectedImageURI, 800, 360, true);
+                boolean b = bmp == null;
+                
+                //Bitmap bmp2 = Bitmap.createScaledBitmap(bmp, 100, 100, true);
+                Toast.makeText(getActivity(), "onActivityResult=" + b2 + "," + b, Toast.LENGTH_SHORT).show();
+                mImgLarge.setImageBitmap(bmp);
+                mImgLarge2.setImageBitmap(bmp);
+                Bitmap bmThumb = ImageLibrary.createThumbnail(bmp, 100, 100);
+                mImgThumbnail.setImageBitmap(bmThumb);
+                
+//skapa jpg och skicka till azure
+                Form form = new Form();
+                form.imgLarge = ImageLibrary.Bmp2Jpg(bmp, 90);
+                form.imgThumbnail = ImageLibrary.Bmp2Jpg(bmThumb, 90);
+                new FetchItemsTask().execute(form);
+/*                
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
-                bmp2.compress(Bitmap.CompressFormat.JPEG, 70, os);
+                bmp.compress(Bitmap.CompressFormat.JPEG, 70, os);
                 new FetchItemsTask().execute(os.toByteArray());
-
+*/
 //dessa tre länkar handlar om hur man får tag i filnamnet om man har en URI. kom på att man inte behöver filnamnet vilket ger en mycket snyggare lösning.
 //http://stackoverflow.com/questions/2169649/get-pick-an-image-from-androids-built-in-gallery-app-programmatically?lq=1
 //http://stackoverflow.com/questions/20067508/get-real-path-from-uri-android-kitkat-new-storage-access-framework?rq=1
@@ -118,10 +133,10 @@ public class CameraFragment extends Fragment {
     
     }//onActivityResult
 
-    private class FetchItemsTask extends AsyncTask<byte[],Void,String> {
+    private class FetchItemsTask extends AsyncTask<Form,Void,String> {
         @Override
-        protected String doInBackground(byte[]... streams) {
-            return MultiPart.PostImage(streams[0]);
+        protected String doInBackground(Form... forms) {
+            return MultiPart.PostImage(forms[0]);
 //            return bytes;      
         }
 

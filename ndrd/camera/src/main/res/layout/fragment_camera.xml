@@ -10,10 +10,24 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     />
+<ImageView android:id="@+id/imgLarge"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scaleType="center" 
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+/>    
+<ImageView android:id="@+id/imgLarge2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scaleType="centerCrop" 
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+/>    
 <ImageView android:id="@+id/imgThumbnail"
-    android:layout_width="100dp"
-    android:layout_height="100dp"
-    android:scaleType="centerCrop" >
-</ImageView>    
+    android:layout_width="150dp"
+    android:layout_height="150dp"
+    android:scaleType="center" 
+/>
 </LinearLayout>
 

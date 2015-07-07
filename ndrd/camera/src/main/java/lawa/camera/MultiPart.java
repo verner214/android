@@ -22,12 +22,12 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 public class MultiPart {
     private final static String TAG = "MulitiPart";
 
-	public static String PostImage(byte[] image) 
+	public static String PostImage(Form form) 
 	{
 		String result = "resultat";
 		try
 		{
-			Log.d(TAG, "image length=" + image.length);
+			Log.d(TAG, "images length=" + form.imgLarge.length + "," + form.imgThumbnail.length);
 		    HttpClient client = new DefaultHttpClient();
 		    HttpPost post = new HttpPost("http://vernerolapp.azurewebsites.net/new");
 //		    HttpPost post = new HttpPost("http://vernerphoto.azurewebsites.net/upload");
@@ -44,8 +44,8 @@ public class MultiPart {
 //		    entityBuilder.addBinaryBody("fileUploaded", image);
 //formidable ville inte känna till filen förrän contenttype och filnamnet fanns med i body (eller om det var något av dessa som gjorde skilnaden)
 //		    entityBuilder.addBinaryBody("fileUploaded", image, ContentType.create("image/jpeg"), "myfilenme.jpg");
-		    entityBuilder.addBinaryBody("img", image, ContentType.create("image/jpeg"), "myfilenme_img.jpg");
-		    entityBuilder.addBinaryBody("thumb", image, ContentType.create("image/jpeg"), "myfilenme_thumb.jpg");
+		    entityBuilder.addBinaryBody("img", form.imgLarge, ContentType.create("image/jpeg"), "form_imgLarge.jpg");
+		    entityBuilder.addBinaryBody("thumb", form.imgThumbnail, ContentType.create("image/jpeg"), "form_imgThumbnail.jpg");
 		
 		    HttpEntity entity = entityBuilder.build();
 		    post.setEntity(entity);
