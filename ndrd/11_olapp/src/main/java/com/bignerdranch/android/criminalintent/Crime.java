@@ -1,4 +1,4 @@
-package com.bignerdranch.android.criminalintent;
+package lawa.olapp;
 
 import java.util.Date;
 import java.util.UUID;
@@ -7,7 +7,8 @@ public class Crime {
     private UUID mId;
     private String mBeerName;
     private String mBeerStyle;
-    private String mThumbUrl
+    private String mThumbUrl;
+    private String mThumbUrl;
     private Date mDate;
     private boolean mSolved;
 
