@@ -39,6 +39,15 @@ public class BrygdEditFragment extends Fragment {
     ImageView mImgLarge;
     EditText mBeerName;
     EditText mBeerStyle;
+    EditText mEtxOg;
+    EditText mEtxFg;
+    EditText mEtxDescription;
+    EditText mEtxRecipe;
+    EditText mEtxComments;
+    EditText mEtxBrewingDate;
+    EditText mEtxPeople;
+    EditText mEtxPlace;
+    CheckBox mChkHide;
     
     Bitmap mBmpLarge;
     Bitmap mBmpThumbnail;
@@ -79,6 +88,17 @@ public class BrygdEditFragment extends Fragment {
 
         mBeerName = (EditText) v.findViewById(R.id.beername);
         mBeerStyle = (EditText) v.findViewById(R.id.beerstyle);
+        mEtxOg = (EditText) v.findViewById(R.id.etxOg);
+        mEtxFg = (EditText) v.findViewById(R.id.etxFg);
+        mEtxDescription = (EditText) v.findViewById(R.id.etxDescription);
+        mEtxRecipe = (EditText) v.findViewById(R.id.etxRecipe);
+        mEtxComments = (EditText) v.findViewById(R.id.etxComments);
+        mEtxBrewingDate = (EditText) v.findViewById(R.id.etxBrewingDate);
+        mEtxPeople = (EditText) v.findViewById(R.id.etxPeople);
+        mEtxPlace = (EditText) v.findViewById(R.id.etxPlace);
+        
+        mChkHide = (CheckBox)v.findViewById(R.id.chkHide);
+//        mSolvedCheckBox.setChecked(mCrime.isSolved());
         
         Log.d(TAG, "onCreateView lawa");
         

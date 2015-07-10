@@ -49,6 +49,122 @@
     android:layout_marginRight="16dp"
     android:hint="tex. IPA"
     />
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Og"
+    style="?android:listSeparatorTextViewStyle"
+    />
+  <EditText android:id="@+id/etxOg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:hint="1,062"
+    />
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Fg"
+    style="?android:listSeparatorTextViewStyle"
+    />
+  <EditText android:id="@+id/etxFg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:hint="1,015"
+    />
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Omdöme"
+    style="?android:listSeparatorTextViewStyle"
+    />
+  <EditText android:id="@+id/etxDescription"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:hint=""
+    />
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Recept"
+    style="?android:listSeparatorTextViewStyle"
+    />
+  <EditText android:id="@+id/etxRecipe"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:hint=""
+    />
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Kommentarer"
+    style="?android:listSeparatorTextViewStyle"
+    />
+  <EditText android:id="@+id/etxComments"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:hint=""
+    />
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Bryggd när?"
+    style="?android:listSeparatorTextViewStyle"
+    />
+  <EditText android:id="@+id/etxBrewingDate"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:hint="Mars 2015"
+    />
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Bryggd av"
+    style="?android:listSeparatorTextViewStyle"
+    />
+  <EditText android:id="@+id/etxPeople"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:hint=""
+    />
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Bryggort"
+    style="?android:listSeparatorTextViewStyle"
+    />
+  <EditText android:id="@+id/etxPlace"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:hint=""
+    />
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Ta bort ölen"
+    style="?android:listSeparatorTextViewStyle"
+    />
+  <CheckBox android:id="@+id/chkHide"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:enabled="true"
+    android:focusable="true"
+    android:padding="4dp" />
   <Button android:id="@+id/btnSave"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

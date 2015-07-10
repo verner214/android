@@ -17,6 +17,7 @@ public class Brygd {
     private String mComments;
     private String mBrewingDate;
     private String mPeople;
+    private String mPlace;
     private String mPictureGallary;//json-struct med array av {url, bildtext}
 
     public Brygd(String id) {
@@ -118,6 +119,14 @@ public class Brygd {
     
     public void setPeople(String people) {
         mPeople = people;
+    }
+
+    public String getPlace() {
+        return mPlace;
+    }
+    
+    public void setPlace(String place) {
+        mPlace = place;
     }
 
     public String getPictureGallary() {
