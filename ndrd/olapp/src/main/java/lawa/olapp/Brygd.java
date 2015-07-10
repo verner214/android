@@ -1,62 +1,131 @@
 package lawa.olapp;
 
 import java.util.Date;
-import java.util.UUID;
+//import java.util.UUID;
 
-public class Crime {
-    private UUID mId;
+public class Brygd {
+    
+    private String mId;
     private String mBeerName;
     private String mBeerStyle;
     private String mThumbUrl;
-    private String mThumbUrl;
-    private Date mDate;
-    private boolean mSolved;
+    private String mImgUrl;
+    private String mOg;
+    private String mFg;//alkohol räknas ut!
+    private String mDescription;
+    private String mRecipe;
+    private String mComments;
+    private String mBrewingDate;
+    private String mPeople;
+    private String mPictureGallary;//json-struct med array av {url, bildtext}
 
-    public Crime() {
-        mId = UUID.randomUUID();
-        mDate = new Date();
+    public Brygd(String id) {
+        mId = id;
+    }
+
+    public String getId() {
+        return mId;
     }
 
     @Override
     public String toString() {
-        return mTitle;
+        return mBeerName;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public String getBeerName() {
+        return mBeerName;
     }
 
-    public String getMediumURL() {
-        return mMediumURL;
+    public void setBeerName(String beerName) {
+        mBeerName = beerName;
+    }
+
+    public String getBeerStyle() {
+        return mBeerStyle;
     }
     
-    public void setMediumURL(String mediumURL) {
-        mMediumURL = mediumURL;
+    public void setBeerStyle(String beerStyle) {
+        mBeerStyle = beerStyle;
     }
 
-    public void setTitle(String title) {
-        mTitle = title;
+    public String getThumbUrl() {
+        return mThumbUrl;
+    }
+    
+    public void setThumbUrl(String thumbUrl) {
+        mThumbUrl = thumbUrl;
     }
 
-    public UUID getId() {
-        return mId;
+    public String getImgUrl() {
+        return mImgUrl;
+    }
+    
+    public void setImgUrl(String imgUrl) {
+        mImgUrl = imgUrl;
     }
 
-    public boolean isSolved() {
-        return mSolved;
+    public String getOg() {
+        return mOg;
+    }
+    
+    public void setOg(String og) {
+        mOg = og;
     }
 
-    public void setSolved(boolean solved) {
-        mSolved = solved;
+    public String getFg() {
+        return mFg;
+    }
+    
+    public void setFg(String fg) {
+        mFg = fg;
     }
 
-    public Date getDate() {
-        return mDate;
+    public String getDescription() {
+        return mDescription;
+    }
+    
+    public void setDescription(String description) {
+        mDescription = description;
     }
 
-    public void setDate(Date date) {
-        mDate = date;
+    public String getRecipe() {
+        return mRecipe;
+    }
+    
+    public void setRecipe(String recipe) {
+        mRecipe = recipe;
     }
 
+    public String getComments() {
+        return mComments;
+    }
+    
+    public void setComments(String comments) {
+        mComments = comments;
+    }
+
+    public String getBrewingDate() {
+        return mBrewingDate;
+    }
+    
+    public void setBrewingDate(String brewingDate) {
+        mBrewingDate = brewingDate;
+    }
+
+    public String getPeople() {
+        return mPeople;
+    }
+    
+    public void setPeople(String people) {
+        mPeople = people;
+    }
+
+    public String getPictureGallary() {
+        return mPictureGallary;
+    }
+    
+    public void setPictureGallary(String pictureGallary) {
+        mPictureGallary = pictureGallary;
+    }
 
 }

@@ -1,2 +1,2 @@
-adb uninstall com.bignerdranch.android.criminalintent
+adb uninstall lawa.olapp
 

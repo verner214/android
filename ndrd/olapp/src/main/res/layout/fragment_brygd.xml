@@ -4,42 +4,18 @@
   android:layout_height="wrap_content"
   android:orientation="vertical"
   >
-  <TextView
+<ImageView android:id="@+id/img"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/crime_title_label"
-    style="?android:listSeparatorTextViewStyle"
-    />
-  <EditText android:id="@+id/crime_title"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:hint="@string/crime_title_hint"
-    />
-  <TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/crime_details_label"
-    style="?android:listSeparatorTextViewStyle"
-    />
-  <Button android:id="@+id/crime_date"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    />
-  <CheckBox android:id="@+id/crime_solved"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:text="@string/crime_solved_label"
-    />
-<ImageView android:id="@+id/medium_item_imageView"
-    android:layout_width="400dp"
-    android:layout_height="400dp"
-    android:scaleType="centerCrop" >
+    android:scaleType="center" >
 </ImageView>    
+  <TextView android:id="@+id/beername"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    />
+  <TextView android:id="@+id/beerstyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    />
 </LinearLayout>
 

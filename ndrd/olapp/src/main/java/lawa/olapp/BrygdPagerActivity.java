@@ -1,4 +1,4 @@
-package com.bignerdranch.android.criminalintent;
+package lawa.olapp;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -12,7 +12,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import android.support.v4.view.ViewPager;
 
-public class CrimePagerActivity extends FragmentActivity {
+public class BrygdPagerActivity extends FragmentActivity {
     ViewPager mViewPager;
 
     @Override
@@ -23,24 +23,24 @@ public class CrimePagerActivity extends FragmentActivity {
         mViewPager.setId(R.id.viewPager);
         setContentView(mViewPager);
 
-        final ArrayList<Crime> crimes = CrimeLab.get(this).getCrimes();
+        final ArrayList<Brygd> brygds = BrygdLab.get(this).getBrygds();
 
         FragmentManager fm = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
             @Override
             public int getCount() {
-                return crimes.size();
+                return brygds.size();
             }
             @Override
             public Fragment getItem(int pos) {
-                UUID crimeId =  crimes.get(pos).getId();
-                return CrimeFragment.newInstance(crimeId);
+                String brygdId =  brygds.get(pos).getId();
+                return BrygdFragment.newInstance(brygdId);
             }
         }); 
 
-        UUID crimeId = (UUID)getIntent().getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
-        for (int i = 0; i < crimes.size(); i++) {
-            if (crimes.get(i).getId().equals(crimeId)) {
+        String brygdId = (String)getIntent().getSerializableExtra(BrygdFragment.EXTRA_BRYGD_ID);
+        for (int i = 0; i < brygds.size(); i++) {
+            if (brygds.get(i).getId().equals(brygdId)) {
                 mViewPager.setCurrentItem(i);
                 break;
             } 

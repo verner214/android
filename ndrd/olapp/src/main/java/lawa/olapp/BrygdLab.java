@@ -1,52 +1,45 @@
-package com.bignerdranch.android.criminalintent;
+package lawa.olapp;
 
 import java.util.ArrayList;
-import java.util.UUID;
+//import java.util.UUID;
 
 import android.content.Context;
 
-public class CrimeLab {
-    private ArrayList<Crime> mCrimes;
+public class BrygdLab {
+    private ArrayList<Brygd> mBrygds;
 
-    private static CrimeLab sCrimeLab;
+    private static BrygdLab sBrygdLab;
     private Context mAppContext;
 
-    private CrimeLab(Context appContext) {
+    private BrygdLab(Context appContext) {
         mAppContext = appContext;
-        mCrimes = new ArrayList<Crime>();
-        for (int i = 0; i < 100; i++) {
-            Crime c = new Crime();
-            c.setTitle("Crime #" + i);
-            c.setSolved(i % 2 == 0); // every other one
-            mCrimes.add(c);
-        }
     }
 
-    public static CrimeLab get(Context c) {
-        if (sCrimeLab == null) {
-            sCrimeLab = new CrimeLab(c.getApplicationContext());
+    public static BrygdLab get(Context c) {
+        if (sBrygdLab == null) {
+            sBrygdLab = new BrygdLab(c.getApplicationContext());
         }
-        return sCrimeLab;
+        return sBrygdLab;
     }
 
-    public Crime getCrime(UUID id) {
-        for (Crime c : mCrimes) {
+    public Brygd getBrygd(String id) {
+        for (Brygd c : mBrygds) {
             if (c.getId().equals(id))
                 return c;
         }
         return null;
     }
     
-    public ArrayList<Crime> getCrimes() {
-        return mCrimes;
+    public ArrayList<Brygd> getBrygds() {
+        return mBrygds;
     }
     
-    private void setCrimesInstance(ArrayList<Crime> crimes) {
-        mCrimes = crimes;
+    private void setBrygdsInstance(ArrayList<Brygd> brygds) {
+        mBrygds = brygds;
     }
     //exception om den anropas innan get.
-    public static void setCrimes(ArrayList<Crime> crimes) {
-        sCrimeLab.setCrimesInstance(crimes);
+    public static void setBrygds(ArrayList<Brygd> brygds) {
+        sBrygdLab.setBrygdsInstance(brygds);
     }
 }
 

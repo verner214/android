@@ -1,11 +1,11 @@
-package com.bignerdranch.android.criminalintent;
+package lawa.olapp;
 
 import android.support.v4.app.Fragment;
 
-public class CrimeListActivity extends SingleFragmentActivity {
+public class BrygdListActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new CrimeListFragment();
+        return new BrygdListFragment();
     }
 }

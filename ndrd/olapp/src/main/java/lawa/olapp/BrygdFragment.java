@@ -1,4 +1,4 @@
-package com.bignerdranch.android.criminalintent;
+package lawa.olapp;
 
 import java.util.UUID;
 import java.io.IOException;
@@ -18,25 +18,26 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-public class CrimeFragment extends Fragment {
-    public static final String EXTRA_CRIME_ID = "criminalintent.CRIME_ID";
-    private final static String TAG = "CrimeFragment";
+public class BrygdFragment extends Fragment {
+    public static final String EXTRA_BRYGD_ID = "olapp.BRYGD_ID";
+    private final static String TAG = "BrygdFragment";
 
-    Crime mCrime;
-    EditText mTitleField;
-    Button mDateButton;
-    CheckBox mSolvedCheckBox;
-    ImageView mImageView;
+    Brygd mBrygd;
+    TextView mBeerName;
+    TextView mBeerStyle;
+    ImageView mImg;
     
-    public static CrimeFragment newInstance(UUID crimeId) {
+    //ta reda på: varför kan man inte sätta mBrygd här?
+    public static BrygdFragment newInstance(String brygdId) {
         Bundle args = new Bundle();
-        args.putSerializable(EXTRA_CRIME_ID, crimeId);
+        args.putSerializable(EXTRA_BRYGD_ID, brygdId);
 
-        CrimeFragment fragment = new CrimeFragment();
+        BrygdFragment fragment = new BrygdFragment();
         fragment.setArguments(args);
 
         return fragment;
@@ -46,50 +47,26 @@ public class CrimeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UUID crimeId = (UUID)getArguments().getSerializable(EXTRA_CRIME_ID);
-        mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+        String brygdId = (String) getArguments().getSerializable(EXTRA_BRYGD_ID);
+        mBrygd = BrygdLab.get(getActivity()).getBrygd(brygdId);
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_crime, parent, false);
+        View v = inflater.inflate(R.layout.fragment_brygd, parent, false);
         
-        mTitleField = (EditText)v.findViewById(R.id.crime_title);
-        mTitleField.setText(mCrime.getTitle());
-        mTitleField.addTextChangedListener(new TextWatcher() {
-            public void onTextChanged(CharSequence c, int start, int before, int count) {
-                mCrime.setTitle(c.toString());
-            }
-
-            public void beforeTextChanged(CharSequence c, int start, int count, int after) {
-                // this space intentionally left blank
-            }
-
-            public void afterTextChanged(Editable c) {
-                // this one too
-            }
-        });
+        mBeerName = (TextView)v.findViewById(R.id.beername);
+        mBeerName.setText(mBrygd.getBeerName());
         
-        mDateButton = (Button)v.findViewById(R.id.crime_date);
-        mDateButton.setText(mCrime.getDate().toString());
-        mDateButton.setEnabled(false);
-
-        mSolvedCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
-        mSolvedCheckBox.setChecked(mCrime.isSolved());
-        mSolvedCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // set the crime's solved property
-                mCrime.setSolved(isChecked);
-            }
-        });
-                
-        mImageView = (ImageView) v.findViewById(R.id.medium_item_imageView);
-        mImageView.setImageResource(R.drawable.no_photo);
-        if (mCrime.getMediumURL() != null) {        
-            new FetchItemsTask().execute(mCrime.getMediumURL());
+        mBeerStyle = (TextView)v.findViewById(R.id.beerstyle);
+        mBeerStyle.setText(mBrygd.getBeerStyle());
+                        
+        mImg = (ImageView) v.findViewById(R.id.img);
+        mImg.setImageResource(R.drawable.no_photo);
+        if (mBrygd.getImgUrl() != null) {        
+            new FetchItemsTask().execute(mBrygd.getImgUrl());
         }
-        //mThumbnailThread.queueThumbnail(imageView, c.getTitle());
         
         return v; 
     }
@@ -110,7 +87,7 @@ public class CrimeFragment extends Fragment {
         protected void onPostExecute(byte[] bitmapBytes) {
             final Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
             if (isVisible()) {
-                mImageView.setImageBitmap(bitmap);
+                mImg.setImageBitmap(bitmap);
             }
         }
     }

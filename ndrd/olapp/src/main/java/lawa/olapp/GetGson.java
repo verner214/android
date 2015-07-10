@@ -1,5 +1,5 @@
 //2do: konsolidera http-kontakten
-package com.bignerdranch.android.criminalintent;
+package lawa.olapp;
 
 import com.google.gson.Gson;
 
@@ -23,7 +23,8 @@ import android.util.Log;
 //nu försök med json som tidiagare hämtats från azure
 
 public class GetGson {
-
+    private final String TAG = "GetGson";
+//public för att den används av thumbnaildownloader och i asynctask. hör kanske hemma i annan klass.
     public static byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -47,20 +48,24 @@ public class GetGson {
             connection.disconnect();
         }
     }
-
+/*
 	private class Item {
-		private String thumbURL;
+        private Brygd mBrygd;
+        
+		private String thumbUrl;
 		private String imgURL;
 		private String beerName;
 		private String beerStyle;
 		
-		private Item() {}
+		private Item() {}//försök ta bort den här
 		
-		public Item(String thumbURL, String imgURL, String beerName, String beerStyle) {
-			this.thumbURL = thumbURL;
-			this.imgURL = imgURL;
-            this.beerName = beerName;
-            this.beerStyle = beerStyle;
+		public Item(String RowKey, String thumbURL, String imgURL, String beerName, String beerStyle) {
+            Log.d(TAG,  "rowkey = " + RowKey);
+            mBrygd = new Brygd(RowKey);
+            mBrygd.setThumbUrl(thumbURL);
+            mBrygd.setImgUrl(imgURL);
+            mBrygd.setBeerName(beerName);
+            mBrygd.setBeerStyle(beerStyle);
 		}
 		
 		@Override
@@ -68,6 +73,7 @@ public class GetGson {
 			return thumbURL + "\n" + imgURL + "\n" + beerName + "\n" + beerStyle + "\n";
 		}
 		
+
 		public String getThumbURL() {
 			return thumbURL;
 		}
@@ -83,8 +89,51 @@ public class GetGson {
 		public String getBeerStyle() {
 			return beerStyle;
 		}
+        
+        public Brygd getBrygd() {
+            return mBrygd;
+        }
 	}
+*/
+	private class Item {
+		private String RowKey;
+		private String thumbURL;
+		private String imgURL;
+		private String beerName;
+		private String beerStyle;
+		
+		private Item() {}//försök ta bort den här?
+		
+		public Item(String RowKey, String beerName, String beerStyle, String imgURL, String thumbURL) {
+            this.RowKey = RowKey;
+            this.thumbURL = thumbURL;
+            this.imgURL = imgURL;
+            this.beerName = beerName;
+            this.beerStyle = beerStyle;
+        }
+        
+		public String getRowKey() {
+			return RowKey;
+		}
+        
+		public String getThumbURL() {
+			return thumbURL;
+		}
 
+		public String getImgURL() {
+			return imgURL;
+		}
+
+		public String getBeerName() {
+			return beerName;
+		}
+
+		public String getBeerStyle() {
+			return beerStyle;
+		}
+        
+    }
+    
 	private class PClass {
 	    private Item[] value;
 	 
@@ -111,6 +160,7 @@ public class GetGson {
 		}
 	}
 	
+    //beöver den verkligen vara public?
     public String GET(String url){
         InputStream inputStream = null;
         String result = "";
@@ -149,9 +199,9 @@ public class GetGson {
  
     }
  
-	public ArrayList<Crime> fetchItems() {
+	public ArrayList<Brygd> fetchItems() {
 //        System.setProperty("javax.net.ssl.trustStore","C:/own/java/javax86/jdk1.7.0_79/jre/lib/security/cacerts");
-        String json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblolapp?st=2015-07-03T09%3A30%3A27Z&se=2034-07-07T21%3A50%3A27Z&sp=r&sv=2014-02-14&tn=tblolapp&sig=vaJqvHQqnZ6iVyp8k6EucjVmF4tRkEPHTAy4q2IVkVM%3D",
+        String json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblolapp?st=2015-07-03T09%3A30%3A27Z&se=2034-07-07T21%3A50%3A27Z&sp=r&sv=2014-02-14&tn=tblolapp&sig=vaJqvHQqnZ6iVyp8k6EucjVmF4tRkEPHTAy4q2IVkVM%3D");
 //		String json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/photos?st=2015-04-02T09%3A13%3A00Z&se=2017-02-24T21%3A33%3A00Z&sp=r&sv=2014-02-14&tn=photos&sig=f8Eo%2FmE3SxQE1TstvG5memvKfmTxyMszMTOa27AQ0WQ%3D");
 					
 		Gson gson = new Gson();
@@ -166,17 +216,23 @@ public class GetGson {
 		PClass johnDoe = gson.fromJson(json, PClass.class);
 		//System.out.println(johnDoe.toString());
 		
-        ArrayList<Crime> crimes = new ArrayList<Crime>();
-		
+        ArrayList<Brygd> brygds = new ArrayList<Brygd>();
+	
 		for (Item i : johnDoe.getItems()) {
-            Crime c = new Crime();
-            c.setTitle(i.getThumbURL());
-//            c.setTitle("url=gris");
-            c.setSolved(i.getMediumURL() != null);
-            c.setMediumURL(i.getMediumURL());
-            crimes.add(c);
+            Brygd c = new Brygd(i.getRowKey());
+            Log.d(TAG,  "roWkey = " + i.getRowKey());
+            c.setBeerName(i.getBeerName());
+            Log.d(TAG,  "name = " + i.getBeerName());
+            c.setBeerStyle(i.getBeerStyle());
+            Log.d(TAG,  "style = " + i.getBeerStyle());
+            c.setThumbUrl(i.getThumbURL());            
+            Log.d(TAG,  "thumb = " + i.getThumbURL());
+            c.setImgUrl(i.getImgURL());            
+            Log.d(TAG,  "img = " + i.getImgURL());
+            brygds.add(c);
+            Log.d(TAG,  "brygd = " + c);
 		}
 		
-		return crimes;
+		return brygds;
 	}
 }
