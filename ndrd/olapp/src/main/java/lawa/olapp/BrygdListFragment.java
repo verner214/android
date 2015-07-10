@@ -27,6 +27,7 @@ import android.util.Log;
 
 public class BrygdListFragment extends ListFragment {
     private final static String TAG = "BrygdListFragment";
+    private final static int ADD_BEER = 1;
     private ArrayList<Brygd> mBrygds;
     ThumbnailDownloader<ImageView> mThumbnailThread;
 
@@ -66,6 +67,7 @@ public class BrygdListFragment extends ListFragment {
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//            if (requestCode == ADD_BEER && resultCode == Activity.RESULT_OK) {
         ((BrygdAdapter)getListAdapter()).notifyDataSetChanged();
     }
 
@@ -102,13 +104,11 @@ public class BrygdListFragment extends ListFragment {
             
             case R.id.menu_item_new_brygd:
             Log.d(TAG, "menu_item_new_brygd");
-/*
-                Crime crime = new Crime();
-                CrimeLab.get(getActivity()).addCrime(crime);
-                Intent i = new Intent(getActivity(), CrimeActivity.class);
-                i.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getId());
-                startActivityForResult(i, 0);
-*/                
+
+                Intent i = new Intent(getActivity(), BrygdEditActivity.class);
+//                i.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getId());
+                startActivityForResult(i, ADD_BEER);
+                
                 return true;
                 
             default:
