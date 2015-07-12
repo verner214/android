@@ -33,6 +33,9 @@ public class BrygdEditFragment extends Fragment {
     private final static String TAG = "BrygdEditFragment";
     static final int REQUEST_IMAGE_GET = 1;
 
+//vid edit hämtas mBrygd via Bundle. vid new skapas den här
+    Brygd mBrygd; 
+
     Button mBtnSelectPhoto;
     Button mBtnSave;
     ImageView mImgThumbnail;
@@ -172,10 +175,25 @@ public class BrygdEditFragment extends Fragment {
     }//onActivityResult
 
     private void saveForm() {
-//skapa jpg och skicka till azure
-        Form form = new Form();
-        form.imgLarge = ImageLibrary.Bmp2Jpg(mBmpLarge, 90);
-        form.imgThumbnail = ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90);
+//vid new brygd skapa Brygd-instance 
+        if (mBrygd == null) {
+            mBrygd = new Brygd(null);//brygd utan id  betyder new Brygd
+        }
+//populera mBrygd        
+        mBrygd.setBeerName(mBeerName.getText().toString());
+        mBrygd.setBeerStyle(mBeerStyle.getText().toString());
+        mBrygd.setOg(mEtxOg.getText().toString());
+        mBrygd.setFg(mEtxFg.getText().toString());
+        mBrygd.setDescription(mEtxDescription.getText().toString());
+        mBrygd.setRecipe(mExtRecipe.getText().toString());
+        mBrygd.setComments(mExtComments.getText().toString());
+        mBrygd.setBrewingDate(mEtxBrewingDate.getText().toString());
+        mBrygd.setPeople(mEtxPeople.getText().toString());
+        mBrygd.setPlace(mEtxPlace.getText().toString());
+
+        Form form = new Form(mBrygd, ImageLibrary.Bmp2Jpg(mBmpLarge, 90), ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90));
+//        form.imgLarge = ImageLibrary.Bmp2Jpg(mBmpLarge, 90);
+//        form.imgThumbnail = ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90);
         new FetchItemsTask().execute(form);        
     }
 

@@ -27,7 +27,7 @@ public class MultiPart {
 		String result = "resultat";
 		try
 		{
-			Log.d(TAG, "images length=" + form.imgLarge.length + "," + form.imgThumbnail.length);
+			Log.d(TAG, "images length=" + form.getImgLarge().length + "," + form.getImgThumbnail().length);
 		    HttpClient client = new DefaultHttpClient();
 		    HttpPost post = new HttpPost("http://vernerolapp.azurewebsites.net/new");
 //		    HttpPost post = new HttpPost("http://vernerphoto.azurewebsites.net/upload");
@@ -44,8 +44,20 @@ public class MultiPart {
 //		    entityBuilder.addBinaryBody("fileUploaded", image);
 //formidable ville inte känna till filen förrän contenttype och filnamnet fanns med i body (eller om det var något av dessa som gjorde skilnaden)
 //		    entityBuilder.addBinaryBody("fileUploaded", image, ContentType.create("image/jpeg"), "myfilenme.jpg");
-		    entityBuilder.addBinaryBody("img", form.imgLarge, ContentType.create("image/jpeg"), "form_imgLarge.jpg");
-		    entityBuilder.addBinaryBody("thumb", form.imgThumbnail, ContentType.create("image/jpeg"), "form_imgThumbnail.jpg");
+		    entityBuilder.addBinaryBody("img", form.getImgLarge(), ContentType.create("image/jpeg"), "form_imgLarge.jpg");
+		    entityBuilder.addBinaryBody("thumb", form.getImgThumbnail(), ContentType.create("image/jpeg"), "form_imgThumbnail.jpg");
+		
+			Brygd b = form.getBrygd();
+			addTextBody("beerName", b.getBeerName());		
+			addTextBody("beerStyle", b.getBeerStyle());		
+			addTextBody("og", b.getOg());		
+			addTextBody("fg", b.getFg());		
+			addTextBody("description", b.getDescription());		
+			addTextBody("recipe", b.getRecipe());		
+			addTextBody("comments", b.getComments());		
+			addTextBody("brewingDate", b.getBrewingDate());		
+			addTextBody("people", b.getPeople());		
+			addTextBody("place", b.getPlace());		
 		
 		    HttpEntity entity = entityBuilder.build();
 		    post.setEntity(entity);
