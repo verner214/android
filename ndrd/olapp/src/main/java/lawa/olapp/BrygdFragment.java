@@ -2,7 +2,9 @@ package lawa.olapp;
 
 import java.util.UUID;
 import java.io.IOException;
+import java.util.ArrayList;
 
+import android.content.Intent;
 import android.annotation.TargetApi;
 import android.os.Bundle;
 import android.os.AsyncTask;
@@ -12,6 +14,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -19,13 +24,18 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.app.Activity;
 
 public class BrygdFragment extends Fragment {
+    OnBrygdsUpdatedListener mCallback;
+
     public static final String EXTRA_BRYGD_ID = "olapp.BRYGD_ID";
     private final static String TAG = "BrygdFragment";
+    private final static int EDIT_BEER = 1;
 
     Brygd mBrygd;
     TextView mBeerName;
@@ -43,13 +53,31 @@ public class BrygdFragment extends Fragment {
         return fragment;
     }
 
+    // Container Activity must implement this interface
+    public interface OnBrygdsUpdatedListener {
+        public void updatePager();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnBrygdsUpdatedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnBrygdsUpdatedListener");
+        }
+    }
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         String brygdId = (String) getArguments().getSerializable(EXTRA_BRYGD_ID);
         mBrygd = BrygdLab.get(getActivity()).getBrygd(brygdId);
-
     }
 
     @Override
@@ -57,7 +85,20 @@ public class BrygdFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_brygd, parent, false);
         
         mBeerName = (TextView)v.findViewById(R.id.beername);
-        mBeerName.setText(mBrygd.getBeerName());
+        mBeerName.setText(
+            mBrygd.getBeerName() + "\n" + 
+            mBrygd.getBeerStyle() + "\n" + 
+            mBrygd.getOg() + "\n" + 
+            mBrygd.getFg() + "\n" + 
+            mBrygd.getDescription() + "\n" + 
+            mBrygd.getRecipe() + "\n" + 
+            mBrygd.getComments() + "\n" + 
+            mBrygd.getBrewingDate() + "\n" + 
+            mBrygd.getPlace() + "\n" + 
+            mBrygd.getPeople() + "\n" + 
+            mBrygd.getHide() + "\n" + 
+            mBrygd.getPictureGallary() + "\n" + 
+            "");
         
         mBeerStyle = (TextView)v.findViewById(R.id.beerstyle);
         mBeerStyle.setText(mBrygd.getBeerStyle());
@@ -70,6 +111,58 @@ public class BrygdFragment extends Fragment {
         
         return v; 
     }
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_brygd, menu);
+        Log.d(TAG, "onCreateOptionsMenu");
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            
+            case R.id.menu_item_edit_brygd:
+                Log.d(TAG, "menu_item_edit_brygd");
+    
+                Intent i = new Intent(getActivity(), BrygdEditActivity.class);
+                i.putExtra(BrygdFragment.EXTRA_BRYGD_ID, mBrygd.getId());
+                startActivityForResult(i, EDIT_BEER);                
+                return true;
+                
+            default:
+                return super.onOptionsItemSelected(item);
+        } 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        new FetchBrygdsTask().execute();
+    }
+
+    private class FetchBrygdsTask extends AsyncTask<Void,Void,ArrayList<Brygd>> {
+        @Override
+        protected ArrayList<Brygd> doInBackground(Void... params) {
+            return new GetGson().fetchItems();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Brygd> brygds) {
+            Log.d(TAG, "onPostExecute, brygds.length = " + brygds.size());
+		    BrygdLab.setBrygds(brygds);
+            mCallback.updatePager();
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), "Brygden uppdaterad.", Toast.LENGTH_LONG).show();
+            }
+/*            
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), "Öllistan uppdaterad.", Toast.LENGTH_LONG).show();
+            }
+*/            
+        }
+    }
+
     
     private class FetchItemsTask extends AsyncTask<String,Void,byte[]> {
         @Override

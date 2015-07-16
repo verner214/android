@@ -22,7 +22,9 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.util.Log;
+import android.app.Activity;
 
 
 public class BrygdListFragment extends ListFragment {
@@ -69,6 +71,12 @@ public class BrygdListFragment extends ListFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //            if (requestCode == ADD_BEER && resultCode == Activity.RESULT_OK) {
         ((BrygdAdapter)getListAdapter()).notifyDataSetChanged();
+        //Activity.RESULT_FIRST_USER är om brygd har sparats.
+        //Toast.makeText(getActivity(), "onActivityResult" + requestCode + "," + resultCode + "," + data, Toast.LENGTH_LONG).show();
+//om ny brygd har sparats.
+        if (resultCode == Activity.RESULT_FIRST_USER) {
+            new FetchItemsTask().execute();
+        }
     }
 
     private class FetchItemsTask extends AsyncTask<Void,Void,ArrayList<Brygd>> {
@@ -80,14 +88,17 @@ public class BrygdListFragment extends ListFragment {
         @Override
         protected void onPostExecute(ArrayList<Brygd> brygds) {
             //try {Thread.sleep(5000);} catch (InterruptedException e) {}
-            Log.d(TAG, "NU ÄR VI I onPostExecute_________________________________________________________________");
-            Log.d(TAG, "brygds.length = " + brygds.size());
+            Log.d(TAG, "onPostExecute, brygds.length = " + brygds.size());
             mBrygds = brygds;
             BrygdAdapter adapter = new BrygdAdapter(mBrygds);
             setListAdapter(adapter);
-            Log.d(TAG, "nu är adaptern satt");
-            Log.d(TAG, "onPost... getCount = " + adapter.getCount());
+            Log.d(TAG, "onPostExecute, nu är adaptern satt, getCount = " + adapter.getCount());
 		    BrygdLab.setBrygds(brygds);
+/*            
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), "Öllistan uppdaterad.", Toast.LENGTH_LONG).show();
+            }
+*/            
         }
     }
 

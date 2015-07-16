@@ -26,6 +26,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.widget.Toast;
 import android.net.Uri;
 
@@ -54,6 +55,9 @@ public class BrygdEditFragment extends Fragment {
     
     Bitmap mBmpLarge;
     Bitmap mBmpThumbnail;
+    
+    boolean mEdit = false;
+    ProgressDialog progress;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -175,6 +179,10 @@ public class BrygdEditFragment extends Fragment {
     }//onActivityResult
 
     private void saveForm() {
+// Note: declare ProgressDialog progress as a field in your class.
+
+        progress = ProgressDialog.show(getActivity(), "Brygd sparas", "vänta...", true);
+          
 //vid new brygd skapa Brygd-instance 
         if (mBrygd == null) {
             mBrygd = new Brygd(null);//brygd utan id  betyder new Brygd
@@ -185,32 +193,62 @@ public class BrygdEditFragment extends Fragment {
         mBrygd.setOg(mEtxOg.getText().toString());
         mBrygd.setFg(mEtxFg.getText().toString());
         mBrygd.setDescription(mEtxDescription.getText().toString());
-        mBrygd.setRecipe(mExtRecipe.getText().toString());
-        mBrygd.setComments(mExtComments.getText().toString());
+        mBrygd.setRecipe(mEtxRecipe.getText().toString());
+        mBrygd.setComments(mEtxComments.getText().toString());
         mBrygd.setBrewingDate(mEtxBrewingDate.getText().toString());
         mBrygd.setPeople(mEtxPeople.getText().toString());
         mBrygd.setPlace(mEtxPlace.getText().toString());
+        mBrygd.setHide(mChkHide.isChecked());
+//ide' låt hide visas för inloggade dvs admins
 
         Form form = new Form(mBrygd, ImageLibrary.Bmp2Jpg(mBmpLarge, 90), ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90));
 //        form.imgLarge = ImageLibrary.Bmp2Jpg(mBmpLarge, 90);
 //        form.imgThumbnail = ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90);
-        new FetchItemsTask().execute(form);        
+        new PostFormTask().execute(form);        
     }
 
-    private class FetchItemsTask extends AsyncTask<Form,Void,String> {
+    private class PostFormTask extends AsyncTask<Form,Void,String> {
         @Override
         protected String doInBackground(Form... forms) {
-            return MultiPart.PostImage(forms[0]);
+            return MultiPart.PostForm(forms[0]);
 //            return bytes;      
         }
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getActivity(), "result från Multipart = " + result, Toast.LENGTH_LONG).show();
-        }
-        
-    }
+//ta bort busy dialog om den syns
+            if (getActivity() != null) {
+                progress.dismiss();
+                if (result != null) {
+                    Toast.makeText(getActivity(), "Något gick fel...\n " + result, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                             
+//lägg till villkor att vid edit så ska det inte göras finish
+//setResult som visar för anropande aktivitet/fragment att data behöver läsas in på nytt. 
+//listan ska vid lyckad save (dvs result=null) hämta ny lista, uppdatera BrygdLab och setAdapter, kanske visa toast som tv.nu
 
-}//class CameraFragment
+//todo sen
+//edit: här: läsa in värden som vid BrygdFragment i onCreate / onCreateView.
+//edit: onActivityResult: anropa aktivity, dvs pager, via listener registrerad i onAttach.
+//detta anrop gör fetchitems async och setAdapter och currentItem.
+//sen: visa endast icke-hide.
+//spara alla thumbnails i listan som bmp i minnet.
+//gör fin gui.
+//--version 0.1
+//lru-cahce och disk cache.
+//picture gallary 
+                if (!mEdit) {
+                    //Intent resultIntent = new Intent();
+                    //getActivity().setResult(Activity.RESULT_OK, resultIntent);
+                    getActivity().setResult(Activity.RESULT_FIRST_USER);                    
+                    getActivity().finish();
+                }
+            }//if (getActivity() != null) {
+        }//onPostExecute
+        
+    }//FetchItemsTask
+
+}//class BrygdEditFragment
 
 

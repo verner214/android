@@ -22,9 +22,9 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 public class MultiPart {
     private final static String TAG = "MulitiPart";
 
-	public static String PostImage(Form form) 
+	public static String PostForm(Form form) 
 	{
-		String result = "resultat";
+		String errormsg = null;
 		try
 		{
 			Log.d(TAG, "images length=" + form.getImgLarge().length + "," + form.getImgThumbnail().length);
@@ -48,31 +48,34 @@ public class MultiPart {
 		    entityBuilder.addBinaryBody("thumb", form.getImgThumbnail(), ContentType.create("image/jpeg"), "form_imgThumbnail.jpg");
 		
 			Brygd b = form.getBrygd();
-			addTextBody("beerName", b.getBeerName());		
-			addTextBody("beerStyle", b.getBeerStyle());		
-			addTextBody("og", b.getOg());		
-			addTextBody("fg", b.getFg());		
-			addTextBody("description", b.getDescription());		
-			addTextBody("recipe", b.getRecipe());		
-			addTextBody("comments", b.getComments());		
-			addTextBody("brewingDate", b.getBrewingDate());		
-			addTextBody("people", b.getPeople());		
-			addTextBody("place", b.getPlace());		
+			entityBuilder.addTextBody("beerName", b.getBeerName());		
+			entityBuilder.addTextBody("beerStyle", b.getBeerStyle());		
+			entityBuilder.addTextBody("og", b.getOg());		
+			entityBuilder.addTextBody("fg", b.getFg());		
+			entityBuilder.addTextBody("description", b.getDescription());		
+			entityBuilder.addTextBody("recipe", b.getRecipe());		
+			entityBuilder.addTextBody("comments", b.getComments());		
+			entityBuilder.addTextBody("brewingDate", b.getBrewingDate());		
+			entityBuilder.addTextBody("people", b.getPeople());		
+			entityBuilder.addTextBody("place", b.getPlace());		
+			entityBuilder.addTextBody("hide", b.getHide() ? "true" : "false");		
+//lägg till hide-checkbox här
 		
 		    HttpEntity entity = entityBuilder.build();
 		    post.setEntity(entity);
 		    HttpResponse response = client.execute(post);
 		    HttpEntity httpEntity = response.getEntity();
-		    result = EntityUtils.toString(httpEntity);
+		    String postResult = EntityUtils.toString(httpEntity);
            // Toast.makeText(context, "multipart result=" + result, Toast.LENGTH_SHORT).show();
-		    Log.d(TAG, "result2bilder=" + result);
+		    Log.d(TAG, "result from post:" + postResult);
 		}
 		catch (Exception e)
 		{
             //Toast.makeText(context, "exception=" + e.toString(), Toast.LENGTH_LONG).show();
+			errormsg = "Error uploading form, " + e.toString();
             Log.e(TAG, "Error uploading image", e);
-            Log.e(TAG, "Error uploading image" + e.toString(), e);
+            Log.e(TAG, errormsg, e);
 		}
-		return result;
+		return errormsg;
 	}//postImage
 }

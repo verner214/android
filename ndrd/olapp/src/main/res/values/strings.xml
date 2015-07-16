@@ -9,5 +9,6 @@
   <string name="date_picker_title">Date of crime:</string>
   <string name="brygds_title">Öl</string>
   <string name="new_brygd">Ny öl</string>
+  <string name="edit_brygd">Ändra</string>
 
 </resources>

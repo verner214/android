@@ -101,15 +101,50 @@ public class GetGson {
 		private String imgURL;
 		private String beerName;
 		private String beerStyle;
+        private String og;
+        private String fg;
+        private String description;
+        private String recipe;
+        private String comments;
+        private String brewingDate;
+        private String people;
+        private String place;
+        private String pictureGallary;
+        private String hide;
 		
 		private Item() {}//försök ta bort den här?
 		
-		public Item(String RowKey, String beerName, String beerStyle, String imgURL, String thumbURL) {
+		public Item(String RowKey, 
+            String beerName, 
+            String beerStyle, 
+            String imgURL, 
+            String thumbURL,
+            String og,            
+            String fg,
+            String description,
+            String recipe,
+            String comments,
+            String brewingDate,
+            String people,
+            String place,
+            String pictureGallary,
+            String hide) 
+        {
             this.RowKey = RowKey;
             this.thumbURL = thumbURL;
             this.imgURL = imgURL;
             this.beerName = beerName;
             this.beerStyle = beerStyle;
+            this.og = og;
+            this.fg = fg;
+            this.description = description;
+            this.recipe = recipe;
+            this.comments = comments;
+            this.brewingDate = brewingDate;
+            this.people = people;            
+            this.place = place;            
+            this.pictureGallary = pictureGallary;            
+            this.hide = hide;            
         }
         
 		public String getRowKey() {
@@ -132,6 +167,45 @@ public class GetGson {
 			return beerStyle;
 		}
         
+		public String getOg() {
+			return og;
+		}
+
+		public String getFg() {
+			return fg;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public String getRecipe() {
+			return recipe;
+		}
+
+		public String getComments() {
+			return comments;
+		}
+
+		public String getBrewingDate() {
+			return brewingDate;
+		}
+
+		public String getPeople() {
+			return people;
+		}
+
+		public String getPlace() {
+			return place;
+		}
+
+		public String getPictureGallary() {
+			return pictureGallary;
+		}
+
+		public String getHide() {
+			return hide;
+		}
     }
     
 	private class PClass {
@@ -229,6 +303,18 @@ public class GetGson {
             Log.d(TAG,  "thumb = " + i.getThumbURL());
             c.setImgUrl(i.getImgURL());            
             Log.d(TAG,  "img = " + i.getImgURL());
+            
+            c.setOg(i.getOg());
+            c.setFg(i.getFg());
+            c.setDescription(i.getDescription());
+            c.setRecipe(i.getRecipe());
+            c.setComments(i.getComments());
+            c.setBrewingDate(i.getBrewingDate());
+            c.setPeople(i.getPeople());
+            c.setPlace(i.getPlace());
+            c.setPictureGallary(i.getPictureGallary());
+            c.setHide(i.getHide() == "true" ? true : false);
+            
             brygds.add(c);
             Log.d(TAG,  "brygd = " + c);
 		}

@@ -4,6 +4,7 @@ public class Form {
 	private byte[] mImgLarge;
 	private byte[] mImgThumbnail;
 	private Brygd mBrygd;
+	private boolean mHide;
 	
 	public Form(Brygd b, byte[] img, byte[] thumb) {
 		mImgLarge = img;
@@ -15,7 +16,7 @@ public class Form {
 		return mImgLarge;
 	}
 
-	public byte[] getImgThumb() {
+	public byte[] getImgThumbnail() {
 		return mImgThumbnail;
 	}
 

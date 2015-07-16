@@ -19,7 +19,8 @@ public class Brygd {
     private String mPeople;
     private String mPlace;
     private String mPictureGallary;//json-struct med array av {url, bildtext}
-
+    private boolean mHide;//true, false
+    
     public Brygd(String id) {
         mId = id;
     }
@@ -136,5 +137,12 @@ public class Brygd {
     public void setPictureGallary(String pictureGallary) {
         mPictureGallary = pictureGallary;
     }
-
+    
+    public boolean getHide() {
+        return mHide;
+    }
+    
+    public void setHide(boolean hide) {
+        mHide = hide;
+    }
 }
