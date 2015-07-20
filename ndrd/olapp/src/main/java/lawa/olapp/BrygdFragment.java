@@ -104,7 +104,7 @@ public class BrygdFragment extends Fragment {
         mBeerStyle.setText(mBrygd.getBeerStyle());
                         
         mImg = (ImageView) v.findViewById(R.id.img);
-        mImg.setImageResource(R.drawable.no_photo);
+        //mImg.setImageResource(R.drawable.no_photo);
         if (mBrygd.getImgUrl() != null) {        
             new FetchItemsTask().execute(mBrygd.getImgUrl());
         }

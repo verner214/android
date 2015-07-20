@@ -59,11 +59,25 @@ public class BrygdEditFragment extends Fragment {
     boolean mEdit = false;
     ProgressDialog progress;
     
-    @Override
+    public static BrygdEditFragment newInstance(String brygdId) {
+        Bundle args = new Bundle();
+        args.putSerializable(BrygdFragment.EXTRA_BRYGD_ID, brygdId);
+        BrygdEditFragment fragment = new BrygdEditFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+    
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setHasOptionsMenu(true);
 
+        Bundle args = getArguments();
+        if (args != null) {
+            String brygdId = (String) args.getSerializable(BrygdFragment.EXTRA_BRYGD_ID);
+            mBrygd = BrygdLab.get(getActivity()).getBrygd(brygdId);
+        }
+    }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_brygd_edit, parent, false);
@@ -74,13 +88,13 @@ public class BrygdEditFragment extends Fragment {
         mBtnSelectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBtnSave.setEnabled(true);
+                //mBtnSave.setEnabled(true);
                 selectImage();
             }
         });
 
         mBtnSave = (Button)v.findViewById(R.id.btnSave);
-        mBtnSave.setEnabled(false);
+        //mBtnSave.setEnabled(false);
         mBtnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +120,19 @@ public class BrygdEditFragment extends Fragment {
         
         mChkHide = (CheckBox)v.findViewById(R.id.chkHide);
 //        mSolvedCheckBox.setChecked(mCrime.isSolved());
+        
+        if (mBrygd != null) {
+            mBeerName.setText(mBrygd.getBeerName());
+            mBeerStyle.setText(mBrygd.getBeerStyle());
+            mEtxOg.setText(mBrygd.getOg());
+            mEtxFg.setText(mBrygd.getFg());
+            mEtxDescription.setText(mBrygd.getDescription());
+            mEtxRecipe.setText(mBrygd.getRecipe());
+            mEtxComments.setText(mBrygd.getComments());
+            mEtxBrewingDate.setText(mBrygd.getBrewingDate());
+            mEtxPeople.setText(mBrygd.getPeople());
+            mEtxPlace.setText(mBrygd.getPlace());
+        }
         
         Log.d(TAG, "onCreateView lawa");
         
