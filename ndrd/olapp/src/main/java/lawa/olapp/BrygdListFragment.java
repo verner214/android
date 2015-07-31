@@ -45,7 +45,7 @@ public class BrygdListFragment extends ListFragment {
 //initiera bakgrundstråden med loopern. i konstruktorn skicka Handler som är associerad till UI-tråden.
 //registrera callback för downloaded vertig.        
 
-        mThumbnailThread = new ThumbnailDownloader<ImageView>(new Handler());
+        mThumbnailThread = new ThumbnailDownloader<ImageView>(getActivity().getExternalCacheDir(), new Handler());
         mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
             public void onThumbnailDownloaded(ImageView imageView, Bitmap thumbnail) {
                 if (isVisible()) {
@@ -55,6 +55,7 @@ public class BrygdListFragment extends ListFragment {
         });
         mThumbnailThread.start();
         mThumbnailThread.getLooper();       
+        
     }
 
     @Override

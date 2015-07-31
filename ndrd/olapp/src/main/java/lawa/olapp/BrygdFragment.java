@@ -106,7 +106,8 @@ public class BrygdFragment extends Fragment {
         mImg = (ImageView) v.findViewById(R.id.img);
         //mImg.setImageResource(R.drawable.no_photo);
         if (mBrygd.getImgUrl() != null) {        
-            new FetchItemsTask().execute(mBrygd.getImgUrl());
+            ImgCacheParam imgP = new ImgCacheParam(getActivity().getExternalCacheDir(), mBrygd.getImgUrl());
+            new FetchItemsTask().execute(imgP);
         }
         
         return v; 
@@ -164,12 +165,12 @@ public class BrygdFragment extends Fragment {
     }
 
     
-    private class FetchItemsTask extends AsyncTask<String,Void,byte[]> {
+    private class FetchItemsTask extends AsyncTask<ImgCacheParam,Void,byte[]> {
         @Override
-        protected byte[] doInBackground(String... urls) {
+        protected byte[] doInBackground(ImgCacheParam... imgCacheParams) {
             byte[] bytes = null; 
             try {
-                bytes = GetGson.getUrlBytes(urls[0]);
+                bytes = GetGson.getUrlBytes(imgCacheParams[0].getCacheDir(), imgCacheParams[0].getUrl());
             } catch (IOException ioe) {
                 Log.e(TAG, "Error downloading image", ioe);
             }          

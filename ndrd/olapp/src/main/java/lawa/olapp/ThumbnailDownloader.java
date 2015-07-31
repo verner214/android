@@ -1,6 +1,7 @@
 package lawa.olapp;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ public class ThumbnailDownloader<Handle> extends HandlerThread {
             Collections.synchronizedMap(new HashMap<Handle,String>());
     Handler mResponseHandler;
     Listener<Handle> mListener;
+    File cacheDir;
     
     public interface Listener<Handle> {
         void onThumbnailDownloaded(Handle handle, Bitmap thumbnail);
@@ -31,9 +33,10 @@ public class ThumbnailDownloader<Handle> extends HandlerThread {
         mListener = listener;
     }
 
-    public ThumbnailDownloader(Handler responseHandler) {
+    public ThumbnailDownloader(File cacheDir, Handler responseHandler) {
         super(TAG);
         mResponseHandler = responseHandler;
+        this.cacheDir = cacheDir; 
     }
     
     @SuppressLint("HandlerLeak")
@@ -58,7 +61,7 @@ public class ThumbnailDownloader<Handle> extends HandlerThread {
             if (url == null) 
                 return;
             
-            byte[] bitmapBytes = GetGson.getUrlBytes(url);
+            byte[] bitmapBytes = GetGson.getUrlBytes(cacheDir, url);
             final Bitmap bitmap = BitmapFactory
                     .decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
             

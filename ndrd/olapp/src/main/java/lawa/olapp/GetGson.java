@@ -3,6 +3,8 @@ package lawa.olapp;
 
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,13 +21,16 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.util.Log;
+import android.content.Context;
 
 //nu försök med json som tidiagare hämtats från azure
 
 public class GetGson {
-    private final String TAG = "GetGson";
+    private static final String TAG = "GetGson";
 //public för att den används av thumbnaildownloader och i asynctask. hör kanske hemma i annan klass.
-    public static byte[] getUrlBytes(String urlSpec) throws IOException {
+    public static byte[] getUrlBytes(File cacheDir, String urlSpec) throws IOException {
+        
+        
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
@@ -43,6 +48,25 @@ public class GetGson {
                 out.write(buffer, 0, bytesRead);
             }
             out.close();
+//spara en fil
+            String content = "hello world";
+            
+            if (cacheDir != null) {
+                File file;
+                FileOutputStream outputStream;
+                String fileName = urlSpec.substring(urlSpec.lastIndexOf("/"));
+                try {
+                    file = new File(cacheDir, fileName);             
+                    outputStream = new FileOutputStream(file);
+                    outputStream.write(out.toByteArray());
+                    outputStream.close();
+                    
+                } catch (IOException e) {
+                    Log.e(TAG, "fel vid spara en fil", e);
+                }
+            }        
+//spara en fil SLUT
+
             return out.toByteArray();
         } finally {
             connection.disconnect();

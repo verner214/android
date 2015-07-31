@@ -228,7 +228,13 @@ public class BrygdEditFragment extends Fragment {
         mBrygd.setHide(mChkHide.isChecked());
 //ide' låt hide visas för inloggade dvs admins
 
-        Form form = new Form(mBrygd, ImageLibrary.Bmp2Jpg(mBmpLarge, 90), ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90));
+        Form form = null;
+        if (mImgLarge.getDrawable() == null) {
+            form = new Form(mBrygd, null, null);
+        } else {
+            form = new Form(mBrygd, ImageLibrary.Bmp2Jpg(mBmpLarge, 90), ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90));
+        }
+        
 //        form.imgLarge = ImageLibrary.Bmp2Jpg(mBmpLarge, 90);
 //        form.imgThumbnail = ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90);
         new PostFormTask().execute(form);        

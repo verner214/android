@@ -27,9 +27,10 @@ public class MultiPart {
 		String errormsg = null;
 		try
 		{
-			Log.d(TAG, "images length=" + form.getImgLarge().length + "," + form.getImgThumbnail().length);
+			//Log.d(TAG, "images length=" + form.getImgLarge().length + "," + form.getImgThumbnail().length);
 		    HttpClient client = new DefaultHttpClient();
-		    HttpPost post = new HttpPost("http://vernerolapp.azurewebsites.net/new");
+		    HttpPost post = new HttpPost("http://vernerolapp.azurewebsites.net/newedit");
+//		    HttpPost post = new HttpPost("http://vernerolapp.azurewebsites.net/new");
 //		    HttpPost post = new HttpPost("http://vernerphoto.azurewebsites.net/upload");
 //		    HttpPost post = new HttpPost("http://10.0.2.2:8080/formhandler");
 			//String boundary = "-------------" + System.currentTimeMillis();
@@ -44,10 +45,12 @@ public class MultiPart {
 //		    entityBuilder.addBinaryBody("fileUploaded", image);
 //formidable ville inte känna till filen förrän contenttype och filnamnet fanns med i body (eller om det var något av dessa som gjorde skilnaden)
 //		    entityBuilder.addBinaryBody("fileUploaded", image, ContentType.create("image/jpeg"), "myfilenme.jpg");
-		    entityBuilder.addBinaryBody("img", form.getImgLarge(), ContentType.create("image/jpeg"), "form_imgLarge.jpg");
-		    entityBuilder.addBinaryBody("thumb", form.getImgThumbnail(), ContentType.create("image/jpeg"), "form_imgThumbnail.jpg");
-		
+			if (form.getImgLarge() != null) {
+		    	entityBuilder.addBinaryBody("img", form.getImgLarge(), ContentType.create("image/jpeg"), "form_imgLarge.jpg");
+		    	entityBuilder.addBinaryBody("thumb", form.getImgThumbnail(), ContentType.create("image/jpeg"), "form_imgThumbnail.jpg");
+			}
 			Brygd b = form.getBrygd();
+			entityBuilder.addTextBody("id", b.getId());		
 			entityBuilder.addTextBody("beerName", b.getBeerName());		
 			entityBuilder.addTextBody("beerStyle", b.getBeerStyle());		
 			entityBuilder.addTextBody("og", b.getOg());		
