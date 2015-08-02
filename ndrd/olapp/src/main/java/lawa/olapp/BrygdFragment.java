@@ -139,7 +139,9 @@ public class BrygdFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        new FetchBrygdsTask().execute();
+        if (resultCode == BrygdEditFragment.RESULT_BRYGD_SAVED) {
+            new FetchBrygdsTask().execute();
+        }
     }
 
     private class FetchBrygdsTask extends AsyncTask<Void,Void,ArrayList<Brygd>> {

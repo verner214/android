@@ -33,6 +33,7 @@ import android.net.Uri;
 public class BrygdEditFragment extends Fragment {
     private final static String TAG = "BrygdEditFragment";
     static final int REQUEST_IMAGE_GET = 1;
+    static final int RESULT_BRYGD_SAVED = Activity.RESULT_FIRST_USER;
 
 //vid edit hämtas mBrygd via Bundle. vid new skapas den här
     Brygd mBrygd; 
@@ -75,6 +76,7 @@ public class BrygdEditFragment extends Fragment {
         if (args != null) {
             String brygdId = (String) args.getSerializable(BrygdFragment.EXTRA_BRYGD_ID);
             mBrygd = BrygdLab.get(getActivity()).getBrygd(brygdId);
+            mEdit = true;
         }
     }
     
@@ -132,6 +134,7 @@ public class BrygdEditFragment extends Fragment {
             mEtxBrewingDate.setText(mBrygd.getBrewingDate());
             mEtxPeople.setText(mBrygd.getPeople());
             mEtxPlace.setText(mBrygd.getPlace());
+            mChkHide.setChecked(mBrygd.getHide());
         }
         
         Log.d(TAG, "onCreateView lawa");
@@ -212,7 +215,7 @@ public class BrygdEditFragment extends Fragment {
           
 //vid new brygd skapa Brygd-instance 
         if (mBrygd == null) {
-            mBrygd = new Brygd(null);//brygd utan id  betyder new Brygd
+            mBrygd = new Brygd("");//brygd utan id  betyder new Brygd
         }
 //populera mBrygd        
         mBrygd.setBeerName(mBeerName.getText().toString());
@@ -271,10 +274,11 @@ public class BrygdEditFragment extends Fragment {
 //--version 0.1
 //lru-cahce och disk cache.
 //picture gallary 
+                getActivity().setResult(BrygdEditFragment.RESULT_BRYGD_SAVED);                    
                 if (!mEdit) {
                     //Intent resultIntent = new Intent();
                     //getActivity().setResult(Activity.RESULT_OK, resultIntent);
-                    getActivity().setResult(Activity.RESULT_FIRST_USER);                    
+                    //getActivity().setResult(BrygdEditFragment.RESULT_BRYGD_SAVED);                    
                     getActivity().finish();
                 }
             }//if (getActivity() != null) {

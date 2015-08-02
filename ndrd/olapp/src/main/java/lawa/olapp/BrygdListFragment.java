@@ -71,13 +71,22 @@ public class BrygdListFragment extends ListFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //            if (requestCode == ADD_BEER && resultCode == Activity.RESULT_OK) {
-        ((BrygdAdapter)getListAdapter()).notifyDataSetChanged();
         //Activity.RESULT_FIRST_USER är om brygd har sparats.
         //Toast.makeText(getActivity(), "onActivityResult" + requestCode + "," + resultCode + "," + data, Toast.LENGTH_LONG).show();
-//om ny brygd har sparats.
-        if (resultCode == Activity.RESULT_FIRST_USER) {
+//om ny brygd har sparats. dvs valt ny brygd i action bar och sedan sparat innan back-knappen tryckts.
+        if (resultCode == BrygdEditFragment.RESULT_BRYGD_SAVED) {
             new FetchItemsTask().execute();
         }
+//om en brygd har editerats så har även modellen lästs in på nytt, i så fall uppdatera.
+        else {
+            ArrayList<Brygd> mBrygds2 = BrygdLab.get(getActivity()).getBrygds();
+            if (mBrygds != mBrygds2) {
+                Log.d(TAG, "inte samma brygds, call notifyDataSetChanged");
+                mBrygds = mBrygds2;
+                setListAdapter(new BrygdAdapter(mBrygds2));
+//                ((BrygdAdapter)getListAdapter()).notifyDataSetChanged();
+            }
+        }        
     }
 
     private class FetchItemsTask extends AsyncTask<Void,Void,ArrayList<Brygd>> {
