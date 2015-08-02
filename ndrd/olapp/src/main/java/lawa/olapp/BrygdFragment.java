@@ -140,6 +140,7 @@ public class BrygdFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == BrygdEditFragment.RESULT_BRYGD_SAVED) {
+            getView().setVisibility(View.GONE);
             new FetchBrygdsTask().execute();
         }
     }
