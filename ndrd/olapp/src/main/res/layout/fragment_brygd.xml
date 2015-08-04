@@ -12,6 +12,41 @@
     android:layout_height="wrap_content"
     android:scaleType="center" >
 </ImageView>    
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:stretchColumns="*"
+    android:layout_gravity="center_vertical"
+    android:layout_height="0dp"  
+    android:layout_weight="1.0"    
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    >
+    <TableRow>
+        <TextView android:text="Og:" android:textStyle="bold"/>
+        <TextView android:text="Fg:" android:textStyle="bold"/>
+        
+    </TableRow>
+    <TableRow>
+        <TextView android:id="@+id/Og" android:text="1,067"/>
+        <TextView android:id="@+id/Fg" android:text="1,017"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text=""/>
+        <TextView android:text=""/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Og:"/>
+        <TextView android:text="Fg:"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:id="@+id/Ogg" android:text="1,067"/>
+        <TextView android:id="@+id/Fgg" android:text="1,017"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text=""/>
+        <TextView android:text=""/>
+    </TableRow>
+</TableLayout>
   <TextView android:id="@+id/beername"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
