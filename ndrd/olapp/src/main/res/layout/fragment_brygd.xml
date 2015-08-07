@@ -12,6 +12,23 @@
     android:layout_height="wrap_content"
     android:scaleType="center" >
 </ImageView>    
+<TextView android:id="@+id/beername"
+    style="@android:style/TextAppearance.Large"
+    android:textStyle="bold"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+/>
+<TextView android:id="@+id/beerstyle"
+    style="@android:style/TextAppearance.Large"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+/>
+<TextView android:id="@+id/description"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+/>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:stretchColumns="*"
@@ -22,38 +39,51 @@
     android:layout_marginRight="16dp"
     >
     <TableRow>
-        <TextView android:text="Og:" android:textStyle="bold"/>
         <TextView android:text="Fg:" android:textStyle="bold"/>
-        
+        <TextView android:text="Og:" android:textStyle="bold"/>        
     </TableRow>
     <TableRow>
-        <TextView android:id="@+id/Og" android:text="1,067"/>
-        <TextView android:id="@+id/Fg" android:text="1,017"/>
+        <TextView android:id="@+id/fg" />
+        <TextView android:id="@+id/og" />
     </TableRow>
     <TableRow>
         <TextView android:text=""/>
         <TextView android:text=""/>
     </TableRow>
     <TableRow>
-        <TextView android:text="Og:"/>
-        <TextView android:text="Fg:"/>
+        <TextView android:text="Alc:" android:textStyle="bold"/>
+        <TextView android:text="Brew date:" android:textStyle="bold"/>        
     </TableRow>
     <TableRow>
-        <TextView android:id="@+id/Ogg" android:text="1,067"/>
-        <TextView android:id="@+id/Fgg" android:text="1,017"/>
+        <TextView android:id="@+id/alc" />
+        <TextView android:id="@+id/brewingDate" />
+    </TableRow>
+    <TableRow>
+        <TextView android:text=""/>
+        <TextView android:text=""/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Brewed by:" android:textStyle="bold"/>
+        <TextView android:text="Place:" android:textStyle="bold"/>        
+    </TableRow>
+    <TableRow>
+        <TextView android:id="@+id/people" />
+        <TextView android:id="@+id/place" />
     </TableRow>
     <TableRow>
         <TextView android:text=""/>
         <TextView android:text=""/>
     </TableRow>
 </TableLayout>
-  <TextView android:id="@+id/beername"
+<TextView android:id="@+id/recipe"
+    android:background="#AAAAAA"  
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    />
-  <TextView android:id="@+id/beerstyle"
+/>
+<TextView android:id="@+id/comments"
+    android:background="#777777"  
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    />
+/>
 </LinearLayout>
 </ScrollView>

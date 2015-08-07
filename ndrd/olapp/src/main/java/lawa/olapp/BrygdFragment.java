@@ -40,6 +40,18 @@ public class BrygdFragment extends Fragment {
     Brygd mBrygd;
     TextView mBeerName;
     TextView mBeerStyle;
+    TextView mDescription;
+    //matrisen, 3 rader
+    TextView mOg;
+    TextView mFg;
+    TextView mAlc;//beräknad
+    TextView mBrewingDate;
+    TextView mPeople;
+    TextView mPlace;
+
+    TextView mRecipe;
+    TextView mComments;
+
     ImageView mImg;
     
     //ta reda på: varför kan man inte sätta mBrygd här?
@@ -85,6 +97,31 @@ public class BrygdFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_brygd, parent, false);
         
         mBeerName = (TextView)v.findViewById(R.id.beername);
+        mBeerName.setText(mBrygd.getBeerName());
+        mBeerStyle = (TextView)v.findViewById(R.id.beerstyle);
+        mBeerStyle.setText(mBrygd.getBeerStyle());
+
+        mDescription = (TextView)v.findViewById(R.id.description);
+        mDescription.setText(mBrygd.getDescription());
+//matrisen        
+        mOg = (TextView) v.findViewById(R.id.og);
+        mOg.setText(mBrygd.getOg());
+        mFg = (TextView) v.findViewById(R.id.fg);
+        mFg.setText(mBrygd.getFg());
+        mAlc = (TextView) v.findViewById(R.id.alc);
+        mAlc.setText("6,5");//beräknad
+        mBrewingDate = (TextView) v.findViewById(R.id.brewingDate);
+        mBrewingDate.setText(mBrygd.getBrewingDate());
+        mPeople = (TextView) v.findViewById(R.id.people);
+        mPeople.setText(mBrygd.getPeople());
+        mPlace = (TextView) v.findViewById(R.id.place);
+        mPlace.setText(mBrygd.getPlace());
+
+        mRecipe = (TextView)v.findViewById(R.id.recipe);
+        mRecipe.setText(mBrygd.getRecipe());
+        mComments = (TextView) v.findViewById(R.id.comments);
+        mComments.setText(mBrygd.getComments());
+/*        
         mBeerName.setText(
             mBrygd.getBeerName() + "\n" + 
             mBrygd.getBeerStyle() + "\n" + 
@@ -99,9 +136,7 @@ public class BrygdFragment extends Fragment {
             mBrygd.getHide() + "\n" + 
             mBrygd.getPictureGallary() + "\n" + 
             "");
-        
-        mBeerStyle = (TextView)v.findViewById(R.id.beerstyle);
-        mBeerStyle.setText(mBrygd.getBeerStyle());
+*/        
                         
         mImg = (ImageView) v.findViewById(R.id.img);
         //mImg.setImageResource(R.drawable.no_photo);
