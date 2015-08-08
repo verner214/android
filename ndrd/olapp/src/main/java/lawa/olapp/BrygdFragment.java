@@ -110,11 +110,12 @@ public class BrygdFragment extends Fragment {
         mFg.setText(mBrygd.getFg());
         try { 
             mAlc = (TextView) v.findViewById(R.id.alc);
-            Float ffg = Float.parseFloat(mBrygd.getFg());
-            Float fog = Float.parseFloat(mBrygd.getOg());
-            Float falc = (fog - ffg) * 1000 / 7.5;
-            mAlc.setText(falc);//beräknad
-        } catch (exception) {
+            float ffg = Float.parseFloat(mBrygd.getFg());
+            float fog = Float.parseFloat(mBrygd.getOg());
+            float falc = (fog - ffg) * 1000 / (float) 7.5;
+            mAlc.setText(Float.toString(falc));//beräknad
+        } catch (NumberFormatException e) {
+            Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
             //do nothing at all
         }
         mBrewingDate = (TextView) v.findViewById(R.id.brewingDate);
