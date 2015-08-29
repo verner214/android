@@ -52,7 +52,7 @@ public class BrygdFragment extends Fragment {
     TextView mRecipe;
     TextView mComments;
 
-    ImageView mImg;
+    ScalingImageView mImg;
     
     //ta reda på: varför kan man inte sätta mBrygd här?
     public static BrygdFragment newInstance(String brygdId) {
@@ -113,7 +113,8 @@ public class BrygdFragment extends Fragment {
             float ffg = Float.parseFloat(mBrygd.getFg());
             float fog = Float.parseFloat(mBrygd.getOg());
             float falc = (fog - ffg) * 1000 / (float) 7.5;
-            mAlc.setText(Float.toString(falc));//beräknad
+            //mAlc.setText(Float.toString(falc));//beräknad
+            mAlc.setText(String.format("%.1f", falc));//beräknad
         } catch (NumberFormatException e) {
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
             //do nothing at all
@@ -146,7 +147,7 @@ public class BrygdFragment extends Fragment {
             "");
 */        
                         
-        mImg = (ImageView) v.findViewById(R.id.img);
+        mImg = (ScalingImageView) v.findViewById(R.id.img);
         //mImg.setImageResource(R.drawable.no_photo);
         if (mBrygd.getImgUrl() != null) {        
             ImgCacheParam imgP = new ImgCacheParam(getActivity().getExternalCacheDir(), mBrygd.getImgUrl());

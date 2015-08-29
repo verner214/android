@@ -7,11 +7,11 @@
   android:layout_height="wrap_content"
   android:orientation="vertical"
   >
-<ImageView android:id="@+id/img"
+  
+<lawa.olapp.ScalingImageView android:id="@+id/img"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scaleType="center" >
-</ImageView>    
+    android:layout_height="0px"
+/>
 <TextView android:id="@+id/beername"
     style="@android:style/TextAppearance.Large"
     android:textStyle="bold"
@@ -114,5 +114,13 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
 />
+  <Button android:id="@+id/btnAddImage"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:text="Lägg till bild"
+    />
+
 </LinearLayout>
 </ScrollView>

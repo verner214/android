@@ -63,7 +63,7 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:hint="1,062"
+    android:hint="1.062"
     />
   <TextView
     android:layout_width="match_parent"
@@ -76,7 +76,7 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:hint="1,015"
+    android:hint="1.015"
     />
   <TextView
     android:layout_width="match_parent"
