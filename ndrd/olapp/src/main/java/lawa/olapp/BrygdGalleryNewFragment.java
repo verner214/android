@@ -34,7 +34,7 @@ public class BrygdGalleryNewFragment extends Fragment {
     private final static String TAG = "BrygdGalleryNewFragment";
 
     Button mBtnSave;
-    ScalingImageView mImg;
+    ScalingImageView mImgLarge;    
     //ImageView mImgLarge;
     EditText mEtxDescription;
     
@@ -72,26 +72,22 @@ public class BrygdGalleryNewFragment extends Fragment {
             }
         });
 
-        mImgThumbnail = (ImageView) v.findViewById(R.id.imgThumbnail);
-        mImgThumbnail.setImageResource(R.drawable.no_photo);
-        
-        mImgLarge = (ImageView) v.findViewById(R.id.imgLarge);
+        mImgLarge = (ImageView) v.findViewById(R.id.img);
 
         mEtxDescription = (EditText) v.findViewById(R.id.etxDescription);
 
-        mBmpLarge = ImageLibrary.Uri2Bmp(getActivity(), selectedImageURI, 640, 360, true);
+        mBmpLarge = ImageLibrary.Uri2Bmp(getActivity(), mImgUri, 640, 360, true);
         Toast.makeText(getActivity(), "onActivityResult", Toast.LENGTH_SHORT).show();
 
         mImgLarge.setImageBitmap(mBmpLarge);
         mBmpThumbnail = ImageLibrary.createThumbnail(mBmpLarge, 100, 100);
-        mImgThumbnail.setImageBitmap(mBmpThumbnail);
 
         return v; 
     }
             
     private void saveForm() {
 // Note: declare ProgressDialog progress as a field in your class.
-
+/*
         progress = ProgressDialog.show(getActivity(), "Brygd sparas", "vänta...", true);
           
         Form form = null;
@@ -103,7 +99,8 @@ public class BrygdGalleryNewFragment extends Fragment {
         
 //        form.imgLarge = ImageLibrary.Bmp2Jpg(mBmpLarge, 90);
 //        form.imgThumbnail = ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90);
-        new PostFormTask().execute(form);        
+        new PostFormTask().execute(form);
+        */        
     }
 
     private class PostFormTask extends AsyncTask<Form,Void,String> {
@@ -123,27 +120,8 @@ public class BrygdGalleryNewFragment extends Fragment {
                     return;
                 }
                              
-//lägg till villkor att vid edit så ska det inte göras finish
-//setResult som visar för anropande aktivitet/fragment att data behöver läsas in på nytt. 
-//listan ska vid lyckad save (dvs result=null) hämta ny lista, uppdatera BrygdLab och setAdapter, kanske visa toast som tv.nu
-
-//todo sen
-//edit: här: läsa in värden som vid BrygdFragment i onCreate / onCreateView.
-//edit: onActivityResult: anropa aktivity, dvs pager, via listener registrerad i onAttach.
-//detta anrop gör fetchitems async och setAdapter och currentItem.
-//sen: visa endast icke-hide.
-//spara alla thumbnails i listan som bmp i minnet.
-//gör fin gui.
-//--version 0.1
-//lru-cahce och disk cache.
-//picture gallary 
                 getActivity().setResult(BrygdFragment.RESULT_BRYGD_SAVED);                    
-                if (!mEdit) {
-                    //Intent resultIntent = new Intent();
-                    //getActivity().setResult(Activity.RESULT_OK, resultIntent);
-                    //getActivity().setResult(BrygdEditFragment.RESULT_BRYGD_SAVED);                    
-                    getActivity().finish();
-                }
+                getActivity().finish();
             }//if (getActivity() != null) {
         }//onPostExecute
         
