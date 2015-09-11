@@ -32,8 +32,7 @@ import android.net.Uri;
 
 public class BrygdEditFragment extends Fragment {
     private final static String TAG = "BrygdEditFragment";
-    static final int REQUEST_IMAGE_GET = 1;
-    static final int RESULT_BRYGD_SAVED = Activity.RESULT_FIRST_USER;
+    //static final int REQUEST_IMAGE_GET = 1;
 
 //vid edit hämtas mBrygd via Bundle. vid new skapas den här
     Brygd mBrygd; 
@@ -146,14 +145,14 @@ public class BrygdEditFragment extends Fragment {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(intent, REQUEST_IMAGE_GET);
+            startActivityForResult(intent, BrygdFragment.REQUEST_IMAGE_GET);
         }
     }
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
-            if (requestCode == REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK) {
+            if (requestCode == BrygdFragment.REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK) {
                 //Bitmap thumbnail = data.getParcelableExtra("data");     
                 Uri selectedImageURI = data.getData();
                 boolean b2 = selectedImageURI == null;
@@ -274,7 +273,7 @@ public class BrygdEditFragment extends Fragment {
 //--version 0.1
 //lru-cahce och disk cache.
 //picture gallary 
-                getActivity().setResult(BrygdEditFragment.RESULT_BRYGD_SAVED);                    
+                getActivity().setResult(BrygdFragment.RESULT_BRYGD_SAVED);                    
                 if (!mEdit) {
                     //Intent resultIntent = new Intent();
                     //getActivity().setResult(Activity.RESULT_OK, resultIntent);

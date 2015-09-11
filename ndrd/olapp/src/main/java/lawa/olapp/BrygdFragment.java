@@ -37,6 +37,9 @@ public class BrygdFragment extends Fragment {
     public static final String EXTRA_GALLERY_URI = "olapp.IMGURI";
     private final static String TAG = "BrygdFragment";
     private final static int EDIT_BEER = 1;
+    private final static int ADD_GALLERY_ITEM = 2;
+    static final int RESULT_BRYGD_SAVED = Activity.RESULT_FIRST_USER;
+    static final int REQUEST_IMAGE_GET = Activity.RESULT_FIRST_USER + 1;
 
     Brygd mBrygd;
     TextView mBeerName;
@@ -54,6 +57,7 @@ public class BrygdFragment extends Fragment {
     TextView mComments;
 
     ScalingImageView mImg;
+    Button btnAddImage;
     
     //ta reda på: varför kan man inte sätta mBrygd här?
     public static BrygdFragment newInstance(String brygdId) {
@@ -155,7 +159,22 @@ public class BrygdFragment extends Fragment {
             new FetchItemsTask().execute(imgP);
         }
         
+        btnAddImage = (Button)v.findViewById(R.id.btnAddImage);
+        btnAddImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
         return v; 
+    }
+    
+    private void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(intent, REQUEST_IMAGE_GET);
+        }
     }
     
     @Override
@@ -184,12 +203,23 @@ public class BrygdFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == BrygdEditFragment.RESULT_BRYGD_SAVED) {
-            getView().setVisibility(View.GONE);
+        if ((requestCode == ADD_GALLERY_ITEM || requestCode == EDIT_BEER)
+             && resultCode == RESULT_BRYGD_SAVED) 
+        {
+            getView().setVisibility(View.GONE);//så att man inte ser den ouppdaterade viewn
             new FetchBrygdsTask().execute();
         }
+        //om bild vald, starta activity som editerar galleryitem
+        if (requestCode == REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK) {
+            Uri selectedImageURI = data.getData();
+            if (selectedImageURI != null) {
+                //starta intent för BrygdGalleryNewActivity, 
+                Intent i = new Intent(getActivity(), BrygdGalleryNewActivity.class);
+                i.putExtra(BrygdFragment.EXTRA_GALLERY_URI, selectedImageURI);
+                startActivityForResult(i, ADD_GALLERY_ITEM);                
+            }
     }
-
+//hämtar alla brygds på nytt
     private class FetchBrygdsTask extends AsyncTask<Void,Void,ArrayList<Brygd>> {
         @Override
         protected ArrayList<Brygd> doInBackground(Void... params) {
@@ -212,7 +242,8 @@ public class BrygdFragment extends Fragment {
         }
     }
 
-    
+    //hämtar toppbilden. appens cachedir och bildens url skickas med så får 
+    //det senare avgöras om den ska hämtas från nätet eller om den finns i cachen.
     private class FetchItemsTask extends AsyncTask<ImgCacheParam,Void,byte[]> {
         @Override
         protected byte[] doInBackground(ImgCacheParam... imgCacheParams) {
