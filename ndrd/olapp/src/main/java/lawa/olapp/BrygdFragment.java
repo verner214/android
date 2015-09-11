@@ -34,6 +34,7 @@ public class BrygdFragment extends Fragment {
     OnBrygdsUpdatedListener mCallback;
 
     public static final String EXTRA_BRYGD_ID = "olapp.BRYGD_ID";
+    public static final String EXTRA_GALLERY_URI = "olapp.IMGURI";
     private final static String TAG = "BrygdFragment";
     private final static int EDIT_BEER = 1;
 
