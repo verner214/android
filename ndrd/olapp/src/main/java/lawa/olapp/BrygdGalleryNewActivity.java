@@ -7,7 +7,7 @@ public class BrygdGalleryNewActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        Uri imgUri = (Uri) getIntent().getSerializableExtra(BrygdFragment.EXTRA_GALLERY_URI);            
+        String imgUri = (String) getIntent().getSerializableExtra(BrygdFragment.EXTRA_GALLERY_URI);            
         return BrygdGalleryNewFragment.newInstance(imgUri);
     }
 }

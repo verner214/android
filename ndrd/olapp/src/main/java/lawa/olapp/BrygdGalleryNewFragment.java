@@ -44,7 +44,7 @@ public class BrygdGalleryNewFragment extends Fragment {
     Uri mImgUri;
     ProgressDialog progress;
     
-    public static BrygdGalleryNewFragment newInstance(Uri imgUri) {
+    public static BrygdGalleryNewFragment newInstance(String imgUri) {
         Bundle args = new Bundle();
         args.putSerializable(BrygdFragment.EXTRA_GALLERY_URI, imgUri);
         BrygdGalleryNewFragment fragment = new BrygdGalleryNewFragment();
@@ -57,7 +57,7 @@ public class BrygdGalleryNewFragment extends Fragment {
         setHasOptionsMenu(true);
 
         Bundle args = getArguments();
-        mImgUri = (Uri) args.getSerializable(BrygdFragment.EXTRA_GALLERY_URI);
+        mImgUri = (Uri) Uri.parse((String)args.getSerializable(BrygdFragment.EXTRA_GALLERY_URI));
     }
     
     @Override
@@ -72,7 +72,7 @@ public class BrygdGalleryNewFragment extends Fragment {
             }
         });
 
-        mImgLarge = (ImageView) v.findViewById(R.id.img);
+        mImgLarge = (ScalingImageView) v.findViewById(R.id.img);
 
         mEtxDescription = (EditText) v.findViewById(R.id.etxDescription);
 

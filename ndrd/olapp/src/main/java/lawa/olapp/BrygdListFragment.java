@@ -74,7 +74,7 @@ public class BrygdListFragment extends ListFragment {
         //Activity.RESULT_FIRST_USER är om brygd har sparats.
         //Toast.makeText(getActivity(), "onActivityResult" + requestCode + "," + resultCode + "," + data, Toast.LENGTH_LONG).show();
 //om ny brygd har sparats. dvs valt ny brygd i action bar och sedan sparat innan back-knappen tryckts.
-        if (resultCode == BrygdEditFragment.RESULT_BRYGD_SAVED) {
+        if (resultCode == BrygdFragment.RESULT_BRYGD_SAVED) {
             new FetchItemsTask().execute();
         }
 //om en brygd har editerats så har även modellen lästs in på nytt, i så fall uppdatera.

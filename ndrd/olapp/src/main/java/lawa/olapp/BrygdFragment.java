@@ -29,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.app.Activity;
+import android.net.Uri;
 
 public class BrygdFragment extends Fragment {
     OnBrygdsUpdatedListener mCallback;
@@ -215,9 +216,10 @@ public class BrygdFragment extends Fragment {
             if (selectedImageURI != null) {
                 //starta intent för BrygdGalleryNewActivity, 
                 Intent i = new Intent(getActivity(), BrygdGalleryNewActivity.class);
-                i.putExtra(BrygdFragment.EXTRA_GALLERY_URI, selectedImageURI);
+                i.putExtra(BrygdFragment.EXTRA_GALLERY_URI, selectedImageURI.toString());
                 startActivityForResult(i, ADD_GALLERY_ITEM);                
             }
+        }
     }
 //hämtar alla brygds på nytt
     private class FetchBrygdsTask extends AsyncTask<Void,Void,ArrayList<Brygd>> {
