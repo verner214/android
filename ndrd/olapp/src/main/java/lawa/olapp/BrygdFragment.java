@@ -217,6 +217,7 @@ public class BrygdFragment extends Fragment {
                 //starta intent för BrygdGalleryNewActivity, 
                 Intent i = new Intent(getActivity(), BrygdGalleryNewActivity.class);
                 i.putExtra(BrygdFragment.EXTRA_GALLERY_URI, selectedImageURI.toString());
+                i.putExtra(BrygdFragment.EXTRA_BRYGD_ID, mBrygd.getId());
                 startActivityForResult(i, ADD_GALLERY_ITEM);                
             }
         }

@@ -39,14 +39,16 @@ public class BrygdGalleryNewFragment extends Fragment {
     EditText mEtxDescription;
     
     Bitmap mBmpLarge;
-    Bitmap mBmpThumbnail;
     
     Uri mImgUri;
+    String mBrygdId;
+    
     ProgressDialog progress;
     
-    public static BrygdGalleryNewFragment newInstance(String imgUri) {
+    public static BrygdGalleryNewFragment newInstance(String brygdId, String imgUri) {
         Bundle args = new Bundle();
         args.putSerializable(BrygdFragment.EXTRA_GALLERY_URI, imgUri);
+        args.putSerializable(BrygdFragment.EXTRA_BRYGD_ID, brygdId);
         BrygdGalleryNewFragment fragment = new BrygdGalleryNewFragment();
         fragment.setArguments(args);
         return fragment;
@@ -57,7 +59,8 @@ public class BrygdGalleryNewFragment extends Fragment {
         setHasOptionsMenu(true);
 
         Bundle args = getArguments();
-        mImgUri = (Uri) Uri.parse((String)args.getSerializable(BrygdFragment.EXTRA_GALLERY_URI));
+        mImgUri = (Uri) Uri.parse((String) args.getSerializable(BrygdFragment.EXTRA_GALLERY_URI));
+        mBrygdId = (String) args.getSerializable(BrygdFragment.EXTRA_BRYGD_ID);
     }
     
     @Override
@@ -68,46 +71,39 @@ public class BrygdGalleryNewFragment extends Fragment {
         mBtnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //saveForm();
+                saveForm();
             }
         });
 
         mImgLarge = (ScalingImageView) v.findViewById(R.id.img);
-
         mEtxDescription = (EditText) v.findViewById(R.id.etxDescription);
 
         mBmpLarge = ImageLibrary.Uri2Bmp(getActivity(), mImgUri, 640, 360, true);
         Toast.makeText(getActivity(), "onActivityResult", Toast.LENGTH_SHORT).show();
 
         mImgLarge.setImageBitmap(mBmpLarge);
-        mBmpThumbnail = ImageLibrary.createThumbnail(mBmpLarge, 100, 100);
 
         return v; 
     }
             
     private void saveForm() {
-// Note: declare ProgressDialog progress as a field in your class.
-/*
         progress = ProgressDialog.show(getActivity(), "Brygd sparas", "vänta...", true);
+        Bitmap bmpThumbnail = ImageLibrary.createThumbnail(mBmpLarge, 100, 100);
           
-        Form form = null;
-        if (mImgLarge.getDrawable() == null) {
-            form = new Form(mBrygd, null, null);
-        } else {
-            form = new Form(mBrygd, ImageLibrary.Bmp2Jpg(mBmpLarge, 90), ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90));
-        }
+        FormGallery form = new FormGallery(
+            mBrygdId, 
+            ImageLibrary.Bmp2Jpg(mBmpLarge, 90), 
+            ImageLibrary.Bmp2Jpg(bmpThumbnail, 90), 
+            mEtxDescription.getText().toString()
+        );
         
-//        form.imgLarge = ImageLibrary.Bmp2Jpg(mBmpLarge, 90);
-//        form.imgThumbnail = ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90);
         new PostFormTask().execute(form);
-        */        
     }
 
-    private class PostFormTask extends AsyncTask<Form,Void,String> {
+    private class PostFormTask extends AsyncTask<FormGallery,Void,String> {
         @Override
-        protected String doInBackground(Form... forms) {
-            return MultiPart.PostForm(forms[0]);
-//            return bytes;      
+        protected String doInBackground(FormGallery... forms) {
+            return MultiPart.PostFormGallery(forms[0]);
         }
 
         @Override
@@ -122,10 +118,9 @@ public class BrygdGalleryNewFragment extends Fragment {
                              
                 getActivity().setResult(BrygdFragment.RESULT_BRYGD_SAVED);                    
                 getActivity().finish();
-            }//if (getActivity() != null) {
-        }//onPostExecute
-        
-    }//FetchItemsTask
+            }
+        }//onPostExecute        
+    }//PostFormTask
 
 }//class BrygdEditFragment
 
