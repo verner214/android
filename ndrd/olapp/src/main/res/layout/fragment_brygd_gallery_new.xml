@@ -11,7 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="0px"
 />  
-  <EditText android:id="@+id/beername"
+  <EditText android:id="@+id/etxDescription"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
