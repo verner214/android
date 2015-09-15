@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.annotation.TargetApi;
 import android.os.Bundle;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,6 +26,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -33,6 +36,8 @@ import android.net.Uri;
 
 public class BrygdFragment extends Fragment {
     OnBrygdsUpdatedListener mCallback;
+    ArrayList<String> mItems;
+    ThumbnailDownloader<ImageView> mThumbnailThread;
 
     public static final String EXTRA_BRYGD_ID = "olapp.BRYGD_ID";
     public static final String EXTRA_GALLERY_URI = "olapp.IMGURI";
@@ -59,6 +64,7 @@ public class BrygdFragment extends Fragment {
 
     ScalingImageView mImg;
     Button btnAddImage;
+    GridView mGridView;
     
     //ta reda på: varför kan man inte sätta mBrygd här?
     public static BrygdFragment newInstance(String brygdId) {
@@ -93,6 +99,29 @@ public class BrygdFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        mItems = new ArrayList<String>();
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+
+//initiera handlerthread
+        mThumbnailThread = new ThumbnailDownloader<ImageView>(getActivity().getExternalCacheDir(), new Handler());
+        mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
+            public void onThumbnailDownloaded(ImageView imageView, Bitmap thumbnail) {
+                if (isVisible()) {
+                    imageView.setImageBitmap(thumbnail);
+                }
+            }
+        });
+        mThumbnailThread.start();
+        mThumbnailThread.getLooper();       
 
         String brygdId = (String) getArguments().getSerializable(EXTRA_BRYGD_ID);
         mBrygd = BrygdLab.get(getActivity()).getBrygd(brygdId);
@@ -167,6 +196,9 @@ public class BrygdFragment extends Fragment {
                 selectImage();
             }
         });
+        mGridView = (GridView)v.findViewById(R.id.gridView);
+        mGridView.setAdapter(new GalleryItemAdapter(mItems));
+
         return v; 
     }
     
@@ -268,5 +300,26 @@ public class BrygdFragment extends Fragment {
         }
     }
 
+//gallery
+    private class GalleryItemAdapter extends ArrayAdapter<String> {
+        public GalleryItemAdapter(ArrayList<String> items) {
+            super(getActivity(), 0, items);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.gallery_item, parent, false);
+            }
+            
+            String item = getItem(position);
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.gallery_item_imageView);
+            imageView.setImageResource(R.drawable.no_photo);
+            mThumbnailThread.queueThumbnail(imageView, item);//använd title tills vidare, byt sen.
+            //mThumbnailThread.queueThumbnail(imageView, item.getUrl());
+            
+            return convertView;
+        }
+    }
     
 }
