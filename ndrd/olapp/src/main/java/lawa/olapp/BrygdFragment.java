@@ -41,11 +41,14 @@ public class BrygdFragment extends Fragment {
 
     public static final String EXTRA_BRYGD_ID = "olapp.BRYGD_ID";
     public static final String EXTRA_GALLERY_URI = "olapp.IMGURI";
+    public static final String EXTRA_GALLERY_POSITION = "olapp.GALLERY_POSITION";
+
     private final static String TAG = "BrygdFragment";
     private final static int EDIT_BEER = 1;
     private final static int ADD_GALLERY_ITEM = 2;
     static final int RESULT_BRYGD_SAVED = Activity.RESULT_FIRST_USER;
     static final int REQUEST_IMAGE_GET = Activity.RESULT_FIRST_USER + 1;
+    static final int REQUEST_GALLERY_PAGER = Activity.RESULT_FIRST_USER + 2;
 
     Brygd mBrygd;
     TextView mBeerName;
@@ -64,7 +67,7 @@ public class BrygdFragment extends Fragment {
 
     ScalingImageView mImg;
     Button btnAddImage;
-    GridView mGridView;
+    MyGridView mGridView;
     
     //ta reda på: varför kan man inte sätta mBrygd här?
     public static BrygdFragment newInstance(String brygdId) {
@@ -102,12 +105,13 @@ public class BrygdFragment extends Fragment {
 
         mItems = new ArrayList<String>();
         mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
         mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
         mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
         mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
         mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
         mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
 
@@ -196,9 +200,20 @@ public class BrygdFragment extends Fragment {
                 selectImage();
             }
         });
-        mGridView = (GridView)v.findViewById(R.id.gridView);
+        mGridView = (MyGridView)v.findViewById(R.id.gridView);
         mGridView.setAdapter(new GalleryItemAdapter(mItems));
-
+        
+//när man klickar på en bild ska pagaer startas och rätt bild ska visas.        
+        mGridView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                Intent i = new Intent(getActivity(), GalleryPagerActivity.class);
+                i.putExtra(BrygdFragment.EXTRA_BRYGD_ID, c.getId());
+                i.putExtra(BrygdFragment.EXTRA_GALLERY_POSITION, c.getId());
+                startActivityForResult(i, REQUEST_GALLERY_PAGER);
+            }
+        });
+            
         return v; 
     }
     
@@ -313,7 +328,8 @@ public class BrygdFragment extends Fragment {
             }
             
             String item = getItem(position);
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.gallery_item_imageView);
+            //ImageView imageView = (ImageView) convertView.findViewById(R.id.gallery_item_imageView);
+            ScalingImageView imageView = (ScalingImageView) convertView.findViewById(R.id.imgGrid);
             imageView.setImageResource(R.drawable.no_photo);
             mThumbnailThread.queueThumbnail(imageView, item);//använd title tills vidare, byt sen.
             //mThumbnailThread.queueThumbnail(imageView, item.getUrl());
