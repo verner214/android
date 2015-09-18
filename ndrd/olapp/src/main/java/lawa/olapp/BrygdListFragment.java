@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.util.Log;
 import android.app.Activity;
-
+import android.widget.AdapterView;  
 
 public class BrygdListFragment extends ListFragment {
     private final static String TAG = "BrygdListFragment";

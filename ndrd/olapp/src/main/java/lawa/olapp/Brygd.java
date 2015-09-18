@@ -1,8 +1,35 @@
 package lawa.olapp;
 
 import java.util.Date;
+import com.google.gson.Gson;
 //import java.util.UUID;
-
+/*
+private class GalleryArray {
+    private Gallery[] value;
+    
+    private PClass() {
+    }
+    
+    public PClass(Item[] value) {
+        this.value = value;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Item i : value) {
+            sb.append(i.toString() + "\n");
+        }
+                    
+        //sb.append("Name: " + name + " ");
+        return sb.toString();
+    }
+    
+    public Item[] getItems() {
+        return value;
+    }
+}
+*/
 public class Brygd {
     
     private String mId;
@@ -18,7 +45,7 @@ public class Brygd {
     private String mBrewingDate;
     private String mPeople;
     private String mPlace;
-    private String mPictureGallary;//json-struct med array av {url, bildtext}
+    private Gallery[] mPictureGallary;//json-struct med array av {url, bildtext}
     private boolean mHide;//true, false
     
     public Brygd(String id) {
@@ -129,13 +156,18 @@ public class Brygd {
     public void setPlace(String place) {
         mPlace = place;
     }
-
-    public String getPictureGallary() {
+/*
+    public String getPictureGallaryString() {
+        return mPictureGallary;
+    }
+*/    
+    public Gallery[] getPictureGallery() {
         return mPictureGallary;
     }
     
     public void setPictureGallary(String pictureGallary) {
-        mPictureGallary = pictureGallary;
+        Gson gson = new Gson();
+        mPictureGallary = gson.fromJson(pictureGallary, Gallery[].class);
     }
     
     public boolean getHide() {

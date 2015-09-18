@@ -33,6 +33,8 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.app.Activity;
 import android.net.Uri;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
 
 public class BrygdFragment extends Fragment {
     OnBrygdsUpdatedListener mCallback;
@@ -103,17 +105,6 @@ public class BrygdFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        mItems = new ArrayList<String>();
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
-        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
 
 //initiera handlerthread
         mThumbnailThread = new ThumbnailDownloader<ImageView>(getActivity().getExternalCacheDir(), new Handler());
@@ -129,6 +120,23 @@ public class BrygdFragment extends Fragment {
 
         String brygdId = (String) getArguments().getSerializable(EXTRA_BRYGD_ID);
         mBrygd = BrygdLab.get(getActivity()).getBrygd(brygdId);
+
+        mItems = new ArrayList<String>();
+        for (Gallery g : mBrygd.getPictureGallery()) {
+            mItems.add(g.getImgURL());
+        }
+        /*
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+        mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_e0a14c9207807c940f510cf34b4d6436.jpg");
+        */
     }
 
     @Override
@@ -169,22 +177,6 @@ public class BrygdFragment extends Fragment {
         mRecipe.setText(mBrygd.getRecipe());
         mComments = (TextView) v.findViewById(R.id.comments);
         mComments.setText(mBrygd.getComments());
-/*        
-        mBeerName.setText(
-            mBrygd.getBeerName() + "\n" + 
-            mBrygd.getBeerStyle() + "\n" + 
-            mBrygd.getOg() + "\n" + 
-            mBrygd.getFg() + "\n" + 
-            mBrygd.getDescription() + "\n" + 
-            mBrygd.getRecipe() + "\n" + 
-            mBrygd.getComments() + "\n" + 
-            mBrygd.getBrewingDate() + "\n" + 
-            mBrygd.getPlace() + "\n" + 
-            mBrygd.getPeople() + "\n" + 
-            mBrygd.getHide() + "\n" + 
-            mBrygd.getPictureGallary() + "\n" + 
-            "");
-*/        
                         
         mImg = (ScalingImageView) v.findViewById(R.id.img);
         //mImg.setImageResource(R.drawable.no_photo);
@@ -203,13 +195,13 @@ public class BrygdFragment extends Fragment {
         mGridView = (MyGridView)v.findViewById(R.id.gridView);
         mGridView.setAdapter(new GalleryItemAdapter(mItems));
         
-//när man klickar på en bild ska pagaer startas och rätt bild ska visas.        
-        mGridView.setOnItemClickListener(new OnItemClickListener() {
+//när man klickar på en bild ska pager startas och rätt bild ska visas.        
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Intent i = new Intent(getActivity(), GalleryPagerActivity.class);
-                i.putExtra(BrygdFragment.EXTRA_BRYGD_ID, c.getId());
-                i.putExtra(BrygdFragment.EXTRA_GALLERY_POSITION, c.getId());
+                i.putExtra(BrygdFragment.EXTRA_BRYGD_ID, mBrygd.getId());
+                i.putExtra(BrygdFragment.EXTRA_GALLERY_POSITION, Integer.toString(position));
                 startActivityForResult(i, REQUEST_GALLERY_PAGER);
             }
         });
