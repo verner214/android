@@ -122,8 +122,10 @@ public class BrygdFragment extends Fragment {
         mBrygd = BrygdLab.get(getActivity()).getBrygd(brygdId);
 
         mItems = new ArrayList<String>();
-        for (Gallery g : mBrygd.getPictureGallery()) {
-            mItems.add(g.getImgURL());
+        for (int i = 0; i < mBrygd.getNumOfGalleryItems(); i++) {
+            Gallery g = mBrygd.getGalleryItem(i);
+            Log.d(TAG, "url=" + g.getThumbURL());
+            mItems.add(g.getThumbURL());
         }
         /*
         mItems.add("https://portalvhdsgfh152bhy290k.blob.core.windows.net/cntolapp/upload/upload_b89d0ce759b6c7ef68d1d3fbd3dd6e5c.jpg");
@@ -163,7 +165,7 @@ public class BrygdFragment extends Fragment {
             //mAlc.setText(Float.toString(falc));//beräknad
             mAlc.setText(String.format("%.1f", falc));//beräknad
         } catch (NumberFormatException e) {
-            Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
             //do nothing at all
         }
         mBrewingDate = (TextView) v.findViewById(R.id.brewingDate);

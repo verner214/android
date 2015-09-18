@@ -2,6 +2,7 @@ package lawa.olapp;
 
 import java.util.Date;
 import com.google.gson.Gson;
+import android.util.Log;
 //import java.util.UUID;
 /*
 private class GalleryArray {
@@ -47,6 +48,7 @@ public class Brygd {
     private String mPlace;
     private Gallery[] mPictureGallary;//json-struct med array av {url, bildtext}
     private boolean mHide;//true, false
+    private final static String TAG = "Brygd";
     
     public Brygd(String id) {
         mId = id;
@@ -160,12 +162,40 @@ public class Brygd {
     public String getPictureGallaryString() {
         return mPictureGallary;
     }
-*/    
+*/  
+/*  
     public Gallery[] getPictureGallery() {
         return mPictureGallary;
     }
+  */  
+    public Gallery getGalleryItem(int pos) {
+        int numOf = 0;
+        for (Gallery g : mPictureGallary) {
+            if (!g.getHide()) {
+                if (numOf == pos) {
+                    return g;
+                }
+                numOf++;
+            }
+        }
+        return null;
+    } 
+    
+    public int getNumOfGalleryItems() {
+        if (mPictureGallary == null) {
+            return 0;
+        }
+        int numOf = 0;
+        for (Gallery g : mPictureGallary) {
+            if (!g.getHide()) {
+                numOf++;
+            }
+        }
+        return numOf;
+    } 
     
     public void setPictureGallary(String pictureGallary) {
+        Log.d(TAG, "pictureGallary=" + pictureGallary);        
         Gson gson = new Gson();
         mPictureGallary = gson.fromJson(pictureGallary, Gallery[].class);
     }

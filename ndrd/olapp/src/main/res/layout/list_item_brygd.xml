@@ -16,6 +16,7 @@
     android:paddingTop="4dp"
     android:text="byts ut name" 
     android:textStyle="bold"
+    style="@android:style/TextAppearance.Large"
     />
   <TextView android:id="@+id/brygd_list_beerstyle"
     android:layout_height="wrap_content"
@@ -25,6 +26,7 @@
     android:paddingLeft="4dp"
     android:paddingRight="4dp"
     android:paddingTop="4dp"
+    style="@android:style/TextAppearance.Large"
     android:text="byts ut style" />
 </RelativeLayout>
 

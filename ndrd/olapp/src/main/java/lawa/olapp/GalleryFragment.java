@@ -69,10 +69,10 @@ public class GalleryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_gallery, parent, false);
         
         mText = (EditText)v.findViewById(R.id.text);
-        mText.setText(mBrygd.getPictureGallery()[mPostition].getText());
+        mText.setText(mBrygd.getGalleryItem(mPostition).getText());
 
         mImg = (ScalingImageView) v.findViewById(R.id.img);
-        ImgCacheParam imgP = new ImgCacheParam(getActivity().getExternalCacheDir(), mBrygd.getPictureGallery()[mPostition].getImgURL());
+        ImgCacheParam imgP = new ImgCacheParam(getActivity().getExternalCacheDir(), mBrygd.getGalleryItem(mPostition).getImgURL());
         new FetchItemsTask().execute(imgP);
             
         return v; 

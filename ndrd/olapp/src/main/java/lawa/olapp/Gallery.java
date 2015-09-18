@@ -2,25 +2,31 @@ package lawa.olapp;
 
 public class Gallery {
     
-    private String mImgURL;
-    private String mThumbURL;
-    private String mText;
+    private String imgURL;
+    private String thumbURL;
+    private String text;
+    private boolean hide;
 
-    public Gallery(String imgURL, String thumbURL, String text) {
-        mImgURL = imgURL;
-        mThumbURL = thumbURL;
-        mText = text;
+    public Gallery(String imgURL, String thumbURL, String text, boolean hide) {
+        this.imgURL = imgURL;
+        this.thumbURL = thumbURL;
+        this.text = text;
+        this.hide = hide;
     }
 
     public String getImgURL() {
-        return mImgURL;
+        return imgURL;
     }
 
     public String getThumbURL() {
-        return mThumbURL;
+        return thumbURL;
     }
 
     public String getText() {
-        return mText;
+        return text;
+    }    
+
+    public boolean getHide() {
+        return hide;
     }    
 }

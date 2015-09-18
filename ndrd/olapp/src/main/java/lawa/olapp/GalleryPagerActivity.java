@@ -39,7 +39,7 @@ public class GalleryPagerActivity extends FragmentActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
             @Override
             public int getCount() {
-                return mBrygd.getPictureGallery().length;
+                return mBrygd.getNumOfGalleryItems();
             }
             @Override
             public Fragment getItem(int pos) {

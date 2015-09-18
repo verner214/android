@@ -167,7 +167,7 @@ public class GetGson {
         private String brewingDate;
         private String people;
         private String place;
-        private String pictureGallary;
+        private String gallery;
         private String hide;
 		
 		private Item() {}//försök ta bort den här?
@@ -185,7 +185,7 @@ public class GetGson {
             String brewingDate,
             String people,
             String place,
-            String pictureGallary,
+            String gallery,
             String hide) 
         {
             this.RowKey = RowKey;
@@ -201,7 +201,7 @@ public class GetGson {
             this.brewingDate = brewingDate;
             this.people = people;            
             this.place = place;            
-            this.pictureGallary = pictureGallary;            
+            this.gallery = gallery;            
             this.hide = hide;            
         }
         
@@ -257,8 +257,8 @@ public class GetGson {
 			return place;
 		}
 
-		public String getPictureGallary() {
-			return pictureGallary;
+		public String getGallery() {
+			return gallery;
 		}
 
 		public String getHide() {
@@ -373,7 +373,7 @@ public class GetGson {
             c.setBrewingDate(i.getBrewingDate());
             c.setPeople(i.getPeople());
             c.setPlace(i.getPlace());
-            c.setPictureGallary(i.getPictureGallary());
+            c.setPictureGallary(i.getGallery());
             c.setHide(i.getHide() != null && i.getHide().equals("true") ? true : false);
             
             brygds.add(c);
