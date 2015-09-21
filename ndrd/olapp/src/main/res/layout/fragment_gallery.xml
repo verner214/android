@@ -17,6 +17,15 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:hint="bildtext"
+    android:focusable="false"
     />
+  <Button android:id="@+id/btnSave"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:text="Spara"
+    android:visibility="invisible"
+/>    
 </LinearLayout>
 </ScrollView>

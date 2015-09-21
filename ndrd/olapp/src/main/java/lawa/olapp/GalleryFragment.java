@@ -43,6 +43,7 @@ public class GalleryFragment extends Fragment {
     
     EditText mText;
     ScalingImageView mImg;
+    Button btnSave;
     
     public static GalleryFragment newInstance(String brygdId, int position) {
         Bundle args = new Bundle();
@@ -69,7 +70,28 @@ public class GalleryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_gallery, parent, false);
         
         mText = (EditText)v.findViewById(R.id.text);
-        mText.setText(mBrygd.getGalleryItem(mPostition).getText());
+        if (mText != null) {
+            mText.setText(mBrygd.getGalleryItem(mPostition).getText());
+            mText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //mBtnSave.setEnabled(true);
+                    //mText.setEnabled(true);
+                    mText.setFocusableInTouchMode(true);
+                    mText.requestFocus();                    
+                }
+            });
+            btnSave = (Button)v.findViewById(R.id.btnSave);
+            btnSave.setVisibility(View.VISIBLE);
+            /*
+            btnSave.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectImage();
+                }
+            });
+            */
+        }
 
         mImg = (ScalingImageView) v.findViewById(R.id.img);
         ImgCacheParam imgP = new ImgCacheParam(getActivity().getExternalCacheDir(), mBrygd.getGalleryItem(mPostition).getImgURL());
