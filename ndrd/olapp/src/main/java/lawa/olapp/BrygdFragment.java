@@ -28,9 +28,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.util.DisplayMetrics;
 import android.app.Activity;
 import android.net.Uri;
 import android.widget.AdapterView.OnItemClickListener;
@@ -69,7 +72,8 @@ public class BrygdFragment extends Fragment {
 
     ScalingImageView mImg;
     Button btnAddImage;
-    MyGridView mGridView;
+    //MyGridView mGridView;
+    TableLayout mTblGallery;
     
     //ta reda på: varför kan man inte sätta mBrygd här?
     public static BrygdFragment newInstance(String brygdId) {
@@ -112,6 +116,8 @@ public class BrygdFragment extends Fragment {
             public void onThumbnailDownloaded(ImageView imageView, Bitmap thumbnail) {
                 if (isVisible()) {
                     imageView.setImageBitmap(thumbnail);
+                } else {
+                    Log.d(TAG, "-------------------------------------------");
                 }
             }
         });
@@ -194,10 +200,11 @@ public class BrygdFragment extends Fragment {
                 selectImage();
             }
         });
-        mGridView = (MyGridView)v.findViewById(R.id.gridView);
-        mGridView.setAdapter(new GalleryItemAdapter(mItems));
+        //mGridView = (MyGridView)v.findViewById(R.id.gridView);
+        //mGridView.setAdapter(new GalleryItemAdapter(mItems));
         
-//när man klickar på en bild ska pager startas och rätt bild ska visas.        
+//när man klickar på en bild ska pager startas och rätt bild ska visas.       
+/*
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -207,7 +214,71 @@ public class BrygdFragment extends Fragment {
                 startActivityForResult(i, REQUEST_GALLERY_PAGER);
             }
         });
-            
+*/
+//tr.setBackgroundColor(Color.BLACK);
+//tr.setPadding(0, 0, 0, 2); //Border between rows
+
+//TableRow.LayoutParams llp = new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+//llp.setMargins(0, 0, 2, 0);//2px right-margin
+
+//New Cell
+/*
+LinearLayout cell = new LinearLayout(getActivity());
+cell.setBackgroundColor(Color.WHITE);
+cell.setLayoutParams(llp);//2px border on the right for the cell
+
+TextView tv = new TextView(getActivity());
+tv.setText("Some Text");
+TextView tv2 = new TextView(getActivity());
+tv2.setText("Some Text");
+tv.setPadding(0, 0, 4, 3);
+int heightPixels = metrics.heightPixels;
+int widthPixels = metrics.widthPixels;
+int densityDpi = metrics.densityDpi;
+float xdpi = metrics.xdpi;
+float ydpi = metrics.ydpi;
+int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+tr.addView(tv);
+tr.addView(tv2);
+        float ydpi = metrics.ydpi;
+    Gallery g = mBrygd.getGalleryItem(i);
+//    Log.d(TAG, "url=" + g.getThumbURL());
+//imageView.setImageResource(R.drawable.no_photo);
+*/
+        mTblGallery = (TableLayout)v.findViewById(R.id.tblGallery);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int nbColumns = (int) (metrics.widthPixels * (double) 1.4 / (double) metrics.ydpi);
+        int imgWidth = metrics.widthPixels / nbColumns;  
+
+//int imgCount = 0;
+TableRow tr = null;
+for (int i = 0; i < mBrygd.getNumOfGalleryItems(); i++) {
+    if (i % nbColumns == 0) {
+        if (tr != null) {
+            mTblGallery.addView(tr);
+        }
+        tr = new TableRow(getActivity());
+    }
+    ImageView imageView = new ImageView(getActivity());
+    imageView.setLayoutParams(new TableRow.LayoutParams(imgWidth, imgWidth));
+    final int i2 = i;
+    imageView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent it = new Intent(getActivity(), GalleryPagerActivity.class);
+            it.putExtra(BrygdFragment.EXTRA_BRYGD_ID, mBrygd.getId());
+            it.putExtra(BrygdFragment.EXTRA_GALLERY_POSITION, Integer.toString(i2));
+            startActivityForResult(it, REQUEST_GALLERY_PAGER);
+        }
+    });
+    tr.addView(imageView);
+    mThumbnailThread.queueThumbnail(imageView, mBrygd.getGalleryItem(i).getThumbURL());
+}//for
+if (tr != null) {
+    mTblGallery.addView(tr);
+}
+
         return v; 
     }
     
@@ -245,7 +316,7 @@ public class BrygdFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((requestCode == ADD_GALLERY_ITEM || requestCode == EDIT_BEER)
+        if ((requestCode == ADD_GALLERY_ITEM || requestCode == EDIT_BEER || requestCode == REQUEST_GALLERY_PAGER)
              && resultCode == RESULT_BRYGD_SAVED) 
         {
             getView().setVisibility(View.GONE);//så att man inte ser den ouppdaterade viewn
@@ -313,10 +384,12 @@ public class BrygdFragment extends Fragment {
     private class GalleryItemAdapter extends ArrayAdapter<String> {
         public GalleryItemAdapter(ArrayList<String> items) {
             super(getActivity(), 0, items);
+            Log.d(TAG, "GalleryItemAdapter " + mBrygd.getBeerName() + "," + items.size());
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            Log.d(TAG, "getView " + mBrygd.getBeerName() + "," + position);
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.gallery_item, parent, false);
             }
@@ -331,5 +404,18 @@ public class BrygdFragment extends Fragment {
             return convertView;
         }
     }
+    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mThumbnailThread.quit();
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mThumbnailThread.clearQueue();
+    }
+    
     
 }

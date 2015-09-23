@@ -29,6 +29,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.widget.Toast;
 import android.net.Uri;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
 
 public class BrygdGalleryNewFragment extends Fragment {
     private final static String TAG = "BrygdGalleryNewFragment";
@@ -95,9 +97,13 @@ public class BrygdGalleryNewFragment extends Fragment {
             ImageLibrary.Bmp2Jpg(mBmpLarge, 90), 
             ImageLibrary.Bmp2Jpg(bmpThumbnail, 90), 
             mEtxDescription.getText().toString()
-        );
-        
+        );        
         new PostFormTask().execute(form);
+        
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(mEtxDescription.getWindowToken(), 0);    
+        }        
     }
 
     private class PostFormTask extends AsyncTask<FormGallery,Void,String> {

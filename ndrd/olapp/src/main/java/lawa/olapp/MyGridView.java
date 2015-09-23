@@ -6,12 +6,14 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
+import android.util.Log;
 
 /**
 en gridview som fungerar innanför en scrollview förutsatt att alla bilder är fyrkantiga och har samma dimension.
  */
 public class MyGridView extends GridView {
 
+private static final String TAG = "MyGridView";
   public MyGridView(Context context) {
     super(context);
   }
@@ -28,10 +30,12 @@ public class MyGridView extends GridView {
 //http://stackoverflow.com/questions/7545915/gridview-rows-overlapping-how-to-make-row-height-fit-the-tallest-item
 @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            Log.d(TAG, "onMeasure " + widthMeasureSpec +","+ heightMeasureSpec);
 	  ListAdapter adapter = (ListAdapter) getAdapter();
 	  int numRows = adapter.getCount() / getNumColumns() + (adapter.getCount() % getNumColumns() > 0 ? 1 : 0);
     int newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(getColumnWidth() * numRows, MeasureSpec.EXACTLY);
     super.onMeasure(widthMeasureSpec, newHeightMeasureSpec);
+            Log.d(TAG, "onMeasure 2 " + MeasureSpec.getSize(newHeightMeasureSpec) + "," + adapter.getCount() + "," + numRows);
   }
 }
 /*	  

@@ -9,13 +9,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.widget.Toast;
+import android.widget.EditText;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
 
 import android.support.v4.view.ViewPager;
 
-public class GalleryPagerActivity extends FragmentActivity {
-        
+public class GalleryPagerActivity extends FragmentActivity 
+    implements GalleryFragment.OnGalleryKeyboardDisplayedListener {
+          
     ViewPager mViewPager;
     Brygd mBrygd;
+    EditText mText;//en reference till den edittext i en fregment som editeras vid page svep.
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,9 +57,37 @@ public class GalleryPagerActivity extends FragmentActivity {
                 return POSITION_NONE;
             }            
         });
+        final GalleryPagerActivity a = this;
+        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+//                Toast.makeText(a, "onPageSelected", Toast.LENGTH_LONG).show();
+                InputMethodManager imm = (InputMethodManager) a.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (mText != null && imm != null) {
+                    imm.hideSoftInputFromWindow(mText.getWindowToken(), 0);    
+                    mText = null;            
+                }
+
+            }
+        
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    return;
+            }
+        
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                    return;
+            }
+        });         
          
 //sätt vald bild när pager öppnas
         int position = Integer.parseInt((String) getIntent().getSerializableExtra(BrygdFragment.EXTRA_GALLERY_POSITION));
         mViewPager.setCurrentItem(position);
     }//onCreate
+    
+    public void setActiveTextEdit(EditText e) {
+        mText = e;
+    }
+
 }//BrygdPagerActivity

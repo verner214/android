@@ -19,6 +19,14 @@
     android:hint="bildtext"
     android:focusable="false"
     />
+  <CheckBox android:id="@+id/chkHide"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:enabled="true"
+    android:focusable="true"
+    android:visibility="invisible"
+    android:padding="4dp" />
+    
   <Button android:id="@+id/btnSave"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

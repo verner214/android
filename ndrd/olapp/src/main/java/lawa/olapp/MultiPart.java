@@ -92,4 +92,18 @@ public class MultiPart {
 		HttpEntity entity = entityBuilder.build();
 		return PostMultipart("http://vernerolapp.azurewebsites.net/gallerynew", entity);
 	}
+
+	public static String PostFormGalleryEdit(FormGalleryEdit form) 
+	{						
+		MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+		entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+		entityBuilder.addTextBody("id", form.getBrygdId());		
+		entityBuilder.addTextBody("text", form.getText());		
+		entityBuilder.addTextBody("imgURL", form.getImgURL());		
+		entityBuilder.addTextBody("hide", form.getHide() ? "true" : "false");		
+		
+		HttpEntity entity = entityBuilder.build();
+		return PostMultipart("http://vernerolapp.azurewebsites.net/galleryedit", entity);
+	}
 }

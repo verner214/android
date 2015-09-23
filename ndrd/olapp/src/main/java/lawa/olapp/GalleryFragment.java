@@ -3,8 +3,10 @@ package lawa.olapp;
 import java.util.UUID;
 import java.io.IOException;
 import java.util.ArrayList;
+import android.app.ProgressDialog;
 
 import android.content.Intent;
+import android.content.Context;
 import android.annotation.TargetApi;
 import android.os.Bundle;
 import android.os.AsyncTask;
@@ -18,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -33,17 +36,22 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.app.Activity;
 import android.net.Uri;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
 
 public class GalleryFragment extends Fragment {
 
     private final static String TAG = "GalleryFragment";
-
+    
     Brygd mBrygd;
     int mPostition;
+    OnGalleryKeyboardDisplayedListener mCallback;
     
     EditText mText;
     ScalingImageView mImg;
     Button btnSave;
+    CheckBox mChkHide;
+    ProgressDialog progress;
     
     public static GalleryFragment newInstance(String brygdId, int position) {
         Bundle args = new Bundle();
@@ -65,9 +73,29 @@ public class GalleryFragment extends Fragment {
         mPostition = (int) getArguments().getSerializable(BrygdFragment.EXTRA_GALLERY_POSITION);
     }
     
+    // Container Activity must implement this interface
+    public interface OnGalleryKeyboardDisplayedListener {
+        public void setActiveTextEdit(EditText e);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnGalleryKeyboardDisplayedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnGalleryKeyboardDisplayedListener");
+        }
+    }
+        
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_gallery, parent, false);
+        btnSave = (Button)v.findViewById(R.id.btnSave);
+        mChkHide = (CheckBox)v.findViewById(R.id.chkHide);
         
         mText = (EditText)v.findViewById(R.id.text);
         if (mText != null) {
@@ -79,26 +107,70 @@ public class GalleryFragment extends Fragment {
                     //mText.setEnabled(true);
                     mText.setFocusableInTouchMode(true);
                     mText.requestFocus();                    
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.showSoftInput(mText, InputMethodManager.SHOW_IMPLICIT);
+                        mCallback.setActiveTextEdit(mText);
+                    }        
+                    btnSave.setVisibility(View.VISIBLE);                    
+                    mChkHide.setVisibility(View.VISIBLE);                    
                 }
             });
-            btnSave = (Button)v.findViewById(R.id.btnSave);
-            btnSave.setVisibility(View.VISIBLE);
-            /*
+            
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectImage();
+                    saveForm();
                 }
             });
-            */
         }
 
         mImg = (ScalingImageView) v.findViewById(R.id.img);
         ImgCacheParam imgP = new ImgCacheParam(getActivity().getExternalCacheDir(), mBrygd.getGalleryItem(mPostition).getImgURL());
         new FetchItemsTask().execute(imgP);
             
+
         return v; 
+    }//onCreateView
+    
+    private void saveForm() {
+        progress = ProgressDialog.show(getActivity(), "Texten sparas", "vänta...", true);
+          
+        FormGalleryEdit form = new FormGalleryEdit (
+            mBrygd.getId(), 
+            mBrygd.getGalleryItem(mPostition).getImgURL(), 
+            mText.getText().toString(),
+            mChkHide.isChecked()
+        );        
+        new PostFormTask().execute(form);
+        
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(mText.getWindowToken(), 0);    
+        }        
     }
+
+    private class PostFormTask extends AsyncTask<FormGalleryEdit,Void,String> {
+        @Override
+        protected String doInBackground(FormGalleryEdit... forms) {
+            return MultiPart.PostFormGalleryEdit(forms[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+//ta bort busy dialog om den syns
+            if (getActivity() != null) {
+                progress.dismiss();
+                if (result != null) {
+                    Toast.makeText(getActivity(), "Något gick fel...\n " + result, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                             
+                getActivity().setResult(BrygdFragment.RESULT_BRYGD_SAVED);                    
+                getActivity().finish();
+            }
+        }//onPostExecute        
+    }//PostFormTask
     
 /*    
     @Override
