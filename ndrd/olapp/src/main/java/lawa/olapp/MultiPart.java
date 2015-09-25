@@ -18,6 +18,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.*;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.protocol.HTTP;
 
 public class MultiPart {
     private final static String TAG = "MulitiPart";
@@ -62,17 +64,18 @@ public class MultiPart {
 			entityBuilder.addBinaryBody("thumb", form.getImgThumbnail(), ContentType.create("image/jpeg"), "form_imgThumbnail.jpg");
 		}
 		Brygd b = form.getBrygd();
+		ContentType contentType = ContentType.create(HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8);
 		entityBuilder.addTextBody("id", b.getId());		
-		entityBuilder.addTextBody("beerName", b.getBeerName());		
-		entityBuilder.addTextBody("beerStyle", b.getBeerStyle());		
+		entityBuilder.addTextBody("beerName", b.getBeerName(), contentType);		
+		entityBuilder.addTextBody("beerStyle", b.getBeerStyle(), contentType);		
 		entityBuilder.addTextBody("og", b.getOg());		
 		entityBuilder.addTextBody("fg", b.getFg());		
-		entityBuilder.addTextBody("description", b.getDescription());		
-		entityBuilder.addTextBody("recipe", b.getRecipe());		
-		entityBuilder.addTextBody("comments", b.getComments());		
-		entityBuilder.addTextBody("brewingDate", b.getBrewingDate());		
-		entityBuilder.addTextBody("people", b.getPeople());		
-		entityBuilder.addTextBody("place", b.getPlace());		
+		entityBuilder.addTextBody("description", b.getDescription(), contentType);		
+		entityBuilder.addTextBody("recipe", b.getRecipe(), contentType);		
+		entityBuilder.addTextBody("comments", b.getComments(), contentType);		
+		entityBuilder.addTextBody("brewingDate", b.getBrewingDate(), contentType);		
+		entityBuilder.addTextBody("people", b.getPeople(), contentType);		
+		entityBuilder.addTextBody("place", b.getPlace(), contentType);		
 		entityBuilder.addTextBody("hide", b.getHide() ? "true" : "false");		
 		
 		HttpEntity entity = entityBuilder.build();
@@ -84,10 +87,11 @@ public class MultiPart {
 		MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
 		entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
+		ContentType contentType = ContentType.create(HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8);
 		entityBuilder.addBinaryBody("img", form.getImgLarge(), ContentType.create("image/jpeg"), "form_imgLarge.jpg");
 		entityBuilder.addBinaryBody("thumb", form.getImgThumbnail(), ContentType.create("image/jpeg"), "form_imgThumbnail.jpg");
 		entityBuilder.addTextBody("id", form.getBrygdId());		
-		entityBuilder.addTextBody("text", form.getText());		
+		entityBuilder.addTextBody("text", form.getText(), contentType);		
 		
 		HttpEntity entity = entityBuilder.build();
 		return PostMultipart("http://vernerolapp.azurewebsites.net/gallerynew", entity);
@@ -98,8 +102,9 @@ public class MultiPart {
 		MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
 		entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
+		ContentType contentType = ContentType.create(HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8);
 		entityBuilder.addTextBody("id", form.getBrygdId());		
-		entityBuilder.addTextBody("text", form.getText());		
+		entityBuilder.addTextBody("text", form.getText(), contentType);		
 		entityBuilder.addTextBody("imgURL", form.getImgURL());		
 		entityBuilder.addTextBody("hide", form.getHide() ? "true" : "false");		
 		
