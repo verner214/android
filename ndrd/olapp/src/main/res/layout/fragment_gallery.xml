@@ -19,6 +19,13 @@
     android:hint="bildtext"
     android:focusable="false"
     />
+  <TextView android:id="@+id/hideLabel"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="kryssa checkbox för att ta bort bild med kommentar"
+    android:visibility="invisible"
+    style="?android:listSeparatorTextViewStyle"
+    />    
   <CheckBox android:id="@+id/chkHide"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

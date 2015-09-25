@@ -51,6 +51,7 @@ public class GalleryFragment extends Fragment {
     ScalingImageView mImg;
     Button btnSave;
     CheckBox mChkHide;
+    TextView mHideLabel;
     ProgressDialog progress;
     
     public static GalleryFragment newInstance(String brygdId, int position) {
@@ -96,6 +97,7 @@ public class GalleryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_gallery, parent, false);
         btnSave = (Button)v.findViewById(R.id.btnSave);
         mChkHide = (CheckBox)v.findViewById(R.id.chkHide);
+        mHideLabel = (TextView)v.findViewById(R.id.hideLabel);
         
         mText = (EditText)v.findViewById(R.id.text);
         if (mText != null) {
@@ -113,7 +115,8 @@ public class GalleryFragment extends Fragment {
                         mCallback.setActiveTextEdit(mText);
                     }        
                     btnSave.setVisibility(View.VISIBLE);                    
-                    mChkHide.setVisibility(View.VISIBLE);                    
+                    mChkHide.setVisibility(View.VISIBLE);                  
+                    mHideLabel.setVisibility(View.VISIBLE);  
                 }
             });
             

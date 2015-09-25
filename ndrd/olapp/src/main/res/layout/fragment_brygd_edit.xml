@@ -159,7 +159,7 @@
   <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Ta bort ölen"
+    android:text="kryssa checkbox för att ta bort ölen ur listan"
     style="?android:listSeparatorTextViewStyle"
     />
   <CheckBox android:id="@+id/chkHide"
