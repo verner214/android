@@ -16,6 +16,8 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -379,7 +381,12 @@ public class GetGson {
             brygds.add(c);
             Log.d(TAG,  "brygd = " + c);
 		}
-		
+//sortera på ölnamn		
+        Collections.sort(brygds, new Comparator<Brygd>() {
+            public int compare(Brygd v1, Brygd v2) {
+                return v1.getBeerName().compareTo(v2.getBeerName());
+            }
+        });
 		return brygds;
 	}
 }
