@@ -29,7 +29,10 @@ import android.widget.AdapterView;
 
 public class BrygdListFragment extends ListFragment {
     private final static String TAG = "BrygdListFragment";
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
+    
     private final static int ADD_BEER = 1;
+    private final static int ASK_PASSWORD = 2;
     private ArrayList<Brygd> mBrygds;
     ThumbnailDownloader<ImageView> mThumbnailThread;
 
@@ -38,9 +41,22 @@ public class BrygdListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         getActivity().setTitle(R.string.brygds_title);
-        mBrygds = BrygdLab.get(getActivity()).getBrygds();
+        
+//se om användaren har valt källa an
+//gör: onActivityResult-ta emot och fetcha eller avsluta
+//AskPasswordActivity-fråga efter table name och spara i prefs samt setResult.
+        SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE); 
+        String table = prefs.getString("table", null);
+        if (table == null) {//fråga efter password
+            Intent i = new Intent(getActivity(), AskPasswordActivity.class);
+            startActivityForResult(i, ASK_PASSWORD);
+        }
+        else {//hämta data
+            new FetchItemsTask().execute();
+        }
+                
+        mBrygds = BrygdLab.get(getActivity()).getBrygds();//mBrygds kommer alltid att vara null här men måste anropas innan BrygdLab.set...
         setListAdapter(null);//visa timglas
-        new FetchItemsTask().execute();
         
 //initiera bakgrundstråden med loopern. i konstruktorn skicka Handler som är associerad till UI-tråden.
 //registrera callback för downloaded vertig.        
