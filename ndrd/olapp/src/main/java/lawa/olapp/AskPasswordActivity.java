@@ -9,7 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.widget.EditText;
+import android.content.Context;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
@@ -45,7 +46,7 @@ public class AskPasswordActivity extends Activity  {
                 if (etxPassword.getText().toString().equals("n11")) {
                     setTable("ejdemo");
                     setResult(Activity.RESULT_OK);                    
-                    getActivity().finish();
+                    finish();
                 }
             }
         });
@@ -56,7 +57,7 @@ public class AskPasswordActivity extends Activity  {
             public void onClick(View v) {
                 setTable("demo");
                 setResult(Activity.RESULT_OK);                    
-                getActivity().finish();
+                finish();
             }
         });
     }

@@ -338,7 +338,7 @@ public class GetGson {
 //med filter dvs visa inte hidden
         String json;
         if (BrygdLab.getSourceIsDemo()) {
-            json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblolapp?$filter=hide%20eq%20'false'&st=2015-07-03T09%3A30%3A27Z&se=2034-07-07T21%3A50%3A27Z&sp=r&sv=2014-02-14&tn=tblolapp&sig=vaJqvHQqnZ6iVyp8k6EucjVmF4tRkEPHTAy4q2IVkVM%3D");
+            json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblolappdemo?$filter=hide%20eq%20'false'&st=2015-09-30T19%3A22%3A28Z&se=2034-10-05T07%3A42%3A28Z&sp=r&sv=2014-02-14&tn=tblolappdemo&sig=yhoOIMqeLZ%2BHUesMM7kowNpnhm%2Fsi9iBf0GaTrYOfws%3D");
         }
         else {
             json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblolapp?$filter=hide%20eq%20'false'&st=2015-07-03T09%3A30%3A27Z&se=2034-07-07T21%3A50%3A27Z&sp=r&sv=2014-02-14&tn=tblolapp&sig=vaJqvHQqnZ6iVyp8k6EucjVmF4tRkEPHTAy4q2IVkVM%3D");

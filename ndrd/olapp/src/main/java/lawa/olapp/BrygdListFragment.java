@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.content.Context;
 
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -46,7 +47,7 @@ public class BrygdListFragment extends ListFragment {
 //se om användaren har valt källa an
 //gör: onActivityResult-ta emot och fetcha eller avsluta
 //AskPasswordActivity-fråga efter table name och spara i prefs samt setResult.
-        SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE); 
+        SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE); 
         String table = prefs.getString("table", null);
         if (table == null) {//fråga efter password
             Intent i = new Intent(getActivity(), AskPasswordActivity.class);
@@ -92,7 +93,7 @@ public class BrygdListFragment extends ListFragment {
                 getActivity().finish();//döda hela appen.
             } 
             else {
-                SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE); 
+                SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE); 
                 String table = prefs.getString("table", null);
                 BrygdLab.setSourceIsDemo(table.equals("demo"));
                 new FetchItemsTask().execute();
