@@ -330,15 +330,20 @@ public class GetGson {
  
         inputStream.close();
         return result;
- 
     }
  
 	public ArrayList<Brygd> fetchItems() {
 //        System.setProperty("javax.net.ssl.trustStore","C:/own/java/javax86/jdk1.7.0_79/jre/lib/security/cacerts");
 //        String json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblolapp?st=2015-07-03T09%3A30%3A27Z&se=2034-07-07T21%3A50%3A27Z&sp=r&sv=2014-02-14&tn=tblolapp&sig=vaJqvHQqnZ6iVyp8k6EucjVmF4tRkEPHTAy4q2IVkVM%3D");
 //med filter dvs visa inte hidden
-        String json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblolapp?$filter=hide%20eq%20'false'&st=2015-07-03T09%3A30%3A27Z&se=2034-07-07T21%3A50%3A27Z&sp=r&sv=2014-02-14&tn=tblolapp&sig=vaJqvHQqnZ6iVyp8k6EucjVmF4tRkEPHTAy4q2IVkVM%3D");
-
+        String json;
+        if (BrygdLab.getSourceIsDemo()) {
+            json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblolapp?$filter=hide%20eq%20'false'&st=2015-07-03T09%3A30%3A27Z&se=2034-07-07T21%3A50%3A27Z&sp=r&sv=2014-02-14&tn=tblolapp&sig=vaJqvHQqnZ6iVyp8k6EucjVmF4tRkEPHTAy4q2IVkVM%3D");
+        }
+        else {
+            json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblolapp?$filter=hide%20eq%20'false'&st=2015-07-03T09%3A30%3A27Z&se=2034-07-07T21%3A50%3A27Z&sp=r&sv=2014-02-14&tn=tblolapp&sig=vaJqvHQqnZ6iVyp8k6EucjVmF4tRkEPHTAy4q2IVkVM%3D");
+        }
+        
 //		String json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/photos?st=2015-04-02T09%3A13%3A00Z&se=2017-02-24T21%3A33%3A00Z&sp=r&sv=2014-02-14&tn=photos&sig=f8Eo%2FmE3SxQE1TstvG5memvKfmTxyMszMTOa27AQ0WQ%3D");
 					
 		Gson gson = new Gson();

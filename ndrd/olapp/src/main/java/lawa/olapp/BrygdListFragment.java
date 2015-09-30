@@ -26,6 +26,7 @@ import android.widget.Toast;
 import android.util.Log;
 import android.app.Activity;
 import android.widget.AdapterView;  
+import android.content.SharedPreferences;
 
 public class BrygdListFragment extends ListFragment {
     private final static String TAG = "BrygdListFragment";
@@ -52,6 +53,7 @@ public class BrygdListFragment extends ListFragment {
             startActivityForResult(i, ASK_PASSWORD);
         }
         else {//hämta data
+            BrygdLab.setSourceIsDemo(table.equals("demo"));
             new FetchItemsTask().execute();
         }
                 
@@ -70,8 +72,7 @@ public class BrygdListFragment extends ListFragment {
             }
         });
         mThumbnailThread.start();
-        mThumbnailThread.getLooper();       
-        
+        mThumbnailThread.getLooper();               
     }
 
     @Override
@@ -86,6 +87,19 @@ public class BrygdListFragment extends ListFragment {
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ASK_PASSWORD) {
+            if (resultCode == Activity.RESULT_CANCELED) {
+                getActivity().finish();//döda hela appen.
+            } 
+            else {
+                SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE); 
+                String table = prefs.getString("table", null);
+                BrygdLab.setSourceIsDemo(table.equals("demo"));
+                new FetchItemsTask().execute();
+            }
+            return;
+        }
+
 //            if (requestCode == ADD_BEER && resultCode == Activity.RESULT_OK) {
         //Activity.RESULT_FIRST_USER är om brygd har sparats.
         //Toast.makeText(getActivity(), "onActivityResult" + requestCode + "," + resultCode + "," + data, Toast.LENGTH_LONG).show();

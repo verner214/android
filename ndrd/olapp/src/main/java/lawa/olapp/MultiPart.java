@@ -77,6 +77,7 @@ public class MultiPart {
 		entityBuilder.addTextBody("people", b.getPeople(), contentType);		
 		entityBuilder.addTextBody("place", b.getPlace(), contentType);		
 		entityBuilder.addTextBody("hide", b.getHide() ? "true" : "false");		
+		entityBuilder.addTextBody("demo", BrygdLab.getSourceIsDemo() ? "true" : "false");				
 		
 		HttpEntity entity = entityBuilder.build();
 		return PostMultipart("http://vernerolapp.azurewebsites.net/newedit", entity);
@@ -92,6 +93,7 @@ public class MultiPart {
 		entityBuilder.addBinaryBody("thumb", form.getImgThumbnail(), ContentType.create("image/jpeg"), "form_imgThumbnail.jpg");
 		entityBuilder.addTextBody("id", form.getBrygdId());		
 		entityBuilder.addTextBody("text", form.getText(), contentType);		
+		entityBuilder.addTextBody("demo", BrygdLab.getSourceIsDemo() ? "true" : "false");				
 		
 		HttpEntity entity = entityBuilder.build();
 		return PostMultipart("http://vernerolapp.azurewebsites.net/gallerynew", entity);
@@ -107,6 +109,7 @@ public class MultiPart {
 		entityBuilder.addTextBody("text", form.getText(), contentType);		
 		entityBuilder.addTextBody("imgURL", form.getImgURL());		
 		entityBuilder.addTextBody("hide", form.getHide() ? "true" : "false");		
+		entityBuilder.addTextBody("demo", BrygdLab.getSourceIsDemo() ? "true" : "false");				
 		
 		HttpEntity entity = entityBuilder.build();
 		return PostMultipart("http://vernerolapp.azurewebsites.net/galleryedit", entity);

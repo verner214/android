@@ -7,6 +7,7 @@ import android.content.Context;
 
 public class BrygdLab {
     private ArrayList<Brygd> mBrygds;
+    private static Boolean mTable;
 
     private static BrygdLab sBrygdLab;
     private Context mAppContext;
@@ -41,5 +42,14 @@ public class BrygdLab {
     public static void setBrygds(ArrayList<Brygd> brygds) {
         sBrygdLab.setBrygdsInstance(brygds);
     }
+    
+    public static void setSourceIsDemo(Boolean demo) {
+        mTable = demo;
+    }
+    
+    public static Boolean getSourceIsDemo() {
+        return mTable;
+    }
+    
 }
 
