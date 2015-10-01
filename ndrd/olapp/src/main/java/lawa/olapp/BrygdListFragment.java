@@ -48,6 +48,12 @@ public class BrygdListFragment extends ListFragment {
 //gör: onActivityResult-ta emot och fetcha eller avsluta
 //AskPasswordActivity-fråga efter table name och spara i prefs samt setResult.
         SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE); 
+        if (prefs.getBoolean("error", false)) {//fel förra gången?
+            Intent i = new Intent(getActivity(), AskPasswordActivity.class);
+            startActivityForResult(i, ASK_PASSWORD);
+            //getActivity().finish();
+            return;
+        }
         String table = prefs.getString("table", null);
         if (table == null) {//fråga efter password
             Intent i = new Intent(getActivity(), AskPasswordActivity.class);
