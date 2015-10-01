@@ -35,6 +35,8 @@ public class BrygdListFragment extends ListFragment {
     
     private final static int ADD_BEER = 1;
     private final static int ASK_PASSWORD = 2;
+    private final static int ERROR_REPORT = 3;
+    
     private ArrayList<Brygd> mBrygds;
     ThumbnailDownloader<ImageView> mThumbnailThread;
 
@@ -48,14 +50,14 @@ public class BrygdListFragment extends ListFragment {
 //gör: onActivityResult-ta emot och fetcha eller avsluta
 //AskPasswordActivity-fråga efter table name och spara i prefs samt setResult.
         SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE); 
-        if (prefs.getBoolean("error", false)) {//fel förra gången?
-            Intent i = new Intent(getActivity(), AskPasswordActivity.class);
-            startActivityForResult(i, ASK_PASSWORD);
-            //getActivity().finish();
-            return;
-        }
         String table = prefs.getString("table", null);
-        if (table == null) {//fråga efter password
+        if (prefs.getBoolean("error", false)) {//fel förra gången?
+            Intent i = new Intent(getActivity(), ErrorReportActivity.class);
+            startActivityForResult(i, ERROR_REPORT);
+            //getActivity().finish();
+            //return;
+        }
+        else if (table == null) {//fråga efter password
             Intent i = new Intent(getActivity(), AskPasswordActivity.class);
             startActivityForResult(i, ASK_PASSWORD);
         }
@@ -94,7 +96,10 @@ public class BrygdListFragment extends ListFragment {
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ASK_PASSWORD) {
+        if (requestCode == ERROR_REPORT) {
+            getActivity().finish();//döda hela appen.
+        } 
+        else if (requestCode == ASK_PASSWORD) {
             if (resultCode == Activity.RESULT_CANCELED) {
                 getActivity().finish();//döda hela appen.
             } 
@@ -104,14 +109,14 @@ public class BrygdListFragment extends ListFragment {
                 BrygdLab.setSourceIsDemo(table.equals("demo"));
                 new FetchItemsTask().execute();
             }
-            return;
+            //return;
         }
 
 //            if (requestCode == ADD_BEER && resultCode == Activity.RESULT_OK) {
         //Activity.RESULT_FIRST_USER är om brygd har sparats.
         //Toast.makeText(getActivity(), "onActivityResult" + requestCode + "," + resultCode + "," + data, Toast.LENGTH_LONG).show();
 //om ny brygd har sparats. dvs valt ny brygd i action bar och sedan sparat innan back-knappen tryckts.
-        if (resultCode == BrygdFragment.RESULT_BRYGD_SAVED) {
+        else if (resultCode == BrygdFragment.RESULT_BRYGD_SAVED) {
             new FetchItemsTask().execute();
         }
 //om en brygd har editerats så har även modellen lästs in på nytt, i så fall uppdatera.

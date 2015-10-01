@@ -38,6 +38,10 @@
       android:label="@string/app_name"
       android:screenOrientation="portrait">
     </activity>    
+    <activity android:name=".ErrorReportActivity"
+      android:label="@string/app_name"
+      android:screenOrientation="portrait">
+    </activity>        
     <activity android:name=".GalleryPagerActivity"
       android:windowSoftInputMode="stateHidden"
       android:label="@string/app_name">
