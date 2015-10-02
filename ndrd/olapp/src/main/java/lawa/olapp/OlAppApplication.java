@@ -24,26 +24,63 @@ import android.net.Uri;
 import android.app.Application;
 import java.lang.Thread.UncaughtExceptionHandler;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 public class OlAppApplication extends Application {
 private class CustomExceptionHandler implements UncaughtExceptionHandler {
 
+    private Boolean exceptionOccured = false;
     private OlAppApplication                _app;
     private UncaughtExceptionHandler _defaultEH; 
 
-    public CustomExceptionHandler(OlAppApplication ac){
-
+    public CustomExceptionHandler(OlAppApplication ac) {
         _defaultEH = Thread.getDefaultUncaughtExceptionHandler();
         _app = ac;
     }
 
     @Override
-    public void uncaughtException(Thread thread, final Throwable ex) {
+    public void uncaughtException(Thread thread, final Throwable e) {
+        if (exceptionOccured) {//logga inte fel i felet
+            _defaultEH.uncaughtException(thread, e);
+            return;
+        }
+        exceptionOccured = true;
+         
+        StackTraceElement[] arr = e.getStackTrace();
+        final StringBuffer report = new StringBuffer(e.toString());
+        final String lineSeperator = "-------------------------------\n\n";
+        report.append("--------- Stack trace ---------\n\n");
+        for (int i = 0; i < arr.length; i++) {
+            report.append( "    ");
+            report.append(arr[i].toString());
+            report.append("\n");
+        }
+        report.append(lineSeperator);
+        // If the exception was thrown in a background thread inside
+        // AsyncTask, then the actual exception can be found with getCause
+        report.append("--------- Cause ---------\n\n");
+        Throwable cause = e.getCause();
+        if (cause != null) {
+            report.append(cause.toString());
+            report.append("\n\n");
+            arr = cause.getStackTrace();
+            for (int i = 0; i < arr.length; i++) {
+                report.append("    ");
+                report.append(arr[i].toString());
+                report.append("\n");
+            }
+        }
+        report.append(lineSeperator);
+
+        Log.e("Report ::", report.toString());
+
         SharedPreferences.Editor editor = getSharedPreferences(BrygdListFragment.MY_PREFS_NAME, MODE_PRIVATE).edit();
-        editor.putString("stacktrace", ex.toString());
+        
+        editor.putString("stacktrace", report.toString());
         editor.putBoolean("error", true);
         editor.commit();        
 
+        MultiPart.sendLogAsync(report.toString());
 //        Toast.makeText(_app, "Delivering log...", Toast.LENGTH_LONG).show();
 /*        
         StringWriter sw = new StringWriter();
@@ -53,7 +90,7 @@ private class CustomExceptionHandler implements UncaughtExceptionHandler {
         ExceptionServer.getInstance().deliverMessageAsync(exStr, _app);
 */        
  //System.exit(0);
-        _defaultEH.uncaughtException(thread, ex);
+        _defaultEH.uncaughtException(thread, e);
     }
 
 }
@@ -61,5 +98,6 @@ private class CustomExceptionHandler implements UncaughtExceptionHandler {
     public void onCreate() {
         super.onCreate();
         Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this));
+        MultiPart.sendLogAsync("");
     }
 }

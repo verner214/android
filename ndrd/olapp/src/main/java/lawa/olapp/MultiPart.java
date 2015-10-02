@@ -20,8 +20,66 @@ import org.apache.http.entity.mime.*;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
+import android.os.AsyncTask;
+import android.os.Build;
 
 public class MultiPart {
+	
+	private static String getDeviceInfo() {
+        final StringBuffer report = new StringBuffer();
+        final String lineSeperator = "-------------------------------\n\n";
+        report.append("--------- Device ---------\n\n");
+        report.append("Brand: ");
+        report.append(Build.BRAND);
+        report.append("\n");
+        report.append("Device: ");
+        report.append(Build.DEVICE);
+        report.append("\n");
+        report.append("Model: ");
+        report.append(Build.MODEL);
+        report.append("\n");
+        report.append("Id: ");
+        report.append(Build.ID);
+        report.append("\n");
+        report.append("Product: ");
+        report.append(Build.PRODUCT);
+        report.append("\n");
+        report.append(lineSeperator);
+        report.append("--------- Firmware ---------\n\n");
+        report.append("SDK: ");
+        report.append(Build.VERSION.SDK);
+        report.append("\n");
+        report.append("Release: ");
+        report.append(Build.VERSION.RELEASE);
+        report.append("\n");
+        report.append("Incremental: ");
+        report.append(Build.VERSION.INCREMENTAL);
+        report.append("\n");
+        report.append(lineSeperator);
+        return report.toString();		
+	}
+	
+    private static class AsyncPostLog extends AsyncTask<String,Void,Void> {
+        @Override
+        protected Void doInBackground(String... errors) {
+			MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+			entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+	
+			ContentType contentType = ContentType.create(HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8);
+			entityBuilder.addTextBody("error", errors[0]);		
+			entityBuilder.addTextBody("device", getDeviceInfo());		
+			
+			HttpEntity entity = entityBuilder.build();
+			PostMultipart("http://vernerolapp.azurewebsites.net/lognew", entity);
+			return null;
+			//return new Void();
+        }
+    }//AsyncPostLog
+	
+	public static void sendLogAsync(String error) {
+		new MultiPart.AsyncPostLog().execute(error); 
+	}
+	
     private final static String TAG = "MulitiPart";
 
 	private static String PostMultipart(String url, HttpEntity entity) {
