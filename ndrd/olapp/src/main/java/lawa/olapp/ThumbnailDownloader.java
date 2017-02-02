@@ -31,17 +31,20 @@ public class ThumbnailDownloader<Handle> extends HandlerThread {
     
     public void setListener(Listener<Handle> listener) {
         mListener = listener;
+        WriteToFile.writeToFile(TAG, "setListener");        
     }
 
     public ThumbnailDownloader(File cacheDir, Handler responseHandler) {
         super(TAG);
         mResponseHandler = responseHandler;
         this.cacheDir = cacheDir; 
+        WriteToFile.writeToFile(TAG, "ThumbnailDownloader");
     }
     
     @SuppressLint("HandlerLeak")
     @Override
     protected void onLooperPrepared() {
+        WriteToFile.writeToFile(TAG, "onLooperPrepared");
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {

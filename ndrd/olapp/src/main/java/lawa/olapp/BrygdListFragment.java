@@ -68,7 +68,8 @@ public class BrygdListFragment extends ListFragment {
         WriteToFile.writeToFile(TAG, "onCreate 3");
             FetchItemsTask ft = new FetchItemsTask();
         WriteToFile.writeToFile(TAG, "onCreate 4");
-            ft.execute();           
+            //ft.execute();      
+            ft.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);     
         WriteToFile.writeToFile(TAG, "onCreate 5");
         }
 
@@ -125,7 +126,8 @@ public class BrygdListFragment extends ListFragment {
                 FetchItemsTask ft = new FetchItemsTask();
                 //new FetchItemsTask().execute();
         WriteToFile.writeToFile(TAG, "i onActivityResult 7, requestCode = " + requestCode + ", resultCode = " + resultCode);   
-        ft.execute();          
+        //ft.execute();     
+        ft.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);     
         WriteToFile.writeToFile(TAG, "i onActivityResult 8, requestCode = " + requestCode + ", resultCode = " + resultCode);   
             }
             //return;
@@ -136,7 +138,8 @@ public class BrygdListFragment extends ListFragment {
         //Toast.makeText(getActivity(), "onActivityResult" + requestCode + "," + resultCode + "," + data, Toast.LENGTH_LONG).show();
 //om ny brygd har sparats. dvs valt ny brygd i action bar och sedan sparat innan back-knappen tryckts.
         else if (resultCode == BrygdFragment.RESULT_BRYGD_SAVED) {
-            new FetchItemsTask().execute();
+            //new FetchItemsTask().execute();
+            new FetchItemsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR); 
         }
 //om en brygd har editerats så har även modellen lästs in på nytt, i så fall uppdatera.
         else {
