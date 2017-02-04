@@ -3,3 +3,14 @@ ejgit/
 temp/
 .gradle/
 build/
+local.properties
+MyApplication
+MyApplication2
+*.iml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/datasources.xml
+.idea/dataSources.ids
+# so med tips om vad som bör vara med i denna fil, kanske andra svaret är bäst? http://stackoverflow.com/questions/16736856/what-should-be-in-my-gitignore-for-an-android-studio-project
+
+

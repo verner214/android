@@ -1,0 +1,6 @@
+installation ------
+se min androidsida på nätet. gör .bat som sätter miljövariabler för bygge och annat android/miljo_xxx.bat
+
+bygga ---------
+kör .bat enligt ovam
+bygg: android\ndrd\olapp\gradle build ---bygger build.gradle om annan fil används kör: gradle -b buildfile.gradle
