@@ -1,0 +1,13 @@
+{
+    "sourcePath": [
+        "C:\\Users\\lars\\AndroidStudioProjects\\android\\ndrd\\olapp\\src\\androidTest\\java",
+        "C:\\Users\\lars\\AndroidStudioProjects\\android\\ndrd\\olapp\\src\\debug\\java",
+        "C:\\Users\\lars\\AndroidStudioProjects\\android\\ndrd\\olapp\\src\\main\\java",
+        "C:\\Users\\lars\\AndroidStudioProjects\\android\\ndrd\\olapp\\src\\release\\java",
+        "C:\\Users\\lars\\AndroidStudioProjects\\android\\ndrd\\olapp\\src\\test\\java",
+        "C:\\Users\\lars\\AndroidStudioProjects\\android\\ndrd\\olapp\\src\\testDebug\\java",
+        "C:\\Users\\lars\\AndroidStudioProjects\\android\\ndrd\\olapp\\src\\testRelease\\java"
+    ],
+    "classPathFile": "C:\\Users\\lars\\AndroidStudioProjects\\android\\ndrd\\olapp\\build\\classpath.txt",
+    "outputDirectory": "C:\\Users\\lars\\AndroidStudioProjects\\android\\ndrd\\olapp\\build\\vscode-classes"
+}
