@@ -1,7 +1,7 @@
 buildscript {
-    System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
+    //System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
     repositories {
-        jcenter()
+        maven { url "http://jcenter.bintray.com" }
     }
 
     dependencies {

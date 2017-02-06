@@ -4,3 +4,8 @@ se min androidsida på nätet. gör .bat som sätter miljövariabler för bygge och an
 bygga ---------
 kör .bat enligt ovam
 bygg: android\ndrd\olapp\gradle build ---bygger build.gradle om annan fil används kör: gradle -b buildfile.gradle
+
+
+kommentarer ------
+har experimenterat med speciell byggfil för jobb och hemmet men det ska nog inte behövas. däremot verkar det inte som om byggfilen 
+fungerar i android studio. om olapp ska fungera i as så måste något göras.
