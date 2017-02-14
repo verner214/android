@@ -10,8 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements QALab.OnModelChanged {
     Button btnMain;
     MainActivity that;
 
@@ -20,6 +21,12 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         Log.d("oncreate", "-------------------------------------------");
         setContentView(R.layout.activity_main);
+        //vid null, se till att starta filinläsning
+        if (QALab.get(this) == null) {
+            QALab.loadFile(this);
+        } else {
+            
+        }
         RadioGroup group = (RadioGroup) findViewById(R.id.myRadioGroup);
         RadioButton button;
         for(int i = 0; i < 3; i++) {
@@ -39,5 +46,22 @@ public class MainActivity extends FragmentActivity {
         });
 
 
+    }//onCreate
+
+    public void updateUI(String area1) {
+        ;//uppdatera gränssnitt
+    }
+    public void progressMsg(String message) {
+        ;//addera message till view
     }
 }
+        /*
+        String logmsg = "bundle = ";
+        if (savedInstanceState != null) {
+            for (String key : savedInstanceState.keySet()) {
+                logmsg += key + ":" + savedInstanceState.get(key) + ";";
+                //Log.d ("myApplication", key + " is a key in the bundle");
+            }
+        }
+        Toast.makeText(this, logmsg, Toast.LENGTH_LONG).show();
+*/
