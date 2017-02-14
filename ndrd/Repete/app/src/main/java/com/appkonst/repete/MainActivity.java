@@ -1,19 +1,25 @@
 package com.appkonst.repete;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements QALab.OnModelChanged {
-    Button btnMain;
+    Button btnSessionStart;
+    Button btnCommented;
+    LinearLayout llArea2;
+    RadioGroup rdgrArea1;
+    TextView txtDebug;
+
     MainActivity that;
 
     @Override
@@ -23,36 +29,61 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
         setContentView(R.layout.activity_main);
         //vid null, se till att starta filinläsning
         if (QALab.get(this) == null) {
-            QALab.loadFile(this);
-        } else {
-            
+            QALab.loadFile(this);//kommer att anropa updateUI async
         }
-        RadioGroup group = (RadioGroup) findViewById(R.id.myRadioGroup);
+        else if (QALab.get(this).dataExists())
+        {
+            updateUI(savedInstanceState.getString("area1"));
+        }
+    }//onCreate
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        //spara text för ikryssad radiobutton
+    }
+
+    public void updateUI(String area1) {
+        RadioGroup group = (RadioGroup) findViewById(R.id.rdgrArea1);
+        CheckBox chkBox;
         RadioButton button;
-        for(int i = 0; i < 3; i++) {
+        llArea2 = (LinearLayout) findViewById(R.id.llArea2);
+
+        for(int i = 0; i < 10; i++) {
             button = new RadioButton(this);
             button.setId(i);
             button.setText("Button " + i);
             group.addView(button);
+            chkBox = new CheckBox(this);
+            chkBox.setText("chkBox" + i);
+            llArea2.addView(chkBox);
+            chkBox.setId(i + 256);
         }
-        btnMain = (Button) findViewById(R.id.btnMain);
+        btnSessionStart = (Button) findViewById(R.id.btnSessionStart);
+        btnSessionStart.setText("btnSessionStart");
         that = this;
-        btnMain.setOnClickListener(new View.OnClickListener() {
+        btnSessionStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(that, QuestionActivity.class);
                 startActivity(i);
             }
         });
+        btnCommented = (Button) findViewById(R.id.btnCommented);
+        btnCommented.setText("btnCommented");
 
+        that = this;
+        btnCommented.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(that, QuestionActivity.class);
+                startActivity(i);
+            }
+        });
+    }//updateUI
 
-    }//onCreate
-
-    public void updateUI(String area1) {
-        ;//uppdatera gränssnitt
-    }
     public void progressMsg(String message) {
-        ;//addera message till view
+        txtDebug.setText(txtDebug.getText() + "-" + message);
     }
 }
         /*
