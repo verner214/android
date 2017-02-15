@@ -24,7 +24,7 @@ public class QALab {
 
     // Container Activity must implement this interface
     public interface OnModelChanged {
-        public void updateUI(String area1);
+        public void updateUI(int area1Id);
         public void progressMsg(String msg);
     }
 
@@ -53,15 +53,21 @@ public class QALab {
 
 //returnerar alla distinkta area1 som finns
     public List<String> getArea1s() {
-        List<String> s = Arrays.asList("area1_1", "area1_2", "area1_3");
+        List<String> s = Arrays.asList("csharp", "js");
         return s;
         //return null;
     }
     //returnerar alla distinkta area2 som finns för ett givet area1
     public List<String> getArea2s(String area1) {
-        List<String> s = Arrays.asList("area2_1", "area2_2", "area2_3");
-        return s;
-        //return null;
+        if (area1.equals("csharp")) {
+            //List<String> s = Arrays.asList("area2_1", "area2_2", "area2_3");
+            return Arrays.asList("csharp_1", "csharp_2", "csharp_3");
+        }
+        else if (area1.equals("js")) {
+            //List<String> s = Arrays.asList("area2_1", "area2_2", "area2_3");
+            return Arrays.asList("js_1", "js_2", "js_3");
+        }
+        return Arrays.asList("null_1", "null_2", "null_3");
     }
     //sann om filen har lästs in. används innan anrop till updateUI i MainActivity. kan vara falsk om MainActivity startats om efter anrop till get men innan filen har lästs in.
     public boolean dataExists() {
