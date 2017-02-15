@@ -2,6 +2,7 @@ package com.appkonst.repete;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
 public class QALab {
 
     private ArrayList<QAItem> mQAItems;
+    private final static String TAG = "BrygdEditFragment";
 
     private static QALab sQALab;
     private Context mAppContext;
@@ -71,7 +73,9 @@ public class QALab {
     }
     //sann om filen har lästs in. används innan anrop till updateUI i MainActivity. kan vara falsk om MainActivity startats om efter anrop till get men innan filen har lästs in.
     public boolean dataExists() {
-        return mQAItems != null;
+        Log.d(TAG, "dataExists");
+        //return mQAItems != null;
+        return true;
     }
 
     public void startSession(String area1, List<String> area2s) {

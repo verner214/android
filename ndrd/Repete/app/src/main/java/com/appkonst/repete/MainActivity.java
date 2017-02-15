@@ -22,31 +22,36 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
 
     MainActivity that;
     private final static String KEY_AREA1_ID = "KEY_AREA1_ID";
+    private final static String TAG = "BrygdEditFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("oncreate", "-------------------------------------------");
+        Log.d(TAG, "onCreate -------------------------------------------");
         setContentView(R.layout.activity_main);
         //vid null har get aldrig anropats och singleton ej initierats. då skapas singleton samtidigt som fil hämtas och läses in.
         //när detta är klart anropas callback i denna aktivitet (updataUI)
         if (QALab.get(this) == null) {
             QALab.loadFile(this);//kommer att anropa updateUI async
+            Log.d(TAG, "onCreate 2-------------------------------------------");
         }
         //dataExists() returnerar false mellan singleton start och filinläsning klar. skulle aktiviteten startas om under denna tid ska updateUI inte anropas. aktivity hamnar då i dött läge. (man får rotera helt enkelt)
         else if (QALab.get(this).dataExists())
         {
+            Log.d(TAG, "onCreate 3------------------------------------------- " + savedInstanceState.getInt("KEY_AREA1_ID", -1));
             updateUI(savedInstanceState.getInt("KEY_AREA1_ID", -1));
         }
     }//onCreate
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         //spara text för ikryssad radiobutton
+        rdgrArea1 = (RadioGroup) findViewById(R.id.rdgrArea1);
         int id = rdgrArea1.getCheckedRadioButtonId();
         if (id != -1) {
             outState.putInt("KEY_AREA1_ID", id);
+            Log.d(TAG, "saveState 3 -------------------------------------------" + id);
         }
     }
     //hämtar area2 strängar och skapar checkboxar
@@ -54,11 +59,13 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
         RadioButton rb = (RadioButton) findViewById(area1Id);
         int i = 0;
         llArea2 = (LinearLayout) findViewById(R.id.llArea2);
+        llArea2.removeAllViews();
         for (String s : QALab.get(this).getArea2s(rb.getText().toString())) {
             CheckBox chkBox = new CheckBox(this);
             chkBox.setText(s);
             llArea2.addView(chkBox);
-            chkBox.setId(i + 100 * area1Id);
+            chkBox.setId(i + 100 * (area1Id + 1));
+            i++;
         }
     }
     //area1Id == -1 betyder att ingen radioknapp är nedtryckt. dvs
@@ -75,6 +82,7 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
                 createArea2(checkedId);
             }
         });
+        group.removeAllViews();
         for (String s : QALab.get(this).getArea1s()) {
             button = new RadioButton(this);
             button.setId(i++);
