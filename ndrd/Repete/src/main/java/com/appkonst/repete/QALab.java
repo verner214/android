@@ -3,6 +3,7 @@ package com.appkonst.repete;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.EditText;
 
@@ -15,9 +16,12 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by lars on 2017-02-13.
@@ -42,10 +46,12 @@ public class QALab {
     }
 
     public static boolean FileIsRequested() {
+        Log.d(TAG, "FileIsRequested -------------------------------------------");
         return fileIsRequested;
     }
 
     private static String getStringFromFile(Context ctx, String filename) throws Exception {
+        Log.d(TAG, "getStringFromFile -------------------------------------------");
         FileInputStream in = ctx.openFileInput(filename);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         StringBuilder sb = new StringBuilder();
@@ -60,6 +66,7 @@ public class QALab {
     private static class FetchItemsTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
+            Log.d(TAG, "doInBackground -------------------------------------------");
             try {
                 String string = new HTTP().GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblrepete?st=2017-02-08T20%3A34%3A21Z&se=2036-02-14T08%3A54%3A21Z&sp=r&sv=2014-02-14&tn=tblrepete&sig=HMFUBRLCbQbegxPB3X%2FC5O2%2FbbKe2P%2Fp9GNShPvIRvw%3D");
 
@@ -76,18 +83,20 @@ public class QALab {
             } catch (Exception e) {
                 e.printStackTrace();//alla fel måste fårngas i java
             }
-
+            mQAItems = Jsonify.String2Json(jsonstring);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void param) {
+            Log.d(TAG, "onPostExecute -------------------------------------------");
             mCallback.updateUI(-1);
         }
     }
 
     //här hämtar vi fil (om det går) sen parsar json från fil (alltid). det skapar mQAItems
     public static void loadFile(Activity activity) {
+        Log.d(TAG, "loadFile -------------------------------------------");
         fileIsRequested = true;
         mAppContext = activity.getApplicationContext();
         try {
@@ -102,8 +111,13 @@ public class QALab {
 
 //returnerar alla distinkta area1 som finns
     public static List<String> getArea1s() {
-        List<String> s = Arrays.asList("csharp", "js");
-        return s;
+        //List<String> s = Arrays.asList("csharp", "js");
+        List<String> ls = new ArrayList<String>();
+        for (QAItem qa : mQAItems) {
+            Log.d(TAG, "getArea1s -------------------------------------------" + qa.getArea1());
+            ls.add(qa.getArea1());
+        }
+        return ls;
         //return null;
     }
     //returnerar alla distinkta area2 som finns för ett givet area1
