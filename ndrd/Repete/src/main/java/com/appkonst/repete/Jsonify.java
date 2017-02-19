@@ -75,7 +75,13 @@ public class Jsonify {
 //sortera på ölnamn
         Collections.sort(qas, new Comparator<QAItem>() {
             public int compare(QAItem v1, QAItem v2) {
-                return v1.getArea1().compareTo(v2.getArea1());
+                int c= v1.getArea1().compareTo(v2.getArea1());
+                if (c == 0) {
+                    String v1a2 = v1.getArea2() == null ? "" : v1.getArea2();
+                    String v2a2 = v2.getArea2() == null ? "" : v2.getArea2();
+                    return v1a2.compareTo(v2a2);
+                }
+                return c;
             }
         });
         //WriteToFile.writeToFile(TAG, "ArrayList<Brygd> fetchItems() 3");

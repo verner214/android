@@ -33,7 +33,7 @@ import java.util.ListIterator;
 public class QALab {
 
     private static ArrayList<QAItem> mQAItems;
-    private final static String TAG = "BrygdEditFragment";
+    private final static String TAG = "QALab";
     private static boolean fileIsRequested = false;
     private static OnModelChanged mCallback;
     private static Context mAppContext;
@@ -113,15 +113,23 @@ public class QALab {
     public static List<String> getArea1s() {
         //List<String> s = Arrays.asList("csharp", "js");
         List<String> ls = new ArrayList<String>();
+        String previousArea1 = "";
         for (QAItem qa : mQAItems) {
-            Log.d(TAG, "getArea1s -------------------------------------------" + qa.getArea1());
-            ls.add(qa.getArea1());
+            Log.d(TAG, "getArea1s -------------------------------------------" + qa.getArea1() + "," + qa.getArea2());
+            Log.d(TAG, "getArea1s prev, area1 = " + previousArea1 + "," + qa.getArea1());
+            if (previousArea1.compareTo(qa.getArea1()) != 0) {
+                Log.d(TAG, "compare to = " + previousArea1.compareTo(qa.getArea1()));
+                ls.add(qa.getArea1());
+                Log.d(TAG, "area1 = " + qa.getArea1());
+                previousArea1 = qa.getArea1();
+            }
         }
         return ls;
         //return null;
     }
     //returnerar alla distinkta area2 som finns för ett givet area1
     public static List<String> getArea2s(String area1) {
+        /*
         if (area1.equals("csharp")) {
             //List<String> s = Arrays.asList("area2_1", "area2_2", "area2_3");
             return Arrays.asList("csharp_1", "csharp_2", "csharp_3");
@@ -131,6 +139,23 @@ public class QALab {
             return Arrays.asList("js_1", "js_2", "js_3");
         }
         return Arrays.asList("null_1", "null_2", "null_3");
+        */
+        List<String> ls = new ArrayList<String>();
+        String previousArea2 = "maaaargemmLAJHSNOD";
+        for (QAItem qa : mQAItems) {
+            if (qa.getArea1().compareTo(area1) != 0) {
+                continue;
+            }
+            //Log.d(TAG, "getArea1s -------------------------------------------" + qa.getArea1() + "," + qa.getArea2());
+            //Log.d(TAG, "getArea1s prev, area1 = " + previousArea1 + "," + qa.getArea1());
+            String area2 = qa.getArea2() == null ? "" : qa.getArea2();
+            if (previousArea2.compareTo(area2) != 0) {
+                Log.d(TAG, "compare to2 = " + area2);
+                ls.add(area2);
+                previousArea2 = area2;
+            }
+        }
+        return ls;
     }
     //sann om filen har lästs in. används innan anrop till updateUI i MainActivity. kan vara falsk om MainActivity startats om efter anrop till get men innan filen har lästs in.
     public static boolean dataExists() {

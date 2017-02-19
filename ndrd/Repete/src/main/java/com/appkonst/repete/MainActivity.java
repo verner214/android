@@ -85,8 +85,10 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
         group.removeAllViews();
         for (String s : QALab.getArea1s()) {
             button = new RadioButton(this);
+            Log.d(TAG, "button id, text = " + i + "," + s);
             button.setId(i++);
-            button.setText(s);
+            String s1 = new String(s);//annars får alla radioknappar samma text
+            button.setText(s1);
             group.addView(button);
         }
 //och checkboxar för area2 om ngn radioknapp är nedtryckt
