@@ -32,7 +32,7 @@ import java.util.ListIterator;
     //tillstånd 4: session skapad -- startSession
 public class QALab {
 
-    private static ArrayList<QAItem> mQAItems;
+    private static ArrayList<QAItem> mQAItems = null;
     private final static String TAG = "QALab";
     private static boolean fileIsRequested = false;
     private static OnModelChanged mCallback;
@@ -161,11 +161,15 @@ public class QALab {
     public static boolean dataExists() {
         Log.d(TAG, "dataExists");
         //return mQAItems != null;
-        return true;
+        return mQAItems != null;
     }
 
     public static void startSession(String area1, List<String> area2s) {
     }
+
+    public static void startSessionComments() {
+    }
+
     //dessa nedan är endast giltiga om startSession har anropats
     public static int Count() {
         return 0;
