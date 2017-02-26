@@ -33,6 +33,7 @@ import java.util.ListIterator;
 public class QALab {
 
     private static ArrayList<QAItem> mQAItems = null;
+    private static ArrayList<QAItem> mQASessionItems = null;
     private final static String TAG = "QALab";
     private static boolean fileIsRequested = false;
     private static OnModelChanged mCallback;
@@ -165,6 +166,16 @@ public class QALab {
     }
 
     public static void startSession(String area1, List<String> area2s) {
+        mQASessionItems = new ArrayList<>();
+        for (QAItem qa : mQAItems) {
+            if (qa.getArea1().compareTo(area1) == 0) {
+                for (String a2 : area2s) {
+                    if (a2.compareTo(qa.getArea2()) == 0) {
+                        mQASessionItems.add(0, qa);//gör slump här senare
+                    }
+                }
+            }
+        }
     }
 
     public static void startSessionComments() {
@@ -172,10 +183,10 @@ public class QALab {
 
     //dessa nedan är endast giltiga om startSession har anropats
     public static int Count() {
-        return 0;
+        return mQASessionItems.size();
     }
     public static QAItem getQAItem(int pos) {
-        return null;
+        return mQASessionItems.get(pos);
     }
 
 }
