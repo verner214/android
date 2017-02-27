@@ -41,12 +41,14 @@ public class QuestionActivity extends FragmentActivity {
         });
 //bör ha liknande konstruktion så att current item visas och att den inte börjar om från 0 vid varje rotation eller när man kommer tillbaka eftet questionEditactivity
         //intent sätts då i fragment som skapas eller 0 om första gången (kommer från mainactivity)
-        String brygdId = (String)getIntent().getSerializableExtra(BrygdFragment.EXTRA_BRYGD_ID);
+        /*
+        String brygdId = (String)getIntent().getSerializableExtra(QuestionFragment.);
         for (int i = 0; i < brygds.size(); i++) {
             if (brygds.get(i).getId().equals(brygdId)) {
                 mViewPager.setCurrentItem(i);
                 break;
             }
         }//for
+        */
     }//onCreate
 }

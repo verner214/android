@@ -13,6 +13,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends FragmentActivity implements QALab.OnModelChanged {
     Button btnSessionStart;
     Button btnCommented;
@@ -103,6 +105,12 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
         btnSessionStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                rdgrArea1 = (RadioGroup) findViewById(R.id.rdgrArea1);
+                RadioButton rb = (RadioButton) findViewById(rdgrArea1.getCheckedRadioButtonId());
+                //rdgrArea1.
+                ArrayList<String> tmp = new ArrayList<String>();
+                tmp.add("generics");
+                QALab.startSession(rb.getText().toString(), tmp);
                 Intent i = new Intent(that, QuestionActivity.class);
                 startActivity(i);
             }
