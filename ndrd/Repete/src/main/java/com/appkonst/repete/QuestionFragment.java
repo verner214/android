@@ -25,7 +25,8 @@ public class QuestionFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private int mPos;
-    TextView mTxtPos;
+    private QAItem mQAItem;
+//    TextView mTxtRubrik;
 
     public QuestionFragment() {
         // Required empty public constructor
@@ -53,6 +54,7 @@ public class QuestionFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mPos = getArguments().getInt(ARG_POS);
+            mQAItem = QALab.getQAItem(mPos / 2);
         }
     }
 
@@ -61,8 +63,13 @@ public class QuestionFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_question, container, false);
-        mTxtPos = (TextView) v.findViewById(R.id.mTxtPos);
-        mTxtPos.setText("" + mPos);
+        TextView txtRubrik = (TextView) v.findViewById(R.id.txtRubrik);
+        boolean question = mPos % 2 == 0;
+        txtRubrik.setText((question ? "F " : "S ") + (mPos / 2 + 1) + "/" + QALab.Count() + " " + mQAItem.getArea1() + " - " + mQAItem.getArea2());
+        TextView txtQA = (TextView) v.findViewById(R.id.txtQA);
+        txtQA.setText(question ? mQAItem.getQuestion() : mQAItem.getAnswer());
+        TextView txtComments = (TextView) v.findViewById(R.id.txtComments);
+        txtComments.setText(mQAItem.getComments());
         return v;
     }
 

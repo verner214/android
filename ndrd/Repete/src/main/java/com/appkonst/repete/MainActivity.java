@@ -66,9 +66,13 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
             CheckBox chkBox = new CheckBox(this);
             chkBox.setText(s);
             llArea2.addView(chkBox);
-            chkBox.setId(i + 100 * (area1Id + 1));
+            //chkBox.setId(i + 100 * (area1Id + 1));
+            chkBox.setId(getChkId(area1Id, i));
             i++;
         }
+    }
+    private int getChkId(int area1Id, int cnt) {
+        return cnt + 100 * (area1Id + 1);
     }
     //area1Id == -1 betyder att ingen radioknapp är nedtryckt. dvs
     public void updateUI(int area1Id) {
@@ -107,10 +111,17 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
             public void onClick(View v) {
                 rdgrArea1 = (RadioGroup) findViewById(R.id.rdgrArea1);
                 RadioButton rb = (RadioButton) findViewById(rdgrArea1.getCheckedRadioButtonId());
-                //rdgrArea1.
-                ArrayList<String> tmp = new ArrayList<String>();
-                tmp.add("generics");
-                QALab.startSession(rb.getText().toString(), tmp);
+                ArrayList<String> area2s = new ArrayList<String>();
+                for (int i = 0; true; i++) {
+                    CheckBox cb = (CheckBox) findViewById(getChkId(rb.getId(), i));
+                    if (cb == null) {
+                        break;
+                    }
+                    if (cb.isChecked()) {
+                        area2s.add(cb.getText().toString());
+                    }
+                }
+                QALab.startSession(rb.getText().toString(), area2s);
                 Intent i = new Intent(that, QuestionActivity.class);
                 startActivity(i);
             }

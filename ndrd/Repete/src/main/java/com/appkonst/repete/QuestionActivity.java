@@ -28,7 +28,7 @@ public class QuestionActivity extends FragmentActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
             @Override
             public int getCount() {
-                return QALab.Count();
+                return QALab.Count() * 2;
             }
             @Override
             public Fragment getItem(int pos) {
