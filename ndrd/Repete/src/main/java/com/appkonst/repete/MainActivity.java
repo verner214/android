@@ -133,6 +133,7 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
         btnCommented.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                QALab.startSessionComments();
                 Intent i = new Intent(that, QuestionActivity.class);
                 startActivity(i);
             }

@@ -7,11 +7,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
-
-        <com.appkonst.repete.ScalingImageView android:id="@+id/imgImg1"
-            android:layout_width="match_parent"
-            android:layout_height="0px"
-            />
         <TextView android:id="@+id/txtRubrik"
             style="@android:style/TextAppearance.Large"
             android:textStyle="bold"
@@ -19,6 +14,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            />
+        <com.appkonst.repete.ScalingImageView android:id="@+id/imgImg1"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
             />
         <TextView android:id="@+id/txtQA"
             android:layout_width="match_parent"

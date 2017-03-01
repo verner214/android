@@ -1,5 +1,8 @@
 package com.appkonst.repete;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 //import android.support.v7.app.AppCompatActivity;
@@ -7,13 +10,18 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 //detta är en pageractivity
 public class QuestionActivity extends FragmentActivity {
 
     ViewPager mViewPager;
+    private final static String TAG = "QuestionActivity";
+
     //hur få viewpager att uppdatera sig? se SO nedan för acceperad men inte så effektiv lösning
 //http://stackoverflow.com/questions/7263291/viewpager-pageradapter-not-updating-the-view
     @Override
@@ -51,4 +59,6 @@ public class QuestionActivity extends FragmentActivity {
         }//for
         */
     }//onCreate
+
+
 }

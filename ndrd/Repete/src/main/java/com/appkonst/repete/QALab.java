@@ -179,6 +179,12 @@ public class QALab {
     }
 
     public static void startSessionComments() {
+        mQASessionItems = new ArrayList<>();
+        for (QAItem qa : mQAItems) {
+            if (qa.getComments() != null && qa.getComments().compareTo("") != 0) {
+                mQASessionItems.add(0, qa);
+            }
+        }
     }
 
     //dessa nedan är endast giltiga om startSession har anropats
