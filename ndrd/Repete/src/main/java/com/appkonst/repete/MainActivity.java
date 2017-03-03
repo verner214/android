@@ -24,7 +24,7 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
 
     MainActivity that;
     private final static String KEY_AREA1_ID = "KEY_AREA1_ID";
-    private final static String TAG = "BrygdEditFragment";
+    private final static String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

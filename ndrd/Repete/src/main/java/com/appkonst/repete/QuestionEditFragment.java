@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -18,21 +19,28 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class QuestionEditFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
+    private int mPos;
+    private QAItem mQAItem;
+    private final static String TAG = "QuestionEditFragment";
 
     public QuestionEditFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
-
+    public static QuestionEditFragment newInstance(int pos) {
+        QuestionEditFragment fragment = new QuestionEditFragment();
+        Bundle args = new Bundle();
+        args.putInt(QuestionFragment.ARG_POS, pos);
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            mPos = getArguments().getInt(QuestionFragment.ARG_POS);
+            mQAItem = QALab.getQAItem(mPos / 2);
         }
     }
 
@@ -40,7 +48,16 @@ public class QuestionEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_question_edit, container, false);
+        View v = inflater.inflate(R.layout.fragment_question_edit, container, false);
+        boolean question = mPos % 2 == 0;
+
+        TextView txtRubrik = (TextView) v.findViewById(R.id.txtRubrik);
+        txtRubrik.setText((question ? "F " : "S ") + (mPos / 2 + 1) + "/" + QALab.Count() + " " + mQAItem.getArea1() + " - " + mQAItem.getArea2());
+
+        TextView txtComments = (TextView) v.findViewById(R.id.txtComments);
+        txtComments.setText(mQAItem.getComments());
+
+        return v;
     }
 
 }

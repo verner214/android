@@ -1,6 +1,8 @@
 package com.appkonst.repete;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -9,9 +11,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +25,8 @@ import java.io.IOException;
 public class QuestionFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_POS = "param1";
+    public static final String ARG_POS = "question number";
+    public static final int REQUESTCODE_EDIT_QUESTION = 1;//minns inte om 0 är ok
 
     // TODO: Rename and change types of parameters
     private int mPos;
@@ -42,6 +49,9 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "inför setHasOptionsMenu");
+        setHasOptionsMenu(true);
+
         if (getArguments() != null) {
             mPos = getArguments().getInt(ARG_POS);
             mQAItem = QALab.getQAItem(mPos / 2);
@@ -52,6 +62,12 @@ public class QuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        /*
+        mToolbar = (Toolbar) v.findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        */
+
         View v = inflater.inflate(R.layout.fragment_question, container, false);
         boolean question = mPos % 2 == 0;
 
@@ -72,6 +88,38 @@ public class QuestionFragment extends Fragment {
         }
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d(TAG, "onCreateOptionsMenu1");
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_question, menu);
+        Log.d(TAG, "onCreateOptionsMenu2");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.menu_item_edit:
+                Log.d(TAG, "menu_item_edit, starta QuestionEditActivity");
+                Intent i = new Intent(getActivity(), QuestionEditActivity.class);
+                i.putExtra(QuestionFragment.ARG_POS, mPos);
+                startActivityForResult(i, REQUESTCODE_EDIT_QUESTION);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUESTCODE_EDIT_QUESTION)
+        {
+            getView().setVisibility(View.GONE);//så att man inte ser den ouppdaterade viewn. kommer detta att ge en blank fragment?
+        }
     }
 
     private class ImgCacheParam {
