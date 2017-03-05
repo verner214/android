@@ -15,14 +15,38 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             />
-        <TextView android:id="@+id/txtComments"
-            android:textColor="#ff0000"
+        <Button android:id="@+id/btnSelectPhoto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:text="Välj bild"
+            />
+        <ImageView android:id="@+id/imgLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kommentar"
+            style="?android:listSeparatorTextViewStyle"
+            />
+        <EditText android:id="@+id/txeComments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            />
+        <Button android:id="@+id/btnSaveComments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="Spara kommentar"
             />
     </LinearLayout>
 </ScrollView>
