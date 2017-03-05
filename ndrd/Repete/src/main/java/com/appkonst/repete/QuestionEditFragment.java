@@ -1,10 +1,12 @@
 package com.appkonst.repete;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,6 +27,7 @@ public class QuestionEditFragment extends Fragment {
     static final int REQUESTCODE_IMAGE_GET = Activity.RESULT_FIRST_USER;
     ImageView mImgLarge;
     EditText mTxeComments;
+
 
     public QuestionEditFragment() {
         // Required empty public constructor
@@ -84,6 +87,13 @@ public class QuestionEditFragment extends Fragment {
     }//onCreateView
 
     private void saveComments() {
+        new PostFormTask<String>() {
+            @Override
+            public String doPost(String comments) {
+                return HTTP.postComments(comments);
+            }
+        }.exec(mTxeComments.getText().toString(), "kommentar sparas.");
+
     }
     //startar inbyggd Activity som väljer bild
     private void selectImage() {
@@ -100,21 +110,58 @@ public class QuestionEditFragment extends Fragment {
 //visa vald bild i view, spara i molnet och
             if (requestCode == REQUESTCODE_IMAGE_GET && resultCode == Activity.RESULT_OK) {
                 Uri selectedImageURI = data.getData();
-                boolean b2 = selectedImageURI == null;
-
                 Bitmap bmpLarge = ImageLibrary.Uri2Bmp(getActivity(), selectedImageURI, 640, 360, true);
-                boolean b = bmpLarge == null;
-
-                Toast.makeText(getActivity(), "onActivityResult=" + b2 + "," + b, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "onActivityResult=" + b2 + "," + b, Toast.LENGTH_SHORT).show();
                 mImgLarge.setImageBitmap(bmpLarge);
 //spara bild i molnet
-
+                //progress = ProgressDialog.show(getActivity(), "bild sparas", "vänta...", true);
+                new PostFormTask<byte[]>() {
+                    @Override
+                    public String doPost(byte[] bytaArr) {
+                        return HTTP.postImage(bytaArr, mPos % 2 == 0/*question*/);
+                    }
+                }.exec(ImageLibrary.Bmp2Jpg(bmpLarge, 90), "bild sparas.");
             }
+
         } catch (Exception e) {
             Toast.makeText(getActivity(), "exception=" + e.toString(), Toast.LENGTH_LONG).show();
             Log.e(TAG, "Error downloading image", e);
         }
 
     }//onActivityResult
+
+    private abstract class PostFormTask<FormItem> extends AsyncTask<FormItem,Void,String> {
+        protected abstract String doPost(FormItem f);
+        ProgressDialog mProgress;
+
+        public void exec(FormItem fi, String msg) {
+            mProgress = ProgressDialog.show(getActivity(), "Vänta...", msg, true);
+            executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, fi);
+        }
+
+        @Override
+        protected String doInBackground(FormItem... forms) {
+            return doPost(forms[0]);
+            //return MultiPart.PostForm(forms[0]);
+//            return bytes;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+//ta bort busy dialog om den syns
+            if (getActivity() != null) {
+                if (mProgress != null) {//måste ju inte ha använt exec.
+                    mProgress.dismiss();
+                }
+                if (result != null) {
+                    Toast.makeText(getActivity(), "Något gick fel...\n " + result, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                getActivity().setResult(QuestionFragment.REQUESTCODE_EDIT_QUESTION);
+                getActivity().finish();
+            }//if (getActivity() != null) {
+        }//onPostExecute
+
+    }//FetchItemsTask
 
 }

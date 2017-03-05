@@ -119,6 +119,13 @@ public class HTTP {
         }
     }//getUrlBytes
 
+
+    public static String postImage(byte[] byteArr, boolean question) {
+        return null;
+    }
+    public static String postComments(String comments) {
+        return null;
+    }
     private static byte[] file2bytes(File file) throws IOException {
 
         byte[] buffer = new byte[(int) file.length()];
