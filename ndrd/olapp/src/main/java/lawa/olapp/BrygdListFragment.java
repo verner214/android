@@ -96,6 +96,7 @@ public class BrygdListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+//dessa två rader ovan är ändrade för att felsöka repete
         // get the Crime from the adapter
         Brygd c = ((BrygdAdapter)getListAdapter()).getItem(position);
         // start an instance of CrimePagerActivity

@@ -72,6 +72,7 @@ public class BrygdEditFragment extends Fragment {
         setHasOptionsMenu(true);
 
         Bundle args = getArguments();
+        //F kan vara i new (ny brygd) eller edit mode
         if (args != null) {
             String brygdId = (String) args.getSerializable(BrygdFragment.EXTRA_BRYGD_ID);
             mBrygd = BrygdLab.get(getActivity()).getBrygd(brygdId);

@@ -8,7 +8,7 @@ public class BrygdEditActivity extends SingleFragmentActivity {
     protected Fragment createFragment() {
         String brygdId = (String)getIntent()
             .getSerializableExtra(BrygdFragment.EXTRA_BRYGD_ID);
-        if (brygdId == null) {
+        if (brygdId == null) {//är null vid ny brygd
             return new BrygdEditFragment();
         }
         return BrygdEditFragment.newInstance(brygdId);

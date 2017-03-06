@@ -90,6 +90,8 @@ public class QuestionEditFragment extends Fragment {
         new PostFormTask<String>() {
             @Override
             public String doPost(String comments) {
+//    public static String postComments(String id, String comments) {
+
                 return HTTP.postComments(comments);
             }
         }.exec(mTxeComments.getText().toString(), "kommentar sparas.");
@@ -118,6 +120,8 @@ public class QuestionEditFragment extends Fragment {
                 new PostFormTask<byte[]>() {
                     @Override
                     public String doPost(byte[] bytaArr) {
+                        //public static String postImage(String id, byte[] byteArr, boolean question) {
+
                         return HTTP.postImage(bytaArr, mPos % 2 == 0/*question*/);
                     }
                 }.exec(ImageLibrary.Bmp2Jpg(bmpLarge, 90), "bild sparas.");

@@ -2,10 +2,16 @@ package com.appkonst.repete;
 
 import android.util.Log;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -120,12 +126,6 @@ public class HTTP {
     }//getUrlBytes
 
 
-    public static String postImage(byte[] byteArr, boolean question) {
-        return null;
-    }
-    public static String postComments(String comments) {
-        return null;
-    }
     private static byte[] file2bytes(File file) throws IOException {
 
         byte[] buffer = new byte[(int) file.length()];
@@ -145,4 +145,53 @@ public class HTTP {
 
         return buffer;
     }//file2bytes
+
+    private static String PostMultipart(String url, HttpEntity entity) {
+        String errormsg = null;
+        try
+        {
+            HttpClient client = new DefaultHttpClient();
+            HttpPost post = new HttpPost(url);
+
+            post.setEntity(entity);
+            HttpResponse response = client.execute(post);
+            HttpEntity httpEntity = response.getEntity();
+            String postResult = EntityUtils.toString(httpEntity);
+            // Toast.makeText(context, "multipart result=" + result, Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "result from post:" + postResult);
+        }
+        catch (Exception e)
+        {
+            //Toast.makeText(context, "exception=" + e.toString(), Toast.LENGTH_LONG).show();
+            errormsg = "Error uploading form, " + e.toString();
+            Log.e(TAG, "Error uploading multipartform ", e);
+            Log.e(TAG, errormsg, e);
+        }
+        return errormsg;
+    }
+//id, imgtype (question|answer), image
+    public static String postImage(String id, byte[] byteArr, boolean question) {
+        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+        entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        entityBuilder.addBinaryBody("img", byteArr, ContentType.create("image/jpeg"), "form_imgLarge.jpg");
+
+        //ContentType contentType = ContentType.create(org.apache.http.protocol.HTTP.PLAIN_TEXT_TYPE, org.apache.http.protocol.HTTP.UTF_8);
+        entityBuilder.addTextBody("id", id);
+        entityBuilder.addTextBody("imgtype", question ? "question" : "answer");
+
+        HttpEntity entity = entityBuilder.build();
+        return PostMultipart("http://repete.azurewebsites.net/image", entity);
+    }
+    //id, comments
+    public static String postComments(String id, String comments) {
+        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+        entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+        ContentType contentType = ContentType.create(org.apache.http.protocol.HTTP.PLAIN_TEXT_TYPE, org.apache.http.protocol.HTTP.UTF_8);
+        entityBuilder.addTextBody("id", id);
+        entityBuilder.addTextBody("comments", comments, contentType);
+
+        HttpEntity entity = entityBuilder.build();
+        return PostMultipart("http://repete.azurewebsites.net/newedit", entity);
+    }
 }
