@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 //detta är en pageractivity
-public class QuestionActivity extends FragmentActivity {
+public class QuestionActivity extends FragmentActivity implements QuestionFragment.OnUpdatedListener {
 
     ViewPager mViewPager;
     private final static String TAG = "QuestionActivity";
@@ -60,5 +60,7 @@ public class QuestionActivity extends FragmentActivity {
         */
     }//onCreate
 
-
+    public void updatePager() {
+        mViewPager.getAdapter().notifyDataSetChanged();
+    }
 }

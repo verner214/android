@@ -33,6 +33,7 @@ public class QuestionFragment extends Fragment {
     private QAItem mQAItem;
     private final static String TAG = "QuestionFragment";
     ScalingImageView mImg;
+    OnUpdatedListener mCallback;
 
     public QuestionFragment() {
         // Required empty public constructor
@@ -89,6 +90,23 @@ public class QuestionFragment extends Fragment {
 
         return v;
     }
+    // Container Activity must implement this interface
+    public interface OnUpdatedListener {
+        public void updatePager();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnUpdatedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnUpdatedListener");
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -118,7 +136,8 @@ public class QuestionFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUESTCODE_EDIT_QUESTION)
         {
-            getView().setVisibility(View.GONE);//så att man inte ser den ouppdaterade viewn. kommer detta att ge en blank fragment?
+            getView().setVisibility(View.GONE);//så att man inte ser den ouppdaterade viewn. kommer den hinna ses?
+            mCallback.updatePager();
         }
     }
 
