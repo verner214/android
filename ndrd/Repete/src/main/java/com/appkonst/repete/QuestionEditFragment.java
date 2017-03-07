@@ -8,7 +8,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +22,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+
 public class QuestionEditFragment extends Fragment {
 
     private int mPagerIndex;
     private QAItem mQAItem;
     private final static String TAG = "QuestionEditFragment";
     static final int REQUESTCODE_IMAGE_GET = Activity.RESULT_FIRST_USER;
+    static final int REQUEST_TAKE_PHOTO = Activity.RESULT_FIRST_USER + 1;
+
     ImageView mImgLarge;
     EditText mTxeComments;
 
@@ -107,6 +115,35 @@ public class QuestionEditFragment extends Fragment {
         }
     }
 
+//alltid använda samma fil, sparas ju i molnet direkt efter, dessutom kan man inte spara filnamn i membervariabel eftersom fragmentobjectet kan recyclas vid ont om minne
+    //https://developer.android.com/training/camera/photobasics.html
+    private File createImageFile() throws IOException {
+        return new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myPic.jpg");
+    }
+
+
+    private void takeAndSavePicture() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ...
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
