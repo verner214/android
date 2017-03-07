@@ -25,11 +25,11 @@ import java.io.IOException;
 public class QuestionFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static final String ARG_POS = "question number";
+    public static final String ARG_PAGERINDEX = "question number";
     public static final int REQUESTCODE_EDIT_QUESTION = 1;//minns inte om 0 är ok
 
     // TODO: Rename and change types of parameters
-    private int mPos;
+    private int mPagerIndex;
     private QAItem mQAItem;
     private final static String TAG = "QuestionFragment";
     ScalingImageView mImg;
@@ -42,7 +42,7 @@ public class QuestionFragment extends Fragment {
     public static QuestionFragment newInstance(int pos) {
         QuestionFragment fragment = new QuestionFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_POS, pos);
+        args.putInt(ARG_PAGERINDEX, pos);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,8 +54,8 @@ public class QuestionFragment extends Fragment {
         setHasOptionsMenu(true);
 
         if (getArguments() != null) {
-            mPos = getArguments().getInt(ARG_POS);
-            mQAItem = QALab.getQAItem(mPos / 2);
+            mPagerIndex = getArguments().getInt(ARG_PAGERINDEX);
+            mQAItem = QALab.getQAItem(mPagerIndex / 2);
         }
     }
 
@@ -70,19 +70,18 @@ public class QuestionFragment extends Fragment {
         */
 
         View v = inflater.inflate(R.layout.fragment_question, container, false);
-        boolean question = mPos % 2 == 0;
 
         TextView txtRubrik = (TextView) v.findViewById(R.id.txtRubrik);
-        txtRubrik.setText((question ? "F " : "S ") + (mPos / 2 + 1) + "/" + QALab.Count() + " " + mQAItem.getArea1() + " - " + mQAItem.getArea2());
+        txtRubrik.setText((mPagerIndex % 2 == 0 ? "F " : "S ") + (mPagerIndex / 2 + 1) + "/" + QALab.Count() + " " + mQAItem.getArea1() + " - " + mQAItem.getArea2());
 
         TextView txtQA = (TextView) v.findViewById(R.id.txtQA);
-        txtQA.setText(question ? mQAItem.getQuestion() : mQAItem.getAnswer());
+        txtQA.setText(mPagerIndex % 2 == 0 ? mQAItem.getQuestion() : mQAItem.getAnswer());
 
         TextView txtComments = (TextView) v.findViewById(R.id.txtComments);
         txtComments.setText(mQAItem.getComments());
 
         mImg = (ScalingImageView) v.findViewById(R.id.imgImg1);
-        String imgUrl = question ? mQAItem.getQuestionimg() : mQAItem.getAnswerimg();
+        String imgUrl = mPagerIndex % 2 == 0 ? mQAItem.getQuestionimg() : mQAItem.getAnswerimg();
         if (imgUrl != null) {
             ImgCacheParam imgP = new ImgCacheParam(getActivity().getExternalCacheDir(), imgUrl);
             new FetchItemsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imgP);
@@ -123,7 +122,7 @@ public class QuestionFragment extends Fragment {
             case R.id.menu_item_edit:
                 Log.d(TAG, "menu_item_edit, starta QuestionEditActivity");
                 Intent i = new Intent(getActivity(), QuestionEditActivity.class);
-                i.putExtra(QuestionFragment.ARG_POS, mPos);
+                i.putExtra(QuestionFragment.ARG_PAGERINDEX, mPagerIndex);
                 startActivityForResult(i, REQUESTCODE_EDIT_QUESTION);
                 return true;
 

@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 public class QuestionEditFragment extends Fragment {
 
-    private int mPos;
+    private int mPagerIndex;
     private QAItem mQAItem;
     private final static String TAG = "QuestionEditFragment";
     static final int REQUESTCODE_IMAGE_GET = Activity.RESULT_FIRST_USER;
@@ -33,10 +33,10 @@ public class QuestionEditFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static QuestionEditFragment newInstance(int pos) {
+    public static QuestionEditFragment newInstance(int pagerIndex) {
         QuestionEditFragment fragment = new QuestionEditFragment();
         Bundle args = new Bundle();
-        args.putInt(QuestionFragment.ARG_POS, pos);
+        args.putInt(QuestionFragment.ARG_PAGERINDEX, pagerIndex);
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,8 +44,8 @@ public class QuestionEditFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mPos = getArguments().getInt(QuestionFragment.ARG_POS);
-            mQAItem = QALab.getQAItem(mPos / 2);
+            mPagerIndex = getArguments().getInt(QuestionFragment.ARG_PAGERINDEX);
+            mQAItem = QALab.getQAItem(mPagerIndex / 2);
         }
     }
 
@@ -54,10 +54,10 @@ public class QuestionEditFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_question_edit, container, false);
-        boolean question = mPos % 2 == 0;
+        //boolean question = mPos % 2 == 0;
 
         TextView txtRubrik = (TextView) v.findViewById(R.id.txtRubrik);
-        txtRubrik.setText((question ? "F " : "S ") + (mPos / 2 + 1) + "/" + QALab.Count() + " " + mQAItem.getArea1() + " - " + mQAItem.getArea2());
+        txtRubrik.setText((mPagerIndex % 2 == 0 ? "F " : "S ") + (mPagerIndex / 2 + 1) + "/" + QALab.Count() + " " + mQAItem.getArea1() + " - " + mQAItem.getArea2());
 
         mTxeComments = (EditText) v.findViewById(R.id.txeComments);
         mTxeComments.setText(mQAItem.getComments());
@@ -87,15 +87,16 @@ public class QuestionEditFragment extends Fragment {
     }//onCreateView
 
     private void saveComments() {
-        new PostFormTask<String>() {
+        new PostFormTask<FormComments>() {
             @Override
-            public String doPost(String comments) {
-//    public static String postComments(String id, String comments) {
-
-                return HTTP.postComments(comments);
+            public String doPost(FormComments comments) {
+                String errmsg = HTTP.postComments(comments);
+                if (errmsg == null) {
+                    return QALab.updateQAItem(mPagerIndex / 2);
+                }
+                return errmsg;
             }
-        }.exec(mTxeComments.getText().toString(), "kommentar sparas.");
-
+        }.exec(new FormComments(mPagerIndex, mTxeComments.getText().toString()), "kommentar sparas.");
     }
     //startar inbyggd Activity som väljer bild
     private void selectImage() {
@@ -117,14 +118,17 @@ public class QuestionEditFragment extends Fragment {
                 mImgLarge.setImageBitmap(bmpLarge);
 //spara bild i molnet
                 //progress = ProgressDialog.show(getActivity(), "bild sparas", "vänta...", true);
-                new PostFormTask<byte[]>() {
+                //FormImage fImg = new FormImage("rowid", ImageLibrary.Bmp2Jpg(bmpLarge, 90), mPos % 2 == 0);
+                new PostFormTask<FormImage>() {
                     @Override
-                    public String doPost(byte[] bytaArr) {
-                        //public static String postImage(String id, byte[] byteArr, boolean question) {
-
-                        return HTTP.postImage(bytaArr, mPos % 2 == 0/*question*/);
+                    public String doPost(FormImage fi) {
+                        String errmsg = HTTP.postImage(fi);
+                        if (errmsg == null) {
+                            return QALab.updateQAItem(mPagerIndex / 2);
+                        }
+                        return errmsg;
                     }
-                }.exec(ImageLibrary.Bmp2Jpg(bmpLarge, 90), "bild sparas.");
+                }.exec(new FormImage(mPagerIndex, ImageLibrary.Bmp2Jpg(bmpLarge, 90)), "bild sparas.");
             }
 
         } catch (Exception e) {

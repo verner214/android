@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import static com.appkonst.repete.Util.exceptionStacktraceToString;
+
 /**
  * Created by lars on 2017-02-13.
  */
@@ -193,6 +195,25 @@ public class QALab {
     }
     public static QAItem getQAItem(int pos) {
         return mQASessionItems.get(pos);
+    }
+    //hämtar ett item syncront och spara i strukturen
+    public static String updateQAItem(int pos) {
+        String json = ":";
+        try {
+            String RowKey = mQASessionItems.get(pos).getRowKey();
+            json = new HTTP().GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblrepete(PartitionKey='photos',RowKey='" + RowKey + "')?" +
+                "st=2017-02-08T20%3A34%3A21Z&se=2036-02-14T08%3A54%3A21Z&sp=r&sv=2014-02-14&tn=tblrepete&sig=HMFUBRLCbQbegxPB3X%2FC5O2%2FbbKe2P%2Fp9GNShPvIRvw%3D");
+
+//            json = new HTTP().GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblrepete?" +
+  //                  "st=2017-02-08T20%3A34%3A21Z&se=2036-02-14T08%3A54%3A21Z&sp=r&sv=2014-02-14&tn=tblrepete&sig=HMFUBRLCbQbegxPB3X%2FC5O2%2FbbKe2P%2Fp9GNShPvIRvw%3D");
+
+            //return json;
+            ArrayList<QAItem> updatedItem = Jsonify.String2Json("{'value':[" + json + "]}");
+            mQASessionItems.set(pos, updatedItem.get(0));
+        } catch (Exception e) {
+            return json + exceptionStacktraceToString(e);
+        }
+        return null;
     }
 
 }

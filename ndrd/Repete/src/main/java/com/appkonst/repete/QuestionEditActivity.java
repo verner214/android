@@ -9,7 +9,7 @@ public class QuestionEditActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        int pos = (int) getIntent().getSerializableExtra(QuestionFragment.ARG_POS);
+        int pos = (int) getIntent().getSerializableExtra(QuestionFragment.ARG_PAGERINDEX);
         return QuestionEditFragment.newInstance(pos);
     }
 }

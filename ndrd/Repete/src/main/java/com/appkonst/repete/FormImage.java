@@ -2,25 +2,19 @@ package com.appkonst.repete;
 
 //public static String postImage(String id, byte[] byteArr, boolean question) {
 public class FormImage {
-	private String mId;
+	private int mPagerIndex;
 	private byte[] mImage;
-	private boolean mQuestion;
 
-	public FormImage(String id, byte[] image, boolean question) {
-		mId = id;
+	public FormImage(int pagerIndex, byte[] image) {
+		mPagerIndex = pagerIndex;
 		mImage = image;
-		mQuestion = question;
 	}
 	
 	public byte[] getImage() {
 		return mImage;
 	}
 
-	public String getId() {
-		return mId;
-	}
-
-	public boolean getQuestion() {
-		return mQuestion;
+	public int getPagerIndex() {
+		return mPagerIndex;
 	}
 }

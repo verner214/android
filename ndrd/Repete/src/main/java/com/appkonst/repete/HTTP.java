@@ -170,26 +170,26 @@ public class HTTP {
         return errormsg;
     }
 //id, imgtype (question|answer), image
-    public static String postImage(String id, byte[] byteArr, boolean question) {
+    public static String postImage(FormImage fi) {//String id, byte[] byteArr, boolean question) {
         MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
         entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        entityBuilder.addBinaryBody("img", byteArr, ContentType.create("image/jpeg"), "form_imgLarge.jpg");
+        entityBuilder.addBinaryBody("image", fi.getImage(), ContentType.create("image/jpeg"), "form_imgLarge.jpg");
 
         //ContentType contentType = ContentType.create(org.apache.http.protocol.HTTP.PLAIN_TEXT_TYPE, org.apache.http.protocol.HTTP.UTF_8);
-        entityBuilder.addTextBody("id", id);
-        entityBuilder.addTextBody("imgtype", question ? "question" : "answer");
+        entityBuilder.addTextBody("id", QALab.getQAItem(fi.getPagerIndex() / 2).getRowKey());
+        entityBuilder.addTextBody("imgtype", fi.getPagerIndex() % 2 == 0 ? "question" : "answer");
 
         HttpEntity entity = entityBuilder.build();
         return PostMultipart("http://repete.azurewebsites.net/image", entity);
     }
     //id, comments
-    public static String postComments(String id, String comments) {
+    public static String postComments(FormComments fc) {
         MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
         entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         ContentType contentType = ContentType.create(org.apache.http.protocol.HTTP.PLAIN_TEXT_TYPE, org.apache.http.protocol.HTTP.UTF_8);
-        entityBuilder.addTextBody("id", id);
-        entityBuilder.addTextBody("comments", comments, contentType);
+        entityBuilder.addTextBody("id", QALab.getQAItem(fc.getPagerIndex() / 2).getRowKey());
+        entityBuilder.addTextBody("comments", fc.getComments(), contentType);
 
         HttpEntity entity = entityBuilder.build();
         return PostMultipart("http://repete.azurewebsites.net/newedit", entity);
