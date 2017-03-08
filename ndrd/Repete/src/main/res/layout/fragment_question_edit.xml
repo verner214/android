@@ -22,6 +22,13 @@
             android:layout_marginRight="16dp"
             android:text="Välj bild"
             />
+        <Button android:id="@+id/btnCapturePhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="Fota"
+            />
         <ImageView android:id="@+id/imgLarge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

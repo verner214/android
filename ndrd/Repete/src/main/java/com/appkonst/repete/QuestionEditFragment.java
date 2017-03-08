@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class QuestionEditFragment extends Fragment {
 
@@ -83,6 +86,18 @@ public class QuestionEditFragment extends Fragment {
             }
         });
 
+        Button btnCapturePhoto = (Button)v.findViewById(R.id.btnCapturePhoto);
+        //mBtnSelectPhoto.setText("välj bild");
+        //btnSelectPhoto.setEnabled(true);
+        btnCapturePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //mBtnSave.setEnabled(true);
+                takeAndSavePicture();
+            }
+        });
+
+
         Button btnSaveComments = (Button)v.findViewById(R.id.btnSaveComments);
         btnSaveComments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,39 +132,50 @@ public class QuestionEditFragment extends Fragment {
 
 //alltid använda samma fil, sparas ju i molnet direkt efter, dessutom kan man inte spara filnamn i membervariabel eftersom fragmentobjectet kan recyclas vid ont om minne
     //https://developer.android.com/training/camera/photobasics.html
-    private File createImageFile() throws IOException {
-        return new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myPic.jpg");
+    private Uri createImageFile() {
+        File f = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myPic.jpg");
+        Log.d(TAG, "createImageFile, path=" + f.getPath());
+        Uri u = FileProvider.getUriForFile(getActivity(), "com.example.android.fileprovider", f);
+        Log.d(TAG, "uri = " + u.toString());
+        return u;
     }
-
 
     private void takeAndSavePicture() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                ...
+        try {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) == null) {
+                Toast.makeText(getActivity(), "kunde inte resolva intent MediaStore.ACTION_IMAGE_CAPTURE", Toast.LENGTH_LONG).show();
+                return;
             }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            Uri imageUri = createImageFile();
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            //man måste ge behörighet till mottagande app att läsa / skriva Uri. först en generell metod sen en som funkar med googles kamera.(nexus)
+            //http://stackoverflow.com/questions/18249007/how-to-use-support-fileprovider-for-sharing-content-to-other-apps
+            List<ResolveInfo> resInfoList = getActivity().getPackageManager().queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            for (ResolveInfo resolveInfo : resInfoList) {
+                String packageName = resolveInfo.activityInfo.packageName;
+                getActivity().grantUriPermission(packageName, imageUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
+            /* funkar bara för google
+            getActivity().grantUriPermission(
+                    "com.google.android.GoogleCamera",
+                    imageUri,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION
+            );*/
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+        } catch (Exception ex) {
+            Toast.makeText(getActivity(), Util.exceptionStacktraceToString(ex), Toast.LENGTH_LONG).show();
+            Log.e(TAG, "gick inte ta kort ", ex);
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
 //visa vald bild i view, spara i molnet och
-            if (requestCode == REQUESTCODE_IMAGE_GET && resultCode == Activity.RESULT_OK) {
-                Uri selectedImageURI = data.getData();
+            if ((requestCode == REQUESTCODE_IMAGE_GET || requestCode == REQUEST_TAKE_PHOTO) && resultCode == Activity.RESULT_OK) {
+                Uri selectedImageURI = requestCode == REQUESTCODE_IMAGE_GET ? data.getData() : createImageFile();
                 Bitmap bmpLarge = ImageLibrary.Uri2Bmp(getActivity(), selectedImageURI, 640, 360, true);
                 //Toast.makeText(getActivity(), "onActivityResult=" + b2 + "," + b, Toast.LENGTH_SHORT).show();
                 mImgLarge.setImageBitmap(bmpLarge);
