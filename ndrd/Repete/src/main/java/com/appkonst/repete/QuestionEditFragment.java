@@ -97,7 +97,6 @@ public class QuestionEditFragment extends Fragment {
             }
         });
 
-
         Button btnSaveComments = (Button)v.findViewById(R.id.btnSaveComments);
         btnSaveComments.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 
 import static com.appkonst.repete.Util.exceptionStacktraceToString;
 
@@ -173,7 +174,9 @@ public class QALab {
             if (qa.getArea1().compareTo(area1) == 0) {
                 for (String a2 : area2s) {
                     if (a2.compareTo(qa.getArea2()) == 0) {
-                        mQASessionItems.add(0, qa);//gör slump här senare
+                        Random rand = new Random();
+                        mQASessionItems.add(rand.nextInt(mQASessionItems.size()), qa);
+                        //mQASessionItems.add(0, qa);//gör slump här senare
                     }
                 }
             }
