@@ -1,6 +1,9 @@
 package com.appkonst.repete;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.PersistableBundle;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -25,12 +28,25 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
     MainActivity that;
     private final static String KEY_AREA1_ID = "KEY_AREA1_ID";
     private final static String TAG = "MainActivity";
+    private final static int REQUEST_ERROR_REPORT = Activity.RESULT_FIRST_USER;
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate -------------------------------------------");
         setContentView(R.layout.activity_main);
+
+//om fel förra gången, visa det sen avsluta
+        SharedPreferences prefs = this.getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        String table = prefs.getString("table", null);
+        if (prefs.getBoolean("error", false)) {//fel förra gången?
+            Intent i = new Intent(this, ErrorReportActivity.class);
+            startActivityForResult(i, REQUEST_ERROR_REPORT);
+            //getActivity().finish();
+            return;
+        }
+
         //vid null har get aldrig anropats och singleton ej initierats. då skapas singleton samtidigt som fil hämtas och läses in.
         //när detta är klart anropas callback i denna aktivitet (updataUI)
         if (!QALab.FileIsRequested()) {
@@ -44,6 +60,13 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
             updateUI(savedInstanceState.getInt("KEY_AREA1_ID", -1));
         }
     }//onCreate
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ERROR_REPORT) {
+            finish();
+        }
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

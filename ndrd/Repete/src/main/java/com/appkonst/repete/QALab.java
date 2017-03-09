@@ -175,7 +175,7 @@ public class QALab {
                 for (String a2 : area2s) {
                     if (a2.compareTo(qa.getArea2()) == 0) {
                         Random rand = new Random();
-                        mQASessionItems.add(rand.nextInt(mQASessionItems.size()), qa);
+                        mQASessionItems.add(mQASessionItems.size() == 0 ? 0 : rand.nextInt(mQASessionItems.size()), qa);
                         //mQASessionItems.add(0, qa);//gör slump här senare
                     }
                 }
