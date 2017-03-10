@@ -25,16 +25,18 @@ import com.appkonst.repete.MainActivity;
 public class ErrorReportActivity extends Activity  {
 
     TextView txtText;
-        
-        
+    public final static String TAG = "ErrorReportActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WriteToFile.writeToFile(TAG, "onCreate");
         setContentView(R.layout.activity_error_report);
 
         txtText = (TextView) findViewById(R.id.txtText);
         SharedPreferences prefs = getSharedPreferences(MainActivity.MY_PREFS_NAME, Context.MODE_PRIVATE);
         txtText.setText(prefs.getString("stacktrace", null));
+        WriteToFile.writeToFile(TAG, prefs.getString("stacktrace", null));
 
         SharedPreferences.Editor editor = getSharedPreferences(MainActivity.MY_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putBoolean("error", false);

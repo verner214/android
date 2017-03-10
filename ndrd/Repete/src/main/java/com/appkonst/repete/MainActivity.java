@@ -34,16 +34,20 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WriteToFile.writeToFile(TAG, "onCreate -------------------------------------------");
         Log.d(TAG, "onCreate -------------------------------------------");
         setContentView(R.layout.activity_main);
 
 //om fel förra gången, visa det sen avsluta
         SharedPreferences prefs = this.getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         String table = prefs.getString("table", null);
+        WriteToFile.writeToFile(TAG, "table = " + table);
         if (prefs.getBoolean("error", false)) {//fel förra gången?
+            WriteToFile.writeToFile(TAG, "error = " + table);
             Intent i = new Intent(this, ErrorReportActivity.class);
             startActivityForResult(i, REQUEST_ERROR_REPORT);
             //getActivity().finish();
+            WriteToFile.writeToFile(TAG, "efter startErrorReport innan return");
             return;
         }
 
@@ -63,6 +67,7 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        WriteToFile.writeToFile(TAG, "requestCode=" + "resultCode=" + resultCode);
         if (requestCode == REQUEST_ERROR_REPORT) {
             finish();
         }
