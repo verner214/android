@@ -1,0 +1,22 @@
+https://portalvhdsgfh152bhy290k.table.core.windows.net/tblrepete?" + filter + 
+"st=2017-02-08T20%3A34%3A21Z&se=2036-02-14T08%3A54%3A21Z&sp=r&sv=2014-02-14&tn=tblrepete&sig=HMFUBRLCbQbegxPB3X%2FC5O2%2FbbKe2P%2Fp9GNShPvIRvw%3D
+
+//no filter
+https://portalvhdsgfh152bhy290k.table.core.windows.net/tblrepete?st=2017-02-08T20%3A34%3A21Z&se=2036-02-14T08%3A54%3A21Z&sp=r&sv=2014-02-14&tn=tblrepete&sig=HMFUBRLCbQbegxPB3X%2FC5O2%2FbbKe2P%2Fp9GNShPvIRvw%3D
+
+//area1 och hide
+https://portalvhdsgfh152bhy290k.table.core.windows.net/tblrepete?$filter=area1%20eq%20'epi'%20and%20hide%20ne%20'on'&st=2017-02-08T20%3A34%3A21Z&se=2036-02-14T08%3A54%3A21Z&sp=r&sv=2014-02-14&tn=tblrepete&sig=HMFUBRLCbQbegxPB3X%2FC5O2%2FbbKe2P%2Fp9GNShPvIRvw%3D
+
+//area1 
+https://portalvhdsgfh152bhy290k.table.core.windows.net/tblrepete?$filter=area1%20eq%20'epi'&st=2017-02-08T20%3A34%3A21Z&se=2036-02-14T08%3A54%3A21Z&sp=r&sv=2014-02-14&tn=tblrepete&sig=HMFUBRLCbQbegxPB3X%2FC5O2%2FbbKe2P%2Fp9GNShPvIRvw%3D
+
+//area1
+$filter=area1%20eq%20'epi'%20and%20hide%20ne%20'on'&
+
+
+//area1 och hide != 'on', test: hide som inte finns, kommer raden med då? (fast det finns nog inga sådana rader, hide är nog "")
+$filter=area1%20eq%20'" + area1 + "'";
+                if (area2.length > 0) {
+                    filter += "%20and%20area2%20eq%20'" + area2 + "'";
+                }
+                filter += "&";

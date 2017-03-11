@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +39,7 @@ public class QALab {
     private static ArrayList<QAItem> mQAItems = null;
     private static ArrayList<QAItem> mQASessionItems = null;
     private final static String TAG = "QALab";
-    private static boolean fileIsRequested = false;
+//    private static boolean fileIsRequested = false;
     private static OnModelChanged mCallback;
     private static Context mAppContext;
 
@@ -48,12 +49,12 @@ public class QALab {
         public void updateUI(int area1Id);
         public void progressMsg(String msg);
     }
-
+/*
     public static boolean FileIsRequested() {
-        Log.d(TAG, "FileIsRequested -------------------------------------------");
+        Log.d(TAG, "enter function FileIsRequested, fileIsRequested = " + (fileIsRequested ? "true" : "false"));
         return fileIsRequested;
     }
-
+*/
     private static String getStringFromFile(Context ctx, String filename) throws Exception {
         Log.d(TAG, "getStringFromFile -------------------------------------------");
         FileInputStream in = ctx.openFileInput(filename);
@@ -69,23 +70,29 @@ public class QALab {
     }
     private static class FetchItemsTask extends AsyncTask<Void,Void,Void> {
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(Void... params)  {
+            String jsonFile = "jsonFile";
             Log.d(TAG, "doInBackground -------------------------------------------");
-            try {
-                String string = new HTTP().GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblrepete?st=2017-02-08T20%3A34%3A21Z&se=2036-02-14T08%3A54%3A21Z&sp=r&sv=2014-02-14&tn=tblrepete&sig=HMFUBRLCbQbegxPB3X%2FC5O2%2FbbKe2P%2Fp9GNShPvIRvw%3D");
+            try {//efter repete?                  $filter=area1%20eq%20'epi'%20and%20hide%20ne%20'on'&
+                if (HTTP.isOnline(mAppContext)) {
+                    Log.d(TAG, "isOnline");
+                    String string = new HTTP().GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblrepete?$filter=hide%20ne%20'on'&st=2017-02-08T20%3A34%3A21Z&se=2036-02-14T08%3A54%3A21Z&sp=r&sv=2014-02-14&tn=tblrepete&sig=HMFUBRLCbQbegxPB3X%2FC5O2%2FbbKe2P%2Fp9GNShPvIRvw%3D");
 
-                FileOutputStream outputStream = mAppContext.openFileOutput("jsonFile", Context.MODE_PRIVATE);
-                outputStream.write(string.getBytes());
-                outputStream.close();
+                    FileOutputStream outputStream = mAppContext.openFileOutput(jsonFile, Context.MODE_PRIVATE);
+                    outputStream.write(string.getBytes());
+                    outputStream.close();
+                }
             } catch (Exception e) {
-                e.printStackTrace();//logga detta på något sätt, kanske särbehandla no connection.
+                Log.d(TAG, "exception i doInBackground 1, " + Util.exceptionStacktraceToString(e));
+                WriteToFile.writeToFile(TAG, Util.exceptionStacktraceToString(e));
             }
             //parsa fil till objekt som sparas i mQAItems
             String jsonstring = null;
             try {
-                jsonstring = getStringFromFile(mAppContext, "jsonFile");
+                jsonstring = getStringFromFile(mAppContext, jsonFile);
             } catch (Exception e) {
-                e.printStackTrace();//alla fel måste fårngas i java
+                Log.d(TAG, "exception i doInBackground 2, " + Util.exceptionStacktraceToString(e));
+                WriteToFile.writeToFile(TAG, Util.exceptionStacktraceToString(e));
             }
             mQAItems = Jsonify.String2Json(jsonstring);
             return null;
@@ -101,7 +108,7 @@ public class QALab {
     //här hämtar vi fil (om det går) sen parsar json från fil (alltid). det skapar mQAItems
     public static void loadFile(Activity activity) {
         Log.d(TAG, "loadFile -------------------------------------------");
-        fileIsRequested = true;
+  //      fileIsRequested = true;
         mAppContext = activity.getApplicationContext();
         try {
             mCallback = (OnModelChanged) activity;

@@ -11,19 +11,19 @@ public class WriteToFile {
 public static void writeToFile(String tg, String data)
 {
     // Get the directory for the user's public pictures directory.
-        Log.d(TAG, "enter WriteToFile: ");
+        //Log.d(TAG, "enter WriteToFile: ");
     final File path =
         android.os.Environment.getExternalStoragePublicDirectory
         (
             //Environment.DIRECTORY_PICTURES
             android.os.Environment.DIRECTORY_DCIM + "/repete/"
         );
-        Log.d(TAG, "path: " + path);
+        //Log.d(TAG, "path: " + path);
 
     // Make sure the path directory exists.
     if(!path.exists())
     {
-        Log.d(TAG, "path does not exists ");
+        //Log.d(TAG, "path does not exists ");
         // Make it, if it doesn't exit
         path.mkdirs();
     }
@@ -50,7 +50,7 @@ OutputStreamWriter writer = new OutputStreamWriter(
 */
         fOut.flush();
         fOut.close();
-        Log.d(TAG, "klart!");
+        //Log.d(TAG, "klart!");
     }
     catch (IOException e)
     {

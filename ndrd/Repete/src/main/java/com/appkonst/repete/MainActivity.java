@@ -34,40 +34,45 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        WriteToFile.writeToFile(TAG, "onCreate -------------------------------------------");
-        Log.d(TAG, "onCreate -------------------------------------------");
+        WriteToFile.writeToFile(TAG, "onCreate --------");
+        Log.d(TAG, "onCreate -- savedInstanceState == null ? " + (savedInstanceState == null ? "yes" : "no"));
         setContentView(R.layout.activity_main);
 
 //om fel förra gången, visa det sen avsluta
         SharedPreferences prefs = this.getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         String table = prefs.getString("table", null);
         WriteToFile.writeToFile(TAG, "table = " + table);
+        Log.d(TAG, "table = " + table);
         if (prefs.getBoolean("error", false)) {//fel förra gången?
             WriteToFile.writeToFile(TAG, "error = " + table);
+            Log.d(TAG, "error == true ");
             Intent i = new Intent(this, ErrorReportActivity.class);
             startActivityForResult(i, REQUEST_ERROR_REPORT);
             //getActivity().finish();
             WriteToFile.writeToFile(TAG, "efter startErrorReport innan return");
+            Log.d(TAG, "efter startErrorReport innan return");
             return;
         }
 
         //vid null har get aldrig anropats och singleton ej initierats. då skapas singleton samtidigt som fil hämtas och läses in.
         //när detta är klart anropas callback i denna aktivitet (updataUI)
-        if (!QALab.FileIsRequested()) {
+        if (savedInstanceState == null) {//savedInstanceState är null när appen startas om. filen kan ändå vara inläst då QALab inte nödvändigtvis GC-ats och alltså finns i minnet. vid omstart ska docj filen alltid läsas in (på nytt)
             QALab.loadFile(this);//kommer att anropa updateUI async
-            Log.d(TAG, "onCreate 2-------------------------------------------");
+            Log.d(TAG, "onCreate hämta fil och läs in i array -------------------------------------------");
         }
         //dataExists() returnerar false mellan singleton start och filinläsning klar. skulle aktiviteten startas om under denna tid ska updateUI inte anropas. aktivity hamnar då i dött läge. (man får rotera helt enkelt)
-        else if (QALab.dataExists())
+        else //rotation etc.
         {
-            Log.d(TAG, "onCreate 3------------------------------------------- " + savedInstanceState.getInt("KEY_AREA1_ID", -1));
+            Log.d(TAG, "QALab.dataExists() dvs fil redan hämtad dvs inte först onCreate för denna session");
+            Log.d(TAG, "onCreate, ------------------------------------------- " + savedInstanceState.getInt("KEY_AREA1_ID", -1));
             updateUI(savedInstanceState.getInt("KEY_AREA1_ID", -1));
         }
     }//onCreate
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        WriteToFile.writeToFile(TAG, "requestCode=" + "resultCode=" + resultCode);
+        WriteToFile.writeToFile(TAG, "resultCode=" + resultCode);
+        Log.d(TAG, "onActivityResult, resultCode=" + resultCode);
         if (requestCode == REQUEST_ERROR_REPORT) {
             finish();
         }

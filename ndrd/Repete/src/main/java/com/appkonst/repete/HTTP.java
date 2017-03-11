@@ -1,5 +1,8 @@
 package com.appkonst.repete;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -193,5 +196,12 @@ public class HTTP {
 
         HttpEntity entity = entityBuilder.build();
         return PostMultipart("http://repete.azurewebsites.net/newedit", entity);
+    }
+
+    public static boolean isOnline(Context ctx) {
+        ConnectivityManager cm =
+                (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

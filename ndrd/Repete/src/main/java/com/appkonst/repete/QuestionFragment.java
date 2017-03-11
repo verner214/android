@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import java.io.File;
@@ -172,6 +173,10 @@ public class QuestionFragment extends Fragment {
 
         @Override
         protected void onPostExecute(byte[] bitmapBytes) {
+            if (bitmapBytes == null) {
+                Toast.makeText(getActivity(), "bild kunde inte hämtas, troligen offline", Toast.LENGTH_LONG).show();
+                return;
+            }
             final Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
             if (isVisible()) {
                 mImg.setImageBitmap(bitmap);
