@@ -145,16 +145,22 @@ public class MainActivity extends FragmentActivity implements QALab.OnModelChang
                 rdgrArea1 = (RadioGroup) findViewById(R.id.rdgrArea1);
                 RadioButton rb = (RadioButton) findViewById(rdgrArea1.getCheckedRadioButtonId());
                 ArrayList<String> area2s = new ArrayList<String>();
+                ArrayList<String> area2sAll = new ArrayList<String>();
                 for (int i = 0; true; i++) {
                     CheckBox cb = (CheckBox) findViewById(getChkId(rb.getId(), i));
                     if (cb == null) {
                         break;
                     }
+                    area2sAll.add(cb.getText().toString());
                     if (cb.isChecked()) {
                         area2s.add(cb.getText().toString());
                     }
                 }
-                QALab.startSession(rb.getText().toString(), area2s);
+                if (area2s.size() == 0) {//om ingen checkad, gör som om alla vore checkade
+                    QALab.startSession(rb.getText().toString(), area2sAll);
+                } else {
+                    QALab.startSession(rb.getText().toString(), area2s);
+                }
                 Intent i = new Intent(that, QuestionActivity.class);
                 startActivity(i);
             }
