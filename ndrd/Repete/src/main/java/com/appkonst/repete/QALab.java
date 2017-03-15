@@ -222,6 +222,16 @@ public class QALab {
             //return json;
             ArrayList<QAItem> updatedItem = Jsonify.String2Json("{'value':[" + json + "]}");
             mQASessionItems.set(pos, updatedItem.get(0));
+
+//och nu uppdatera orinalarrayen, rå kraft
+            int idx = 0;
+            for (QAItem qa : mQAItems) {
+                if (qa.getRowKey().compareTo(updatedItem.get(0).getRowKey()) != 0) {
+                    mQAItems.set(idx, updatedItem.get(0));
+                    break;
+                }
+                idx++;
+            }
         } catch (Exception e) {
             return json + exceptionStacktraceToString(e);
         }
