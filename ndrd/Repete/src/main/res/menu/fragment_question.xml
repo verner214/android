@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_item_minimize"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/edit_minimize"
+        android:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/menu_item_edit"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/edit_question"

@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,8 @@ public class QuestionFragment extends Fragment {
     private int mPagerIndex;
     private QAItem mQAItem;
     private final static String TAG = "QuestionFragment";
+    private TextView txtQA;
+    private boolean mLargeText = true;
     ScalingImageView mImg;
     OnUpdatedListener mCallback;
 
@@ -75,8 +78,9 @@ public class QuestionFragment extends Fragment {
         TextView txtRubrik = (TextView) v.findViewById(R.id.txtRubrik);
         txtRubrik.setText((mPagerIndex % 2 == 0 ? "F " : "S ") + (mPagerIndex / 2 + 1) + "/" + QALab.Count() + " " + mQAItem.getArea1() + " - " + mQAItem.getArea2());
 
-        TextView txtQA = (TextView) v.findViewById(R.id.txtQA);
+        txtQA = (TextView) v.findViewById(R.id.txtQA);
         txtQA.setText(mPagerIndex % 2 == 0 ? mQAItem.getQuestion() : mQAItem.getAnswer());
+        //txtQA.setTextSize(TypedValue.COMPLEX_UNIT_DIP,35);//gör detta via bar at the top
 
         TextView txtComments = (TextView) v.findViewById(R.id.txtComments);
         txtComments.setText(mQAItem.getComments());
@@ -125,6 +129,17 @@ public class QuestionFragment extends Fragment {
                 Intent i = new Intent(getActivity(), QuestionEditActivity.class);
                 i.putExtra(QuestionFragment.ARG_PAGERINDEX, mPagerIndex);
                 startActivityForResult(i, REQUESTCODE_EDIT_QUESTION);
+                return true;
+
+            case R.id.menu_item_minimize:
+                Log.d(TAG, "menu_item_enlarge, gör texten mindre");
+                if (mLargeText) {
+                    txtQA.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);//gör detta via bar at the top
+                    mLargeText = false;
+                } else {
+                    txtQA.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);//gör detta via bar at the top
+                    mLargeText = true;
+                }
                 return true;
 
             default:
