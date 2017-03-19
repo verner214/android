@@ -57,7 +57,6 @@ public class GetGson {
 //public för att den används av thumbnaildownloader och i asynctask. hör kanske hemma i annan klass.
     public static byte[] getUrlBytes(File cacheDir, String urlSpec) throws IOException {
         
-        WriteToFile.writeToFile(TAG, "getUrlBytes 1, " + urlSpec);         
         String fileName = urlSpec.substring(urlSpec.lastIndexOf("/"));
         File cachedImgFile = null;
         if (cacheDir != null) {
@@ -71,17 +70,13 @@ public class GetGson {
 //filen fanns inte cachad. hämta från molnet och spara i cachen      
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-        WriteToFile.writeToFile(TAG, "getUrlBytes 2, " + urlSpec);         
 
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            WriteToFile.writeToFile(TAG, "getUrlBytes 3, " + urlSpec);         
-            
+
             InputStream in = connection.getInputStream();
-            WriteToFile.writeToFile(TAG, "getUrlBytes 4, " + urlSpec);         
-            
+
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                WriteToFile.writeToFile(TAG, "getUrlBytes 5, HTTP_OK EJ OK!,  " + urlSpec);                         
                 return null;
             }
 
@@ -109,7 +104,6 @@ public class GetGson {
             }        
 //spara bilden i cachen SLUT
 
-            WriteToFile.writeToFile(TAG, "getUrlBytes, 5,  " + urlSpec);                         
             return out.toByteArray();
         } finally {
             connection.disconnect();
@@ -340,7 +334,6 @@ public class GetGson {
     }
  
 	public ArrayList<Brygd> fetchItems() {
-        WriteToFile.writeToFile(TAG, "ArrayList<Brygd> fetchItems() 1");                                 
 //        System.setProperty("javax.net.ssl.trustStore","C:/own/java/javax86/jdk1.7.0_79/jre/lib/security/cacerts");
 //        String json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblolapp?st=2015-07-03T09%3A30%3A27Z&se=2034-07-07T21%3A50%3A27Z&sp=r&sv=2014-02-14&tn=tblolapp&sig=vaJqvHQqnZ6iVyp8k6EucjVmF4tRkEPHTAy4q2IVkVM%3D");
 //med filter dvs visa inte hidden
@@ -351,8 +344,7 @@ public class GetGson {
         else {
             json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/tblolapp?$filter=hide%20eq%20'false'&st=2015-07-03T09%3A30%3A27Z&se=2034-07-07T21%3A50%3A27Z&sp=r&sv=2014-02-14&tn=tblolapp&sig=vaJqvHQqnZ6iVyp8k6EucjVmF4tRkEPHTAy4q2IVkVM%3D");
         }
-        WriteToFile.writeToFile(TAG, "ArrayList<Brygd> fetchItems() 2");                                 
-       
+
 //		String json = GET("https://portalvhdsgfh152bhy290k.table.core.windows.net/photos?st=2015-04-02T09%3A13%3A00Z&se=2017-02-24T21%3A33%3A00Z&sp=r&sv=2014-02-14&tn=photos&sig=f8Eo%2FmE3SxQE1TstvG5memvKfmTxyMszMTOa27AQ0WQ%3D");
 					
 		Gson gson = new Gson();
@@ -401,7 +393,6 @@ public class GetGson {
                 return v1.getBeerName().compareTo(v2.getBeerName());
             }
         });
-        WriteToFile.writeToFile(TAG, "ArrayList<Brygd> fetchItems() 3");                                 
 		return brygds;
 	}
 }

@@ -98,7 +98,7 @@ public class BrygdGalleryNewFragment extends Fragment {
             ImageLibrary.Bmp2Jpg(bmpThumbnail, 90), 
             mEtxDescription.getText().toString()
         );        
-        new PostFormTask().execute(form);
+        new PostFormTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, form);
         
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {

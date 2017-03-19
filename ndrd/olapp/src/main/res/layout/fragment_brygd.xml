@@ -121,6 +121,13 @@
     android:layout_marginRight="16dp"
     android:text="Lägg till bild"
     />
+    <Button android:id="@+id/btnCapturePhoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Fota"
+        />
 <!--
 <TableLayout android:background="#000000"
     android:layout_width="fill_parent"

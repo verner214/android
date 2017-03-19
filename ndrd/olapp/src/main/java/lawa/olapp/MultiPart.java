@@ -1,5 +1,7 @@
 package lawa.olapp;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Toast;
 import android.content.Context;
@@ -24,7 +26,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 public class MultiPart {
-	
+	public static boolean isOnline(Context ctx) {
+		ConnectivityManager cm =
+				(ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		return netInfo != null && netInfo.isConnectedOrConnecting();
+	}
+
 	private static String getDeviceInfo() {
         final StringBuffer report = new StringBuffer();
         final String lineSeperator = "-------------------------------\n\n";
@@ -77,7 +85,7 @@ public class MultiPart {
     }//AsyncPostLog
 	
 	public static void sendLogAsync(String error) {
-		new MultiPart.AsyncPostLog().execute(error); 
+		new MultiPart.AsyncPostLog().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, error);
 	}
 	
     private final static String TAG = "MulitiPart";

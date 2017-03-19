@@ -130,7 +130,7 @@ public class GalleryFragment extends Fragment {
 
         mImg = (ScalingImageView) v.findViewById(R.id.img);
         ImgCacheParam imgP = new ImgCacheParam(getActivity().getExternalCacheDir(), mBrygd.getGalleryItem(mPostition).getImgURL());
-        new FetchItemsTask().execute(imgP);
+        new FetchItemsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imgP);
             
 
         return v; 
@@ -145,7 +145,7 @@ public class GalleryFragment extends Fragment {
             mText.getText().toString(),
             mChkHide.isChecked()
         );        
-        new PostFormTask().execute(form);
+        new PostFormTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, form);
         
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {

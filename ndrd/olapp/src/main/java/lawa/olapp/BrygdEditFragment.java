@@ -1,5 +1,7 @@
 package lawa.olapp;
 
+import java.io.File;
+import java.util.List;
 import java.util.UUID;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,9 +10,13 @@ import java.io.ByteArrayOutputStream;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.annotation.TargetApi;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -94,6 +100,13 @@ public class BrygdEditFragment extends Fragment {
                 selectImage();
             }
         });
+        Button btnCapturePhoto = (Button)v.findViewById(R.id.btnCapturePhoto);
+        btnCapturePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takeAndSavePicture();
+            }
+        });
 
         mBtnSave = (Button)v.findViewById(R.id.btnSave);
         //mBtnSave.setEnabled(false);
@@ -149,13 +162,45 @@ public class BrygdEditFragment extends Fragment {
             startActivityForResult(intent, BrygdFragment.REQUEST_IMAGE_GET);
         }
     }
-    
+
+    private Uri createImageFile() {
+        File f = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myPic.jpg");
+        Log.d(TAG, "createImageFile, path=" + f.getPath());
+        Uri u = FileProvider.getUriForFile(getActivity(), "com.example1.android.fileprovider", f);
+        Log.d(TAG, "uri = " + u.toString());
+        return u;
+    }
+
+    private void takeAndSavePicture() {
+        try {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) == null) {
+                Toast.makeText(getActivity(), "kunde inte resolva intent MediaStore.ACTION_IMAGE_CAPTURE", Toast.LENGTH_LONG).show();
+                return;
+            }
+            Uri imageUri = createImageFile();
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            //man måste ge behörighet till mottagande app att läsa / skriva Uri. först en generell metod sen en som funkar med googles kamera.(nexus)
+            //http://stackoverflow.com/questions/18249007/how-to-use-support-fileprovider-for-sharing-content-to-other-apps
+            List<ResolveInfo> resInfoList = getActivity().getPackageManager().queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            for (ResolveInfo resolveInfo : resInfoList) {
+                String packageName = resolveInfo.activityInfo.packageName;
+                getActivity().grantUriPermission(packageName, imageUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+            startActivityForResult(takePictureIntent, BrygdFragment.REQUEST_TAKE_PHOTO);
+        } catch (Exception ex) {
+            Toast.makeText(getActivity(), Util.exceptionStacktraceToString(ex), Toast.LENGTH_LONG).show();
+            Log.e(TAG, "gick inte ta kort ", ex);
+        }
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
-            if (requestCode == BrygdFragment.REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK) {
-                //Bitmap thumbnail = data.getParcelableExtra("data");     
-                Uri selectedImageURI = data.getData();
+            if ((requestCode == BrygdFragment.REQUEST_IMAGE_GET || requestCode == BrygdFragment.REQUEST_TAKE_PHOTO) && resultCode == Activity.RESULT_OK) {
+                Uri selectedImageURI = requestCode == BrygdFragment.REQUEST_IMAGE_GET ? data.getData() : createImageFile();
                 boolean b2 = selectedImageURI == null;
 //                InputStream inputStream = getActivity().getContentResolver().openInputStream(selectedImageURI);
 //                Bitmap bmp = BitmapFactory.decodeStream(inputStream);
@@ -240,7 +285,7 @@ public class BrygdEditFragment extends Fragment {
         
 //        form.imgLarge = ImageLibrary.Bmp2Jpg(mBmpLarge, 90);
 //        form.imgThumbnail = ImageLibrary.Bmp2Jpg(mBmpThumbnail, 90);
-        new PostFormTask().execute(form);        
+        new PostFormTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, form);
     }
 
     private class PostFormTask extends AsyncTask<Form,Void,String> {

@@ -1,15 +1,22 @@
 package lawa.olapp;
 
+import java.io.File;
+import java.util.List;
 import java.util.UUID;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Intent;
 import android.annotation.TargetApi;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -54,6 +61,8 @@ public class BrygdFragment extends Fragment {
     static final int RESULT_BRYGD_SAVED = Activity.RESULT_FIRST_USER;
     static final int REQUEST_IMAGE_GET = Activity.RESULT_FIRST_USER + 1;
     static final int REQUEST_GALLERY_PAGER = Activity.RESULT_FIRST_USER + 2;
+    static final int REQUEST_TAKE_PHOTO = Activity.RESULT_FIRST_USER + 3;
+
 
     Brygd mBrygd;
     TextView mBeerName;
@@ -190,7 +199,7 @@ public class BrygdFragment extends Fragment {
         //mImg.setImageResource(R.drawable.no_photo);
         if (mBrygd.getImgUrl() != null) {        
             ImgCacheParam imgP = new ImgCacheParam(getActivity().getExternalCacheDir(), mBrygd.getImgUrl());
-            new FetchItemsTask().execute(imgP);
+            new FetchItemsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imgP);
         }
         
         btnAddImage = (Button)v.findViewById(R.id.btnAddImage);
@@ -200,6 +209,14 @@ public class BrygdFragment extends Fragment {
                 selectImage();
             }
         });
+        Button btnCapturePhoto = (Button)v.findViewById(R.id.btnCapturePhoto);
+        btnCapturePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takeAndSavePicture();
+            }
+        });
+
         //mGridView = (MyGridView)v.findViewById(R.id.gridView);
         //mGridView.setAdapter(new GalleryItemAdapter(mItems));
         
@@ -289,7 +306,38 @@ if (tr != null) {
             startActivityForResult(intent, REQUEST_IMAGE_GET);
         }
     }
-    
+    private Uri createImageFile() {
+        File f = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myPic.jpg");
+        Log.d(TAG, "createImageFile, path=" + f.getPath());
+        Uri u = FileProvider.getUriForFile(getActivity(), "com.example1.android.fileprovider", f);
+        Log.d(TAG, "uri = " + u.toString());
+        return u;
+    }
+
+    private void takeAndSavePicture() {
+        try {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) == null) {
+                Toast.makeText(getActivity(), "kunde inte resolva intent MediaStore.ACTION_IMAGE_CAPTURE", Toast.LENGTH_LONG).show();
+                return;
+            }
+            Uri imageUri = createImageFile();
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            //man måste ge behörighet till mottagande app att läsa / skriva Uri. först en generell metod sen en som funkar med googles kamera.(nexus)
+            //http://stackoverflow.com/questions/18249007/how-to-use-support-fileprovider-for-sharing-content-to-other-apps
+            List<ResolveInfo> resInfoList = getActivity().getPackageManager().queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            for (ResolveInfo resolveInfo : resInfoList) {
+                String packageName = resolveInfo.activityInfo.packageName;
+                getActivity().grantUriPermission(packageName, imageUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+            startActivityForResult(takePictureIntent, BrygdFragment.REQUEST_TAKE_PHOTO);
+        } catch (Exception ex) {
+            Toast.makeText(getActivity(), Util.exceptionStacktraceToString(ex), Toast.LENGTH_LONG).show();
+            Log.e(TAG, "gick inte ta kort ", ex);
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -320,11 +368,11 @@ if (tr != null) {
              && resultCode == RESULT_BRYGD_SAVED) 
         {
             getView().setVisibility(View.GONE);//så att man inte ser den ouppdaterade viewn
-            new FetchBrygdsTask().execute();
+            new FetchBrygdsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         //om bild vald, starta activity som editerar galleryitem
-        if (requestCode == REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK) {
-            Uri selectedImageURI = data.getData();
+        if ((requestCode == BrygdFragment.REQUEST_IMAGE_GET || requestCode == BrygdFragment.REQUEST_TAKE_PHOTO) && resultCode == Activity.RESULT_OK) {
+            Uri selectedImageURI = requestCode == BrygdFragment.REQUEST_IMAGE_GET ? data.getData() : createImageFile();
             if (selectedImageURI != null) {
                 //starta intent för BrygdGalleryNewActivity, 
                 Intent i = new Intent(getActivity(), BrygdGalleryNewActivity.class);

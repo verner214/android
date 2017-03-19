@@ -37,7 +37,7 @@ public static void writeToFile(String tg, String data)
         file.createNewFile();
         java.io.FileOutputStream fOut = new java.io.FileOutputStream(file, true);
         java.io.OutputStreamWriter myOutWriter = new java.io.OutputStreamWriter(fOut);
-        myOutWriter.append(new java.util.Date().toString() + ", " + tg + ", "  + data + System.lineSeparator());
+        myOutWriter.append(new java.util.Date().toString() + ", " + tg + ", "  + data + System.getProperty("line.separator"));
 
         myOutWriter.close();
 /*

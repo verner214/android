@@ -1,6 +1,7 @@
 package lawa.olapp;
 
 import java.util.ArrayList;
+import java.util.concurrent.RunnableFuture;
 
 import android.content.Intent;
 
@@ -42,7 +43,6 @@ public class BrygdListFragment extends ListFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        WriteToFile.writeToFile(TAG, "onCreate 1");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         getActivity().setTitle(R.string.brygds_title);
@@ -58,26 +58,28 @@ public class BrygdListFragment extends ListFragment {
             //getActivity().finish();
             //return;
         }
-        else if (table == null) {//fråga efter password
+        if (!MultiPart.isOnline(getActivity())) {
+            for (int i=0; i < 2; i++)
+            {
+                Toast.makeText(getActivity(), "Appen fungerar bara online.", Toast.LENGTH_LONG).show();
+                getActivity().finish();
+            }
+            return;
+        }
+        if (table == null) {//fråga efter password
             Intent i = new Intent(getActivity(), AskPasswordActivity.class);
             startActivityForResult(i, ASK_PASSWORD);
         }
         else {//hämta data
-        WriteToFile.writeToFile(TAG, "onCreate 2");
             BrygdLab.setSourceIsDemo(table.equals("demo"));
-        WriteToFile.writeToFile(TAG, "onCreate 3");
             FetchItemsTask ft = new FetchItemsTask();
-        WriteToFile.writeToFile(TAG, "onCreate 4");
-            //ft.execute();      
+            //ft.execute();
             ft.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);     
-        WriteToFile.writeToFile(TAG, "onCreate 5");
         }
 
-        WriteToFile.writeToFile(TAG, "innan BrygdLab.get(getActivity()).getBrygds()");                
         mBrygds = BrygdLab.get(getActivity()).getBrygds();//mBrygds kommer alltid att vara null här men måste anropas innan BrygdLab.set...
         setListAdapter(null);//visa timglas
-        WriteToFile.writeToFile(TAG, "efter BrygdLab.get(getActivity()).getBrygds()");                
-        
+
 //initiera bakgrundstråden med loopern. i konstruktorn skicka Handler som är associerad till UI-tråden.
 //registrera callback för downloaded vertig.        
 
@@ -91,7 +93,6 @@ public class BrygdListFragment extends ListFragment {
         });
         mThumbnailThread.start();
         mThumbnailThread.getLooper();    
-        WriteToFile.writeToFile(TAG, "efter mThumbnailThread.getLooper(); ");             
     }
 
     @Override
@@ -107,31 +108,20 @@ public class BrygdListFragment extends ListFragment {
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        WriteToFile.writeToFile(TAG, "i onActivityResult 1, requestCode = " + requestCode + ", resultCode = " + resultCode);             
         if (requestCode == ERROR_REPORT) {
             getActivity().finish();//döda hela appen.
         } 
         else if (requestCode == ASK_PASSWORD) {
             if (resultCode == Activity.RESULT_CANCELED) {
-        WriteToFile.writeToFile(TAG, "i onActivityResult 2, requestCode = " + requestCode + ", resultCode = " + resultCode);             
                 getActivity().finish();//döda hela appen.
             } 
             else {
-        WriteToFile.writeToFile(TAG, "i onActivityResult 3, requestCode = " + requestCode + ", resultCode = " + resultCode);             
-                SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE); 
-        WriteToFile.writeToFile(TAG, "i onActivityResult 4, requestCode = " + requestCode + ", resultCode = " + resultCode);             
+                SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
                 String table = prefs.getString("table", null);
-        WriteToFile.writeToFile(TAG, "i onActivityResult 5, requestCode = " + requestCode + ", resultCode = " + resultCode);             
                 BrygdLab.setSourceIsDemo(table.equals("demo"));
-        WriteToFile.writeToFile(TAG, "i onActivityResult 6, requestCode = " + requestCode + ", resultCode = " + resultCode);      
                 FetchItemsTask ft = new FetchItemsTask();
-                //new FetchItemsTask().execute();
-        WriteToFile.writeToFile(TAG, "i onActivityResult 7, requestCode = " + requestCode + ", resultCode = " + resultCode);   
-        //ft.execute();     
-        ft.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);     
-        WriteToFile.writeToFile(TAG, "i onActivityResult 8, requestCode = " + requestCode + ", resultCode = " + resultCode);   
+                ft.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
-            //return;
         }
 
 //            if (requestCode == ADD_BEER && resultCode == Activity.RESULT_OK) {
@@ -157,30 +147,17 @@ public class BrygdListFragment extends ListFragment {
     private class FetchItemsTask extends AsyncTask<Void,Void,ArrayList<Brygd>> {
         @Override
         protected ArrayList<Brygd> doInBackground(Void... params) {
-            WriteToFile.writeToFile(TAG, "FetchItemsTask.doInBackground 1");             
             ArrayList<Brygd> a = new GetGson().fetchItems();
-            WriteToFile.writeToFile(TAG, "FetchItemsTask.doInBackground 2");             
             return a;
         }
 
         @Override
         protected void onPostExecute(ArrayList<Brygd> brygds) {
             //try {Thread.sleep(5000);} catch (InterruptedException e) {}
-            WriteToFile.writeToFile(TAG, "FetchItemsTask.onPostExecute 1");             
-            Log.d(TAG, "onPostExecute, brygds.length = " + brygds.size());
             mBrygds = brygds;
             BrygdAdapter adapter = new BrygdAdapter(mBrygds);
-            WriteToFile.writeToFile(TAG, "FetchItemsTask.onPostExecute 2");             
             setListAdapter(adapter);
-            WriteToFile.writeToFile(TAG, "FetchItemsTask.onPostExecute 3");             
-            Log.d(TAG, "onPostExecute, nu är adaptern satt, getCount = " + adapter.getCount());
 		    BrygdLab.setBrygds(brygds);
-            WriteToFile.writeToFile(TAG, "FetchItemsTask.onPostExecute 4");             
-/*            
-            if (getActivity() != null) {
-                Toast.makeText(getActivity(), "Öllistan uppdaterad.", Toast.LENGTH_LONG).show();
-            }
-*/            
         }
     }
 
@@ -212,13 +189,17 @@ public class BrygdListFragment extends ListFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mThumbnailThread.quit();
+        if (mThumbnailThread != null) {
+            mThumbnailThread.quit();
+        }
     }
     
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mThumbnailThread.clearQueue();
+        if (mThumbnailThread != null) {
+            mThumbnailThread.clearQueue();
+        }
     }
     
     private class BrygdAdapter extends ArrayAdapter<Brygd> {
@@ -229,7 +210,6 @@ public class BrygdListFragment extends ListFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // if we weren't given a view, inflate one
-            WriteToFile.writeToFile(TAG, "BrygdAdapter.getView 1");             
             if (null == convertView) {
                 convertView = getActivity().getLayoutInflater()
                     .inflate(R.layout.list_item_brygd, null);
@@ -245,7 +225,6 @@ public class BrygdListFragment extends ListFragment {
                     .findViewById(R.id.gallery_item_imageView);
             imageView.setImageResource(R.drawable.no_photo);
             
-            WriteToFile.writeToFile(TAG, "BrygdAdapter.getView 2");             
             mThumbnailThread.queueThumbnail(imageView, c.getThumbUrl());//använd title tills vidare, byt sen.
 
             TextView beerName =
@@ -256,7 +235,6 @@ public class BrygdListFragment extends ListFragment {
                 (TextView)convertView.findViewById(R.id.brygd_list_beerstyle);
             beerStyle.setText(c.getBeerStyle());
             
-            WriteToFile.writeToFile(TAG, "BrygdAdapter.getView 3");             
             return convertView;
         }
     }
