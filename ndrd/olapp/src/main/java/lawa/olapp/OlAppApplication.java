@@ -27,7 +27,18 @@ import android.content.SharedPreferences;
 import android.os.Build;
 
 public class OlAppApplication extends Application {
-private class CustomExceptionHandler implements UncaughtExceptionHandler {
+
+//har märkt att singeltonen (BrygdLab) dör mellan varven. när appen hamnar i bakgrunden och minnet börjar ta slut dödas alla aktivities och därmed alla referenser
+//till BrygdLab. Detta borde hålla BrygdLab vid liv då Application garanteras leva hela appens livslängd.
+//http://stackoverflow.com/questions/708012/how-to-declare-global-variables-in-android/708317#708317
+    private BrygdLab lifeTimeReference;
+
+    public void setSingleton(BrygdLab bl) {
+        lifeTimeReference = bl;
+    }
+
+
+    private class CustomExceptionHandler implements UncaughtExceptionHandler {
 
     private Boolean exceptionOccured = false;
     private OlAppApplication                _app;

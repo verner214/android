@@ -19,6 +19,8 @@ public class BrygdLab {
     public static BrygdLab get(Context c) {
         if (sBrygdLab == null) {
             sBrygdLab = new BrygdLab(c.getApplicationContext());
+            OlAppApplication appState = ((OlAppApplication) c.getApplicationContext());
+            appState.setSingleton(sBrygdLab);
         }
         return sBrygdLab;
     }
